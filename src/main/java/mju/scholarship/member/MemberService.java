@@ -6,6 +6,7 @@ import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.dto.LoginDto;
 import mju.scholarship.member.dto.MemberInfoRequest;
 import mju.scholarship.member.dto.SignupDto;
+import mju.scholarship.member.dto.UpdateMemberInfoRequest;
 import mju.scholarship.result.exception.MemberNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +46,25 @@ public class MemberService {
 
         memberRepository.save(loginMember);
 
+    }
+
+    @Transactional
+    public void updateInfo(UpdateMemberInfoRequest request) {
+        Member loginMember = jwtUtil.getLoginMember();
+
+        loginMember.updateInfo(
+                request.getEmail(),
+                request.getPhone(),
+                request.getPassword(),
+                request.getUniversity(),
+                request.getAge(),
+                request.getGender(),
+                request.getCity(),
+                request.getDepartment(),
+                request.getGrade(),
+                request.getIncomeQuantile()
+        );
+
+        memberRepository.save(loginMember);
     }
 }

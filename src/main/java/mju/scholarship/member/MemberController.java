@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.member.dto.LoginDto;
 import mju.scholarship.member.dto.MemberInfoRequest;
 import mju.scholarship.member.dto.SignupDto;
+import mju.scholarship.member.dto.UpdateMemberInfoRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,8 @@ public class MemberController {
     }
 
     @PutMapping("password")
-    public ResponseEntity<String> updateInfo(){
+    public ResponseEntity<String> updateInfo(UpdateMemberInfoRequest request){
+        memberService.updateInfo(request);
         return ResponseEntity.ok("update info success");
     }
 

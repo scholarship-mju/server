@@ -66,4 +66,26 @@ public class Member {
         this.incomeQuantile = incomeQuantile;
     }
 
+    public void updateInfo(String email,
+                           String phone,
+                           String password,
+                           String university,
+                           Integer age,
+                           String gender,
+                           String city,
+                           String department,
+                           Integer grade,
+                           Integer incomeQuantile) {
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.university = university;
+        this.age = age;
+        this.gender = gender;
+        this.city = city;
+        this.department = department;
+        this.grade = grade;
+        this.incomeQuantile = incomeQuantile;
+    }
+
 }
