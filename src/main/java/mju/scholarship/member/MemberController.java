@@ -6,8 +6,11 @@ import mju.scholarship.member.dto.LoginDto;
 import mju.scholarship.member.dto.MemberInfoRequest;
 import mju.scholarship.member.dto.SignupDto;
 import mju.scholarship.member.dto.UpdateMemberInfoRequest;
+import mju.scholarship.result.ResultResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static mju.scholarship.result.code.ResultCode.*;
 
 @RestController
 @RequestMapping
@@ -23,10 +26,16 @@ public class MemberController {
         return "login success";
     }
 
-    @PutMapping("password")
-    public ResponseEntity<String> updateInfo(UpdateMemberInfoRequest request){
+    @PutMapping("/update-info")
+    public ResponseEntity<ResultResponse> updateInfo(UpdateMemberInfoRequest request){
         memberService.updateInfo(request);
-        return ResponseEntity.ok("update info success");
+        return ResponseEntity.ok(ResultResponse.of(ProfileUpdateSuccess));
+    }
+
+    @PostMapping("/{scholarshipId}/interest")
+    public ResponseEntity<ResultResponse> interestScholarship(@PathVariable Long scholarshipId){
+        memberService.interestScholarship(scholarshipId);
+        return ResponseEntity.ok(ResultResponse.of(InterestScholarshipSuccess));
     }
 
 

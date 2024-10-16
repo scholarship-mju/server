@@ -16,6 +16,7 @@ public class Member {
 
     @Id
     @GeneratedValue
+    @Column(name = "member_id")
     private Long id;
 
     /**
@@ -37,14 +38,26 @@ public class Member {
     private Integer grade; // 1.0 - 4.5
     private Integer incomeQuantile; // 1-10
 
+    // 이미 받은 장학금
     @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scholarship_id")
     private List<Scholarship> gotScholarships = new ArrayList<>();
+
+    // 찜한 장학금
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scholarship_id")
+    private List<Scholarship> interestScholarships = new ArrayList<>();
 
     @Builder
     public Member(String username, String email) {
         this.username = username;
         this.email = email;
     }
+
+    public void addInterestScholarship(Scholarship scholarship) {
+        interestScholarships.add(scholarship);
+    }
+
 
     public void addGotScholarship(Scholarship scholarship) {
         gotScholarships.add(scholarship);

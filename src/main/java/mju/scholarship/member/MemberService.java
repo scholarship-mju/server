@@ -8,6 +8,9 @@ import mju.scholarship.member.dto.MemberInfoRequest;
 import mju.scholarship.member.dto.SignupDto;
 import mju.scholarship.member.dto.UpdateMemberInfoRequest;
 import mju.scholarship.result.exception.MemberNotFoundException;
+import mju.scholarship.result.exception.ScholarshipNotFoundException;
+import mju.scholarship.scholoarship.ScholarShipRepository;
+import mju.scholarship.scholoarship.Scholarship;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +19,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
+    private final ScholarShipRepository scholarShipRepository;
 
     public void login(LoginDto loginDto) {
         // 로그인 로직
@@ -65,6 +69,17 @@ public class MemberService {
                 request.getIncomeQuantile()
         );
 
+        memberRepository.save(loginMember);
+    }
+
+    @Transactional
+    public void interestScholarship(Long scholarshipId) {
+        Member loginMember = jwtUtil.getLoginMember();
+
+        Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
+                .orElseThrow(ScholarshipNotFoundException::new);
+
+        loginMember.addInterestScholarship(scholarship);
         memberRepository.save(loginMember);
     }
 }
