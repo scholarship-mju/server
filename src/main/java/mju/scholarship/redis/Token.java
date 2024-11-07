@@ -21,6 +21,7 @@ public class Token {
     @Indexed
     private String accessToken;
 
+
     public Token updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;

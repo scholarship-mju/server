@@ -1,5 +1,6 @@
 package mju.scholarship.member;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -8,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class PrincipalDetails implements OAuth2User, UserDetails {
 
     private Member member;
@@ -26,11 +28,14 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
         return "";
     }
 
+
     //리턴 해주는거 바꿔야함
     @Override
     public String getUsername() {
-        return "hello";
+        return member.getUsername();
     }
+
+    public String getEmail(){ return member.getEmail(); }
 
     @Override
     public Map<String, Object> getAttributes() {

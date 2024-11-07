@@ -2,17 +2,32 @@ package mju.scholarship.redis;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.result.exception.TokenExpiredException;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TokenService {
 
     private final TokenRepository tokenRepository;
+    private final StringRedisTemplate redisTemplate;
 
-    public void deleteRefreshToken(String memberKey) {
-        tokenRepository.deleteById(memberKey);
+    public void deleteRefreshToken(String authToken) {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(authToken))) {
+            redisTemplate.delete(authToken);
+            tokenRepository.deleteById(authToken);
+            log.info("Redis에서 토큰이 성공적으로 삭제되었습니다.");
+        } else {
+            log.warn("삭제하려는 토큰이 Redis에 존재하지 않습니다.");
+        }
+    }
+
+    @Transactional
+    public boolean validTokenInRedis(String accessToken) {
+        return tokenRepository.findByAccessToken(accessToken).isPresent();
     }
 
     @Transactional
@@ -34,4 +49,6 @@ public class TokenService {
         token.updateAccessToken(accessToken);
         tokenRepository.save(token);
     }
+
+
 }

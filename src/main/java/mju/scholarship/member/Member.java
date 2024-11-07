@@ -1,5 +1,6 @@
 package mju.scholarship.member;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,8 +23,12 @@ public class Member {
     /**
      * 유저 관련 데이터
      */
+    @Column(unique = true)
     private String username;
+
+    @Column(unique = true)
     private String email;
+
     private String phone;
     private String password;
 
@@ -31,6 +36,7 @@ public class Member {
      * 장학금 조건
      */
     private String university;
+
     private Integer age;
     private String gender; //enum 으로 할까
     private String city;
@@ -40,12 +46,10 @@ public class Member {
 
     // 이미 받은 장학금
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scholarship_id")
     private List<Scholarship> gotScholarships = new ArrayList<>();
 
     // 찜한 장학금
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scholarship_id")
     private List<Scholarship> interestScholarships = new ArrayList<>();
 
     @Builder
@@ -58,9 +62,16 @@ public class Member {
         interestScholarships.add(scholarship);
     }
 
+    public void deleteInterestScholarship(Scholarship scholarship) {
+        interestScholarships.remove(scholarship);
+    }
 
     public void addGotScholarship(Scholarship scholarship) {
         gotScholarships.add(scholarship);
+    }
+
+    public void deleteGotScholarship(Scholarship scholarship) {
+        gotScholarships.remove(scholarship);
     }
 
     public void createInfo(String university,

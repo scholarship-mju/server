@@ -3,15 +3,14 @@ package mju.scholarship.member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.config.JwtUtil;
-import mju.scholarship.member.dto.LoginDto;
-import mju.scholarship.member.dto.MemberInfoRequest;
-import mju.scholarship.member.dto.SignupDto;
-import mju.scholarship.member.dto.UpdateMemberInfoRequest;
+import mju.scholarship.member.dto.*;
 import mju.scholarship.result.exception.MemberNotFoundException;
 import mju.scholarship.result.exception.ScholarshipNotFoundException;
 import mju.scholarship.scholoarship.ScholarShipRepository;
 import mju.scholarship.scholoarship.Scholarship;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +19,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final ScholarShipRepository scholarShipRepository;
+
+
 
     public void login(LoginDto loginDto) {
         // 로그인 로직
@@ -53,33 +54,44 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateInfo(UpdateMemberInfoRequest request) {
+    public MemberResponse updateInfo(UpdateMemberInfoRequest memberInfoRequest) {
         Member loginMember = jwtUtil.getLoginMember();
 
         loginMember.updateInfo(
-                request.getEmail(),
-                request.getPhone(),
-                request.getPassword(),
-                request.getUniversity(),
-                request.getAge(),
-                request.getGender(),
-                request.getCity(),
-                request.getDepartment(),
-                request.getGrade(),
-                request.getIncomeQuantile()
+                memberInfoRequest.getEmail(),
+                memberInfoRequest.getPhone(),
+                memberInfoRequest.getPassword(),
+                memberInfoRequest.getUniversity(),
+                memberInfoRequest.getAge(),
+                memberInfoRequest.getGender(),
+                memberInfoRequest.getCity(),
+                memberInfoRequest.getDepartment(),
+                memberInfoRequest.getGrade(),
+                memberInfoRequest.getIncomeQuantile()
         );
 
-        memberRepository.save(loginMember);
+        return createResponseDto(loginMember);
     }
 
-    @Transactional
-    public void interestScholarship(Long scholarshipId) {
+
+    public MemberResponse getMyInfo() {
         Member loginMember = jwtUtil.getLoginMember();
 
-        Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
-                .orElseThrow(ScholarshipNotFoundException::new);
+        return createResponseDto(loginMember);
+    }
 
-        loginMember.addInterestScholarship(scholarship);
-        memberRepository.save(loginMember);
+    private static MemberResponse createResponseDto(Member member) {
+        return MemberResponse.builder()
+                .username(member.getUsername())
+                .email(member.getEmail())
+                .password(member.getPassword())
+                .phone(member.getPhone())
+                .university(member.getUniversity())
+                .age(member.getAge())
+                .gender(member.getGender())
+                .city(member.getCity())
+                .department(member.getDepartment())
+                .incomeQuantile(member.getIncomeQuantile())
+                .build();
     }
 }

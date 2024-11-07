@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.provider.TokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
@@ -28,8 +30,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(request);
 
+        log.info("Tokennnnnnnnnnn = {}", tokenProvider.validTokenInRedis(accessToken));
         // accessToken 검증
-        if (tokenProvider.validateToken(accessToken)) {
+        if (tokenProvider.validateToken(accessToken) && tokenProvider.validTokenInRedis(accessToken)) {
+            log.info("Token = {}", accessToken);
             setAuthentication(accessToken);
         } else {
             // 만료되었을 경우 accessToken 재발급

@@ -7,11 +7,14 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.redis.Token;
 import mju.scholarship.redis.TokenService;
 import mju.scholarship.result.exception.JwtSignatureInvalidException;
 import mju.scholarship.result.exception.TokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TokenProvider {
 
     @Value("${jwt.key}")
@@ -38,6 +42,7 @@ public class TokenProvider {
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
     private static final String KEY_ROLE = "role";
     private final TokenService tokenService;
+    private final StringRedisTemplate redisTemplate;
 
 
     @PostConstruct
@@ -51,6 +56,7 @@ public class TokenProvider {
 
     public void generateRefreshToken(Authentication authentication, String accessToken) {
         String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
+        log.info("Refresh token: {}", refreshToken);
         tokenService.saveOrUpdate(authentication.getName(), refreshToken, accessToken); // redis에 저장
     }
 
@@ -62,13 +68,16 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        return Jwts.builder()
+        String jwt = Jwts.builder()
                 .subject(authentication.getName())
                 .claim(KEY_ROLE, authorities)
                 .issuedAt(now)
                 .expiration(expiredDate)
                 .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
+
+        log.info("jwt = {}", jwt);
+        return jwt;
     }
 
     public Authentication getAuthentication(String token) {
@@ -77,20 +86,20 @@ public class TokenProvider {
 
         // 2. security의 User 객체 생성
         User principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token);
     }
 
     private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
-        return Collections.singletonList(new SimpleGrantedAuthority(
-                claims.get(KEY_ROLE).toString()));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
+
 
     public String reissueAccessToken(String accessToken) {
         if (StringUtils.hasText(accessToken)) {
             Token token = tokenService.findByAccessTokenOrThrow(accessToken);
             String refreshToken = token.getRefreshToken();
 
-            if (validateToken(refreshToken)) {
+            if (validTokenInRedis(accessToken)) {
                 String reissueAccessToken = generateAccessToken(getAuthentication(refreshToken));
                 tokenService.updateToken(reissueAccessToken, token);
                 return reissueAccessToken;
@@ -108,7 +117,11 @@ public class TokenProvider {
         return claims.getExpiration().after(new Date());
     }
 
-    private Claims parseClaims(String token) {
+    public boolean validTokenInRedis(String token) {
+        return tokenService.validTokenInRedis(token);
+    }
+
+    public Claims parseClaims(String token) {
         try {
             return Jwts.parser().verifyWith(secretKey).build()
                     .parseSignedClaims(token).getPayload();
@@ -122,4 +135,7 @@ public class TokenProvider {
     }
 
 
+    public void removeTokenFromRedis(String authToken) {
+        tokenService.deleteRefreshToken(authToken);
+    }
 }

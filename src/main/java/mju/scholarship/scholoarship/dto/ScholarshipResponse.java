@@ -2,9 +2,11 @@ package mju.scholarship.scholoarship.dto;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class ScholarshipResponse {
 
     @Id
@@ -27,4 +29,27 @@ public class ScholarshipResponse {
     private String department; // major -> 전공 (?)
     private Integer grade; // 1.0 - 4.5
     private Integer incomeQuantile; // 1-10
+
+    @Builder
+    public ScholarshipResponse(Long id,
+                               String name,
+                               String description,
+                               String university,
+                               Integer age,
+                               String gender,
+                               String city,
+                               String department,
+                               Integer grade,
+                               Integer incomeQuantile) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.university = university;
+        this.age = age;
+        this.gender = gender;
+        this.city = city;
+        this.department = department;
+        this.grade = grade;
+        this.incomeQuantile = incomeQuantile;
+    }
 }

@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 @Configuration
@@ -42,7 +44,17 @@ public class SecurityConfig {
         http
                 // rest api 설정
                 .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화 -> cookie를 사용하지 않으면 꺼도 된다. (cookie를 사용할 경우 httpOnly(XSS 방어), sameSite(CSRF 방어)로 방어해야 한다.)
-                .cors(AbstractHttpConfigurer::disable) // cors 비활성화 -> 프론트와 연결 시 따로 설정 필요
+                .cors(cors -> {
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 도메인 허용
+                    config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
+                    config.addAllowedHeader("*"); // 모든 헤더 허용
+                    config.setAllowCredentials(true); // 인증 정보 허용
+
+                    source.registerCorsConfiguration("/**", config);
+                    cors.configurationSource(source);
+                })
                 .httpBasic(AbstractHttpConfigurer::disable) // 기본 인증 로그인 비활성화
                 .formLogin(AbstractHttpConfigurer::disable) // 기본 login form 비활성화
                 .logout(AbstractHttpConfigurer::disable) // 기본 logout 비활성화
@@ -54,7 +66,8 @@ public class SecurityConfig {
                 // request 인증, 인가 설정
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(
-                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/*"),
+                                new AntPathRequestMatcher("/oauth2/authorization/*"),
                                 new AntPathRequestMatcher("/auth/success"))
                                 .permitAll()
                 .anyRequest().authenticated()

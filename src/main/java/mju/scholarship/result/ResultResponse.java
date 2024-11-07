@@ -1,7 +1,9 @@
 package mju.scholarship.result;
 
+import lombok.Getter;
 import mju.scholarship.result.code.ResultCode;
 
+@Getter
 public class ResultResponse {
 
     private int status;

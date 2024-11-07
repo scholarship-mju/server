@@ -31,7 +31,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         Member member = getOrSave(oAuth2UserInfo);
 
-        return new PrincipalDetails(member, userAttribute, registrationId);
+        return new PrincipalDetails(member, userAttribute, userNameAttributeName);
     }
 
     private Member getOrSave(OAuth2UserInfo oAuth2UserInfo) {

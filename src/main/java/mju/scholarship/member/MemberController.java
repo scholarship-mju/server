@@ -1,11 +1,9 @@
 package mju.scholarship.member;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mju.scholarship.member.dto.LoginDto;
-import mju.scholarship.member.dto.MemberInfoRequest;
-import mju.scholarship.member.dto.SignupDto;
-import mju.scholarship.member.dto.UpdateMemberInfoRequest;
+import mju.scholarship.member.dto.*;
 import mju.scholarship.result.ResultResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +24,6 @@ public class MemberController {
         return "login success";
     }
 
-    @PutMapping("/update-info")
-    public ResponseEntity<ResultResponse> updateInfo(UpdateMemberInfoRequest request){
-        memberService.updateInfo(request);
-        return ResponseEntity.ok(ResultResponse.of(ProfileUpdateSuccess));
-    }
-
-    @PostMapping("/{scholarshipId}/interest")
-    public ResponseEntity<ResultResponse> interestScholarship(@PathVariable Long scholarshipId){
-        memberService.interestScholarship(scholarshipId);
-        return ResponseEntity.ok(ResultResponse.of(InterestScholarshipSuccess));
-    }
 
 
     @PostMapping("signup")
@@ -45,10 +32,25 @@ public class MemberController {
         return ResponseEntity.ok("signup success");
     }
 
+    // 내 정보 생성
     @PostMapping("create-info")
-    public ResponseEntity<String> createInfo(@RequestBody MemberInfoRequest memberInfoRequest){
+    public ResponseEntity<ResultResponse> createInfo(@RequestBody MemberInfoRequest memberInfoRequest){
         memberService.createInfo(memberInfoRequest);
-        return ResponseEntity.ok("create info success");
+        return ResponseEntity.ok().body(ResultResponse.of(CreateInfoSuccess));
+    }
+
+    // 내 정보 변경
+    @PostMapping("/my")
+    public ResponseEntity<MemberResponse> updateInfo(@RequestBody UpdateMemberInfoRequest request){
+        log.info("request = {}", request.getUniversity());
+        memberService.updateInfo(request);
+        return ResponseEntity.ok().body(memberService.updateInfo(request));
+    }
+
+    // 내 정보 조회
+    @GetMapping("/my")
+    public ResponseEntity<MemberResponse> getMyInfo(){
+        return ResponseEntity.ok().body(memberService.getMyInfo());
     }
 
 

@@ -8,4 +8,5 @@ public interface ScholarShipRepository extends JpaRepository<Scholarship, Long> 
 
     Optional<Scholarship> findByName(String name);
 
+
 }

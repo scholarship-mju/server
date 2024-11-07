@@ -7,9 +7,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateMemberInfoRequest {
 
+    private String username;
     private String email;
     private String phone;
     private String password;
+
+    /**
+     * 장학금 조건
+     */
     private String university;
     private Integer age;
     private String gender; //enum 으로 할까
