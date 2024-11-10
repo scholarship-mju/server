@@ -36,7 +36,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
-                .requestMatchers("/error", "/favicon.ico");
+                .requestMatchers("/error", "/favicon.ico", "/api-docs", "swagger-ui/**");
     }
 
     @Bean
@@ -66,7 +66,10 @@ public class SecurityConfig {
                 // request 인증, 인가 설정
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(
-                                new AntPathRequestMatcher("/*"),
+                                new AntPathRequestMatcher("/**"),
+                                new AntPathRequestMatcher("/api-docs"),
+                                new AntPathRequestMatcher("/api-docs/**"),
+                                new AntPathRequestMatcher("/swagger-ui/**"),
                                 new AntPathRequestMatcher("/oauth2/authorization/*"),
                                 new AntPathRequestMatcher("/auth/success"))
                                 .permitAll()

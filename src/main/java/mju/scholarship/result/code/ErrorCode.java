@@ -13,7 +13,8 @@ public enum ErrorCode {
     TokenInvalidException(500, "T002", "검증된 토큰이 아닙니다"),
     TokenExpiredException(500, "T003", "토큰이 만료되었씁니다"),
     JwtSignatureInvalid(500, "T004", "서명이 검증되지 않음"),
-    ScholarshipNotFoundException(500, "S001", "장학금을 찾을 수 없습니다")
+    ScholarshipNotFoundException(500, "S001", "장학금을 찾을 수 없습니다"),
+    RefreshTokenNotFoundException(500, "T005", "리프레시 토큰을 찾을 수 없음")
     ;
 
 

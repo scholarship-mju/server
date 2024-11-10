@@ -70,7 +70,6 @@ public class TokenProvider {
 
         String jwt = Jwts.builder()
                 .subject(authentication.getName())
-                .claim(KEY_ROLE, authorities)
                 .issuedAt(now)
                 .expiration(expiredDate)
                 .signWith(secretKey, Jwts.SIG.HS512)

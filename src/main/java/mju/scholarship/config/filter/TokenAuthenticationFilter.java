@@ -30,7 +30,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(request);
 
-        log.info("Tokennnnnnnnnnn = {}", tokenProvider.validTokenInRedis(accessToken));
         // accessToken 검증
         if (tokenProvider.validateToken(accessToken) && tokenProvider.validTokenInRedis(accessToken)) {
             log.info("Token = {}", accessToken);
