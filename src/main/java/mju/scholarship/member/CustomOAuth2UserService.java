@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @RequiredArgsConstructor
@@ -23,22 +24,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> userAttribute = super.loadUser(userRequest).getAttributes();
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, userAttribute);
 
-        Member member = getOrSave(oAuth2UserInfo);
-
-        return new PrincipalDetails(member, userAttribute, userNameAttributeName);
-    }
-
-    private Member getOrSave(OAuth2UserInfo oAuth2UserInfo) {
+        AtomicBoolean isFirstLogin = new AtomicBoolean(false);
         Member member = memberRepository.findByEmail(oAuth2UserInfo.getEmail())
-                .orElseGet(oAuth2UserInfo::toMember);
-        return memberRepository.save(member);
+                .orElseGet(() -> {
+                    isFirstLogin.set(true); // 처음 로그인 플래그 설정
+                    return memberRepository.save(oAuth2UserInfo.toMember());
+                });
+
+        // `isFirstLogin` 값을 PrincipalDetails에 전달
+        return new PrincipalDetails(member, userAttribute, userNameAttributeName, isFirstLogin.get());
     }
-
-
 }

@@ -15,11 +15,17 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
     private Member member;
     private Map<String, Object> attributes;
     private String attributeKey;
+    private boolean isFirstLogin;
 
-    public PrincipalDetails(Member member, Map<String, Object> attributes, String attributeKey) {
+    public PrincipalDetails(Member member, Map<String, Object> attributes, String attributeKey, boolean isFirstLogin) {
         this.member = member;
         this.attributes = attributes;
         this.attributeKey = attributeKey;
+        this.isFirstLogin = isFirstLogin;
+    }
+
+    public boolean isFirstLogin() {
+        return isFirstLogin;
     }
 
 

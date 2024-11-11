@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.provider.TokenProvider;
+import mju.scholarship.member.PrincipalDetails;
 import mju.scholarship.redis.TokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
@@ -16,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,6 +42,12 @@ public class AuthController {
         authService.logout(accessToken);
 
         return ResponseEntity.ok("로그아웃 성공");
+    }
+
+    @GetMapping("/oauth2/current-user")
+    public boolean getCurrentUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        // 사용자 정보 확인
+        return principalDetails.isFirstLogin();
     }
 
     private String getUserIdFromToken(String token) {

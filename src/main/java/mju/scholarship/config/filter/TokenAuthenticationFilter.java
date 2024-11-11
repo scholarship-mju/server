@@ -37,6 +37,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         } else {
             // 만료되었을 경우 accessToken 재발급
             String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
+            log.info("reissuetoken = {}", accessToken);
 
             if (StringUtils.hasText(reissueAccessToken)) {
                 setAuthentication(reissueAccessToken);
