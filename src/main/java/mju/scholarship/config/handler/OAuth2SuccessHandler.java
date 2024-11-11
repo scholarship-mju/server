@@ -32,7 +32,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
 
         // 토큰 전달을 위한 redirect
-        String redirectUrl = UriComponentsBuilder.fromUriString("http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com:3000/auth/success")
+        String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth/success")
                 .queryParam("accessToken", accessToken)
                 .build().toUriString();
         log.info("redirect to {}", redirectUrl);
