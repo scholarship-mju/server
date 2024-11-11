@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.result.exception.TokenExpiredException;
+import mju.scholarship.result.exception.TokenNotFoundException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class TokenService {
 
     public Token findByAccessTokenOrThrow(String accessToken) {
         return tokenRepository.findByAccessToken(accessToken)
-                .orElseThrow(TokenExpiredException::new);
+                .orElseThrow(TokenNotFoundException::new);
     }
 
     @Transactional
