@@ -31,23 +31,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         AtomicBoolean isFirstLogin = new AtomicBoolean(false);
 
-        // 이메일 중복 체크
+        // 이메일 중복 체크 및 기존 사용자 처리
         Member member = memberRepository.findByEmail(oAuth2UserInfo.getEmail())
                 .orElseGet(() -> {
-                    // 유저네임 중복 체크 추가
-                    if (memberRepository.existsByUsername(oAuth2UserInfo.getName())) {
-                        throw new RuntimeException("이미 존재하는 사용자 이름입니다.");
-                    }
-                    if (memberRepository.existsByEmail(oAuth2UserInfo.getEmail())) {
-                        throw new RuntimeException("이미 존재하는 이메일입니다.");
-                    }
-
                     isFirstLogin.set(true); // 처음 로그인 플래그 설정
                     return memberRepository.save(oAuth2UserInfo.toMember());
                 });
 
         return new PrincipalDetails(member, userAttribute, userNameAttributeName, isFirstLogin.get());
     }
-
-
 }
