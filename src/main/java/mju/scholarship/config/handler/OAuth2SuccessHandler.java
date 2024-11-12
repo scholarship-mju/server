@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.provider.TokenProvider;
+import mju.scholarship.member.Member;
 import mju.scholarship.member.MemberRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -26,22 +27,29 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        // accessToken, refreshToken 발급
+        // accessToken 발급
         String accessToken = tokenProvider.generateAccessToken(authentication);
         tokenProvider.generateRefreshToken(authentication, accessToken);
 
+        // 첫 로그인 여부 확인
+        boolean isFirstLogin = checkNewUser(authentication);
 
-        // 토큰 전달을 위한 redirect
+        // 토큰과 첫 로그인 여부를 포함하여 리다이렉트 URL 생성
         String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth/success")
                 .queryParam("accessToken", accessToken)
+                .queryParam("isFirstLogin", isFirstLogin) // 첫 로그인 여부 추가
                 .build().toUriString();
+
         log.info("redirect to {}", redirectUrl);
 
         response.sendRedirect(redirectUrl);
     }
 
-//    public boolean checkNewUser(Authentication authentication){
-//        return memberRepository.findByEmail(authentication.)
-//    }
-
+    // 첫 로그인 여부 확인 메서드
+    private boolean checkNewUser(Authentication authentication) {
+        String email = authentication.getName(); // 인증 객체에서 이메일 추출
+        return memberRepository.findByEmail(email)
+                .map(Member::isFirstLogin) // 첫 로그인 여부 반환
+                .orElse(true); // 사용자가 없을 경우 false 반환 (예외 처리 가능)
+    }
 }

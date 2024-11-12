@@ -11,6 +11,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,12 +43,6 @@ public class AuthController {
         authService.logout(accessToken);
 
         return ResponseEntity.ok("로그아웃 성공");
-    }
-
-    @GetMapping("/oauth2/current-user")
-    public boolean getCurrentUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        // 사용자 정보 확인
-        return principalDetails.isFirstLogin();
     }
 
     private String getUserIdFromToken(String token) {

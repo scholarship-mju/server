@@ -23,8 +23,8 @@ public class Member {
     /**
      * 유저 관련 데이터
      */
-    @Column(unique = true)
     private String username;
+    private String nickname;
 
     @Column(unique = true)
     private String email;
@@ -43,6 +43,7 @@ public class Member {
     private String department; // major -> 전공 (?)
     private Integer grade; // 1.0 - 4.5
     private Integer incomeQuantile; // 1-10
+    private boolean isFirstLogin = true;
 
     // 이미 받은 장학금
     @OneToMany(fetch = FetchType.LAZY)
@@ -57,6 +58,11 @@ public class Member {
         this.username = username;
         this.email = email;
     }
+
+    public void updateFirstLogin(){
+        isFirstLogin = false;
+    }
+
 
     public void addInterestScholarship(Scholarship scholarship) {
         interestScholarships.add(scholarship);
@@ -74,13 +80,15 @@ public class Member {
         gotScholarships.remove(scholarship);
     }
 
-    public void createInfo(String university,
+    public void createInfo(String nickname,
+                           String university,
                            Integer age,
                            String gender,
                            String city,
                            String department,
                            Integer grade,
                            Integer incomeQuantile) {
+        this.nickname = nickname;
         this.university = university;
         this.age = age;
         this.gender = gender;
@@ -90,7 +98,8 @@ public class Member {
         this.incomeQuantile = incomeQuantile;
     }
 
-    public void updateInfo(String email,
+    public void updateInfo(String nickname,
+                           String email,
                            String phone,
                            String password,
                            String university,
@@ -100,6 +109,7 @@ public class Member {
                            String department,
                            Integer grade,
                            Integer incomeQuantile) {
+        this.nickname = nickname;
         this.email = email;
         this.phone = phone;
         this.password = password;

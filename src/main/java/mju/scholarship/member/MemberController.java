@@ -86,4 +86,10 @@ public class MemberController {
     public ResponseEntity<MemberResponse> getMyInfo() {
         return ResponseEntity.ok().body(memberService.getMyInfo());
     }
+
+    @PostMapping("/first-login")
+    public ResponseEntity<ResultResponse> firstLogin(UpdateMemberInfoRequest firstLoginRequest){
+        memberService.firstLogin(firstLoginRequest);
+        return ResponseEntity.ok().body(ResultResponse.of(FirstLoginSuccess));
+    }
 }

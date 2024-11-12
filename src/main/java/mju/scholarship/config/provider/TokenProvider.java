@@ -95,10 +95,12 @@ public class TokenProvider {
 
     public String reissueAccessToken(String accessToken) {
         if (StringUtils.hasText(accessToken)) {
+            log.info("hasText");
             Token token = tokenService.findByAccessTokenOrThrow(accessToken);
             String refreshToken = token.getRefreshToken();
 
             if (validTokenInRedis(accessToken)) {
+                log.info("validTokenInRedis");
                 String reissueAccessToken = generateAccessToken(getAuthentication(refreshToken));
                 tokenService.updateToken(reissueAccessToken, token);
                 return reissueAccessToken;

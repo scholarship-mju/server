@@ -40,6 +40,7 @@ public class MemberService {
         Member loginMember = jwtUtil.getLoginMember();
 
         loginMember.createInfo(
+                memberInfoRequest.getNickname(),
                 memberInfoRequest.getUniversity(),
                 memberInfoRequest.getAge(),
                 memberInfoRequest.getGender(),
@@ -57,22 +58,18 @@ public class MemberService {
     public MemberResponse updateInfo(UpdateMemberInfoRequest memberInfoRequest) {
         Member loginMember = jwtUtil.getLoginMember();
 
-        loginMember.updateInfo(
-                memberInfoRequest.getEmail(),
-                memberInfoRequest.getPhone(),
-                memberInfoRequest.getPassword(),
-                memberInfoRequest.getUniversity(),
-                memberInfoRequest.getAge(),
-                memberInfoRequest.getGender(),
-                memberInfoRequest.getCity(),
-                memberInfoRequest.getDepartment(),
-                memberInfoRequest.getGrade(),
-                memberInfoRequest.getIncomeQuantile()
-        );
+        updateInfo(memberInfoRequest, loginMember);
 
         return createResponseDto(loginMember);
     }
 
+    @Transactional
+    public void firstLogin(UpdateMemberInfoRequest firstLoginRequest) {
+        Member loginMember = jwtUtil.getLoginMember();
+
+        updateInfo(firstLoginRequest, loginMember);
+        loginMember.updateFirstLogin();
+    }
 
     public MemberResponse getMyInfo() {
         Member loginMember = jwtUtil.getLoginMember();
@@ -82,6 +79,7 @@ public class MemberService {
 
     private static MemberResponse createResponseDto(Member member) {
         return MemberResponse.builder()
+                .nickname(member.getNickname())
                 .username(member.getUsername())
                 .email(member.getEmail())
                 .password(member.getPassword())
@@ -93,5 +91,21 @@ public class MemberService {
                 .department(member.getDepartment())
                 .incomeQuantile(member.getIncomeQuantile())
                 .build();
+    }
+
+    private static void updateInfo(UpdateMemberInfoRequest memberInfoRequest, Member loginMember) {
+        loginMember.updateInfo(
+                memberInfoRequest.getNickname(),
+                memberInfoRequest.getEmail(),
+                memberInfoRequest.getPhone(),
+                memberInfoRequest.getPassword(),
+                memberInfoRequest.getUniversity(),
+                memberInfoRequest.getAge(),
+                memberInfoRequest.getGender(),
+                memberInfoRequest.getCity(),
+                memberInfoRequest.getDepartment(),
+                memberInfoRequest.getGrade(),
+                memberInfoRequest.getIncomeQuantile()
+        );
     }
 }
