@@ -26,6 +26,8 @@ public class Scholarship {
     /**
      * 장학금 조건 데이터
      */
+    private Integer price;
+    private String category;
     private String university;
     private Integer age;
     private String gender; //enum 으로 할까
@@ -36,6 +38,8 @@ public class Scholarship {
 
     @Builder
     public Scholarship(String name,
+                       Integer price,
+                       String category,
                        String description,
                        String university,
                        Integer age,
@@ -45,6 +49,8 @@ public class Scholarship {
                        Integer grade,
                        Integer incomeQuantile) {
 
+        this.price = price;
+        this.category = category;
         this.name = name;
         this.description = description;
         this.university = university;

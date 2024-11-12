@@ -5,6 +5,8 @@ import lombok.Getter;
 @Getter
 public class CreateScholarshipRequest {
 
+    private Integer price;
+    private String category;
     private String name;
     private String university;
     private Integer age;

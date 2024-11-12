@@ -31,6 +31,8 @@ public class ScholarshipService {
     @Transactional
     public void createScholarship(CreateScholarshipRequest request) {
         Scholarship scholarship = Scholarship.builder()
+                .price(request.getPrice())
+                .category(request.getCategory())
                 .name(request.getName())
                 .age(request.getAge())
                 .university(request.getUniversity())
@@ -107,6 +109,8 @@ public class ScholarshipService {
         return gotScholarships.stream()
                 .map(scholarship -> new ScholarshipResponse(
                         scholarship.getId(),
+                        scholarship.getPrice(),
+                        scholarship.getCategory(),
                         scholarship.getName(),
                         scholarship.getDescription(),
                         scholarship.getUniversity(),
@@ -129,6 +133,8 @@ public class ScholarshipService {
         return interestScholarships.stream()
                 .map(scholarship -> new ScholarshipResponse(
                         scholarship.getId(),
+                        scholarship.getPrice(),
+                        scholarship.getCategory(),
                         scholarship.getName(),
                         scholarship.getDescription(),
                         scholarship.getUniversity(),

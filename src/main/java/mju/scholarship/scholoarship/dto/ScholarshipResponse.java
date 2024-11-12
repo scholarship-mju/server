@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class ScholarshipResponse {
 
     @Id
@@ -22,6 +21,8 @@ public class ScholarshipResponse {
     /**
      * 장학금 조건 데이터
      */
+    private Integer price;
+    private String category;
     private String university;
     private Integer age;
     private String gender; //enum 으로 할까
@@ -32,6 +33,8 @@ public class ScholarshipResponse {
 
     @Builder
     public ScholarshipResponse(Long id,
+                               Integer price,
+                               String category,
                                String name,
                                String description,
                                String university,
@@ -42,6 +45,8 @@ public class ScholarshipResponse {
                                Integer grade,
                                Integer incomeQuantile) {
         this.id = id;
+        this.price = price;
+        this.category = category;
         this.name = name;
         this.description = description;
         this.university = university;
