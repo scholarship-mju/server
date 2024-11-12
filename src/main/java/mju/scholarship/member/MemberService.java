@@ -66,6 +66,7 @@ public class MemberService {
                 firstLoginRequest.getGrade(),
                 firstLoginRequest.getIncomeQuantile()
         );
+        loginMember.updateFirstLogin();
         memberRepository.save(loginMember);
     }
 
