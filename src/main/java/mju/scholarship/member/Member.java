@@ -30,7 +30,6 @@ public class Member {
     private String email;
 
     private String phone;
-    private String password;
 
     /**
      * 장학금 조건
@@ -99,9 +98,7 @@ public class Member {
     }
 
     public void updateInfo(String nickname,
-                           String email,
                            String phone,
-                           String password,
                            String university,
                            Integer age,
                            String gender,
@@ -110,9 +107,7 @@ public class Member {
                            Integer grade,
                            Integer incomeQuantile) {
         this.nickname = nickname;
-        this.email = email;
         this.phone = phone;
-        this.password = password;
         this.university = university;
         this.age = age;
         this.gender = gender;

@@ -27,29 +27,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "사용자 로그인", description = "주어진 자격 증명으로 사용자를 로그인합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그인 성공",
-                    content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content)
-    })
-    @PostMapping("login")
-    public String login(@RequestBody @Parameter(description = "로그인 정보") LoginDto loginDto) {
-        memberService.login(loginDto);
-        return "login success";
-    }
-
-    @Operation(summary = "사용자 회원가입", description = "새 사용자를 등록합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입 성공",
-                    content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content)
-    })
-    @PostMapping("signup")
-    public ResponseEntity<String> signup(@RequestBody @Parameter(description = "회원가입 정보") SignupDto signupDto) {
-        memberService.signup(signupDto);
-        return ResponseEntity.ok("signup success");
-    }
 
     @Operation(summary = "내 정보 생성", description = "사용자의 개인 정보를 생성합니다.")
     @ApiResponses(value = {
@@ -87,6 +64,12 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.getMyInfo());
     }
 
+    @Operation(summary = "첫번째 로그인 사용자 데이터 추가", description = "처음 로그인 한 유저의 정보 등록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자 정보 등록 성공",
+                    content = @Content(schema = @Schema(implementation = MemberResponse.class))),
+            @ApiResponse(responseCode = "400", description = "사용자 정보 등록 실패", content = @Content)
+    })
     @PostMapping("/first-login")
     public ResponseEntity<ResultResponse> firstLogin(UpdateMemberInfoRequest firstLoginRequest){
         memberService.firstLogin(firstLoginRequest);

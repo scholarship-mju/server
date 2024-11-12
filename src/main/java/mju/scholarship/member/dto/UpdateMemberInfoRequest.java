@@ -8,11 +8,7 @@ import lombok.NoArgsConstructor;
 public class UpdateMemberInfoRequest {
 
     private String nickname;
-    private String username;
-    private String email;
     private String phone;
-    private String password;
-
     /**
      * 장학금 조건
      */

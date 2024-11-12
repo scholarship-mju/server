@@ -20,20 +20,6 @@ public class MemberService {
     private final JwtUtil jwtUtil;
     private final ScholarShipRepository scholarShipRepository;
 
-
-
-    public void login(LoginDto loginDto) {
-        // 로그인 로직
-        Member member = memberRepository.findByPassword(loginDto.getPassword())
-                .orElseThrow(MemberNotFoundException::new);
-
-    }
-
-    public void signup(SignupDto signupDto) {
-        //회원가입 로직
-
-    }
-
     @Transactional
     public void createInfo(MemberInfoRequest memberInfoRequest) {
         //내 정보 입력 로직
@@ -82,7 +68,6 @@ public class MemberService {
                 .nickname(member.getNickname())
                 .username(member.getUsername())
                 .email(member.getEmail())
-                .password(member.getPassword())
                 .phone(member.getPhone())
                 .university(member.getUniversity())
                 .age(member.getAge())
@@ -96,9 +81,7 @@ public class MemberService {
     private static void updateInfo(UpdateMemberInfoRequest memberInfoRequest, Member loginMember) {
         loginMember.updateInfo(
                 memberInfoRequest.getNickname(),
-                memberInfoRequest.getEmail(),
                 memberInfoRequest.getPhone(),
-                memberInfoRequest.getPassword(),
                 memberInfoRequest.getUniversity(),
                 memberInfoRequest.getAge(),
                 memberInfoRequest.getGender(),
