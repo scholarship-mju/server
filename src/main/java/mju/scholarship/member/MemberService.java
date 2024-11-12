@@ -54,7 +54,6 @@ public class MemberService {
     @Transactional
     public void firstLogin(UpdateMemberInfoRequest firstLoginRequest) {
         Member loginMember = jwtUtil.getLoginMember();
-        log.info("loginMember = {}", loginMember);
 
         loginMember.updateInfo(
                 firstLoginRequest.getNickname(),

@@ -71,7 +71,7 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "사용자 정보 등록 실패", content = @Content)
     })
     @PostMapping("/first-login")
-    public ResponseEntity<ResultResponse> firstLogin(UpdateMemberInfoRequest firstLoginRequest){
+    public ResponseEntity<ResultResponse> firstLogin(@RequestBody UpdateMemberInfoRequest firstLoginRequest){
         memberService.firstLogin(firstLoginRequest);
         return ResponseEntity.ok().body(ResultResponse.of(FirstLoginSuccess));
     }
