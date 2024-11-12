@@ -2,6 +2,7 @@ package mju.scholarship.member;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.dto.*;
 import mju.scholarship.result.exception.MemberNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -52,9 +54,20 @@ public class MemberService {
     @Transactional
     public void firstLogin(UpdateMemberInfoRequest firstLoginRequest) {
         Member loginMember = jwtUtil.getLoginMember();
+        log.info("loginMember = {}", loginMember);
 
-        updateInfo(firstLoginRequest, loginMember);
-        loginMember.updateFirstLogin();
+        loginMember.updateInfo(
+                firstLoginRequest.getNickname(),
+                firstLoginRequest.getPhone(),
+                firstLoginRequest.getUniversity(),
+                firstLoginRequest.getAge(),
+                firstLoginRequest.getGender(),
+                firstLoginRequest.getCity(),
+                firstLoginRequest.getDepartment(),
+                firstLoginRequest.getGrade(),
+                firstLoginRequest.getIncomeQuantile()
+        );
+        memberRepository.save(loginMember);
     }
 
     public MemberResponse getMyInfo() {
@@ -78,17 +91,8 @@ public class MemberService {
                 .build();
     }
 
+    @Transactional
     private static void updateInfo(UpdateMemberInfoRequest memberInfoRequest, Member loginMember) {
-        loginMember.updateInfo(
-                memberInfoRequest.getNickname(),
-                memberInfoRequest.getPhone(),
-                memberInfoRequest.getUniversity(),
-                memberInfoRequest.getAge(),
-                memberInfoRequest.getGender(),
-                memberInfoRequest.getCity(),
-                memberInfoRequest.getDepartment(),
-                memberInfoRequest.getGrade(),
-                memberInfoRequest.getIncomeQuantile()
-        );
+
     }
 }
