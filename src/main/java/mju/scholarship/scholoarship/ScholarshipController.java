@@ -61,13 +61,26 @@ public class ScholarshipController {
         return ResponseEntity.ok().body(scholarshipService.getAllGotScholarships());
     }
 
+    @Operation(summary = "받은 장학금 제거", description = "이미 받은 장학금을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "S207", description = "받은 장학금 제거 성공",
+                    content = @Content(schema = @Schema(implementation = List.class))),
+            @ApiResponse(responseCode = "400", description = "해당 id의 장학금 없음", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content)
+    })
+    @DeleteMapping("/got/{scholarshipId}")
+    public ResponseEntity<ResultResponse> deleteGotScholarship(@PathVariable Long scholarshipId){
+        scholarshipService.deleteScholarship(scholarshipId);
+        return ResponseEntity.ok().body(ResultResponse.of(DeleteGotScholarshipSuccess));
+    }
+
     @Operation(summary = "장학금 찜하기", description = "특정 장학금을 찜 목록에 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "찜한 장학금 추가 성공",
                     content = @Content(schema = @Schema(implementation = ResultResponse.class))),
             @ApiResponse(responseCode = "404", description = "장학금 ID를 찾을 수 없음", content = @Content)
     })
-    @PostMapping("{scholarshipId}/interest")
+    @PostMapping("/interest/{scholarshipId}")
     public ResponseEntity<ResultResponse> addInterestScholarship(@PathVariable @Parameter(description = "장학금 ID") Long scholarshipId) {
         scholarshipService.addInterestScholarship(scholarshipId);
         return ResponseEntity.ok(ResultResponse.of(InterestScholarshipSuccess));

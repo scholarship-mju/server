@@ -160,6 +160,11 @@ public class ScholarshipService {
         memberRepository.save(loginMember);
     }
 
+    @Transactional
+    public void deleteScholarship(Long scholarshipId) {
+        scholarShipRepository.deleteById(scholarshipId);
+    }
+
 
 //    public List<Scholarship> getMyScholarship() {
         // 내 정보 가져오기
