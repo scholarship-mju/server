@@ -24,6 +24,8 @@ public class Member {
      * 유저 관련 데이터
      */
     private String username;
+
+    @Column(unique = true)
     private String nickname;
 
     @Column(unique = true)
@@ -43,6 +45,7 @@ public class Member {
     private Integer grade; // 1.0 - 4.5
     private Integer incomeQuantile; // 1-10
     private boolean isFirstLogin = true;
+    private int total = 0;
 
     // 이미 받은 장학금
     @OneToMany(fetch = FetchType.LAZY)
@@ -74,6 +77,11 @@ public class Member {
     public void addGotScholarship(Scholarship scholarship) {
         gotScholarships.add(scholarship);
     }
+
+    public void addTotal(int price){
+        this.total += price;
+    }
+
 
     public void deleteGotScholarship(Scholarship scholarship) {
         gotScholarships.remove(scholarship);

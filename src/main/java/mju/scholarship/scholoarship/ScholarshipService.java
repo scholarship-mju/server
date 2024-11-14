@@ -67,6 +67,7 @@ public class ScholarshipService {
 
         Member loginMember = jwtUtil.getLoginMember();
         loginMember.addGotScholarship(scholarship);
+        loginMember.addTotal(scholarship.getPrice());
         memberRepository.save(loginMember);
 
     }

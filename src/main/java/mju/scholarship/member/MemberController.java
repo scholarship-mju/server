@@ -74,4 +74,10 @@ public class MemberController {
         memberService.firstLogin(createNewUserRequest);
         return ResponseEntity.ok().body(ResultResponse.of(FirstLoginSuccess));
     }
+
+    @GetMapping("/rank")
+    public ResponseEntity<RankResponse> getRank(){
+        return ResponseEntity.ok().body(memberService.getRank());
+    }
+
 }

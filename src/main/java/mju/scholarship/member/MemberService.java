@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.dto.*;
-import mju.scholarship.result.exception.MemberNotFoundException;
-import mju.scholarship.result.exception.ScholarshipNotFoundException;
 import mju.scholarship.scholoarship.ScholarShipRepository;
-import mju.scholarship.scholoarship.Scholarship;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +44,17 @@ public class MemberService {
     public MemberResponse updateInfo(UpdateMemberInfoRequest memberInfoRequest) {
         Member loginMember = jwtUtil.getLoginMember();
 
-        updateInfo(memberInfoRequest, loginMember);
+        loginMember.updateInfo(
+                memberInfoRequest.getNickname(),
+                memberInfoRequest.getPhone(),
+                memberInfoRequest.getUniversity(),
+                memberInfoRequest.getAge(),
+                memberInfoRequest.getGender(),
+                memberInfoRequest.getCity(),
+                memberInfoRequest.getDepartment(),
+                memberInfoRequest.getGrade(),
+                memberInfoRequest.getIncomeQuantile()
+        );
 
         return createResponseDto(loginMember);
     }
@@ -55,6 +63,7 @@ public class MemberService {
     public void firstLogin(CreateNewUserRequest createNewUserRequest) {
         Member loginMember = jwtUtil.getLoginMember();
 
+        log.info("firstdfaat = {}", createNewUserRequest.getUniversity());
         loginMember.updateInfo(
                 createNewUserRequest.getNickname(),
                 createNewUserRequest.getPhone(),
@@ -91,7 +100,13 @@ public class MemberService {
     }
 
     @Transactional
-    private static void updateInfo(UpdateMemberInfoRequest memberInfoRequest, Member loginMember) {
+    public RankResponse getRank() {
+        PageRequest pageRequest = PageRequest.of(0, 3);
 
+        List<Member> rank = memberRepository.getRank(pageRequest);
+
+        RankResponse rankResponse = new RankResponse();
+        rankResponse.addRanker(rank);
+        return rankResponse;
     }
 }
