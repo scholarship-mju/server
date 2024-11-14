@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,8 +70,8 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "사용자 정보 등록 실패", content = @Content)
     })
     @PostMapping("/first-login")
-    public ResponseEntity<ResultResponse> firstLogin(@RequestBody UpdateMemberInfoRequest firstLoginRequest){
-        memberService.firstLogin(firstLoginRequest);
+    public ResponseEntity<ResultResponse> firstLogin(@RequestBody CreateNewUserRequest createNewUserRequest){
+        memberService.firstLogin(createNewUserRequest);
         return ResponseEntity.ok().body(ResultResponse.of(FirstLoginSuccess));
     }
 }

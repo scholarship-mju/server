@@ -1,12 +1,11 @@
 package mju.scholarship.member.dto;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @Data
-public class UpdateMemberInfoRequest {
+@NoArgsConstructor
+public class CreateNewUserRequest {
 
     private String nickname;
     private String phone;

@@ -52,22 +52,21 @@ public class MemberService {
     }
 
     @Transactional
-    public void firstLogin(UpdateMemberInfoRequest firstLoginRequest) {
+    public void firstLogin(CreateNewUserRequest createNewUserRequest) {
         Member loginMember = jwtUtil.getLoginMember();
 
         loginMember.updateInfo(
-                firstLoginRequest.getNickname(),
-                firstLoginRequest.getPhone(),
-                firstLoginRequest.getUniversity(),
-                firstLoginRequest.getAge(),
-                firstLoginRequest.getGender(),
-                firstLoginRequest.getCity(),
-                firstLoginRequest.getDepartment(),
-                firstLoginRequest.getGrade(),
-                firstLoginRequest.getIncomeQuantile()
+                createNewUserRequest.getNickname(),
+                createNewUserRequest.getPhone(),
+                createNewUserRequest.getUniversity(),
+                createNewUserRequest.getAge(),
+                createNewUserRequest.getGender(),
+                createNewUserRequest.getCity(),
+                createNewUserRequest.getDepartment(),
+                createNewUserRequest.getGrade(),
+                createNewUserRequest.getIncomeQuantile()
         );
         loginMember.updateFirstLogin();
-        memberRepository.save(loginMember);
     }
 
     public MemberResponse getMyInfo() {
