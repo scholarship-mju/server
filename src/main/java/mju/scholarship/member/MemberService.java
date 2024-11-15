@@ -101,7 +101,7 @@ public class MemberService {
 
     @Transactional
     public RankResponse getRank() {
-        PageRequest pageRequest = PageRequest.of(0, 3);
+        PageRequest pageRequest = PageRequest.of(0, 4);
 
         List<Member> rank = memberRepository.getRank(pageRequest);
 
