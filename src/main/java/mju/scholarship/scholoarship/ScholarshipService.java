@@ -2,6 +2,7 @@ package mju.scholarship.scholoarship;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.Member;
 import mju.scholarship.member.MemberRepository;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ScholarshipService {
@@ -163,7 +165,11 @@ public class ScholarshipService {
 
     @Transactional
     public void deleteScholarship(Long scholarshipId) {
-        scholarShipRepository.deleteById(scholarshipId);
+        log.info("id = {}", scholarshipId);
+        Member loginMember = jwtUtil.getLoginMember();
+        Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
+                .orElseThrow(ScholarshipNotFoundException::new);
+        loginMember.deleteGotScholarship(scholarship);
     }
 
 
