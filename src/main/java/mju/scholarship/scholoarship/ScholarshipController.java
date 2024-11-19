@@ -131,8 +131,14 @@ public class ScholarshipController {
         return ResponseEntity.ok().body(scholarshipService.getOneScholarship(scholarshipId));
     }
 
-    // @GetMapping("my-scholarship")
-    // public ResponseEntity<List<Scholarship>> getMyScholarship() {
-    //     return ResponseEntity.ok().body(scholarshipService.getMyScholarship());
-    // }
+    @Operation(summary = "맞춤 장학금 조회", description = "맞춤 장학금 조회.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "장학금 조회 성공",
+                    content = @Content(schema = @Schema(implementation = Scholarship.class))),
+            @ApiResponse(responseCode = "404", description = "장학금 ID를 찾을 수 없음", content = @Content)
+    })
+     @GetMapping("my-scholarship")
+     public ResponseEntity<List<Scholarship>> getMyScholarship() {
+         return ResponseEntity.ok().body(scholarshipService.getMyScholarship());
+     }
 }

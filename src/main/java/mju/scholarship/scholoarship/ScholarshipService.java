@@ -9,12 +9,10 @@ import mju.scholarship.member.MemberRepository;
 import mju.scholarship.result.exception.ScholarshipNotFoundException;
 import mju.scholarship.scholoarship.dto.CreateScholarshipRequest;
 import mju.scholarship.scholoarship.dto.ScholarshipResponse;
-import org.springframework.http.ResponseEntity;
+import mju.scholarship.scholoarship.repository.ScholarShipRepository;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -170,6 +168,14 @@ public class ScholarshipService {
         Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
                 .orElseThrow(ScholarshipNotFoundException::new);
         loginMember.deleteGotScholarship(scholarship);
+    }
+
+    public List<Scholarship> getMyScholarship() {
+        Member loginMember = jwtUtil.getLoginMember();
+
+        List<Scholarship> myScholarships = scholarShipRepository.findMyScholarships(loginMember);
+
+        return myScholarships;
     }
 
 
