@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    MemberNotFoundException(500, "M501", "유저가 존재하지 않습니다"),
+    MemberNotFoundException(500, "M501", "유저가 존재하지 않습니다(토큰오류)"),
     IllegalRegistrationIdException(500, "A501", "Oauth 로그인 오류"),
     TokenException(500, "T501", "정상적인 토큰이 아닙니다"),
     TokenInvalidException(500, "T502", "검증된 토큰이 아닙니다"),
