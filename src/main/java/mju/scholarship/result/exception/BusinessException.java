@@ -1,8 +1,10 @@
 package mju.scholarship.result.exception;
 
+import lombok.Getter;
 import mju.scholarship.result.code.ErrorCode;
 
 
+@Getter
 public class BusinessException extends RuntimeException {
 
     private ErrorCode errorCode;
