@@ -34,10 +34,12 @@ public class ScholarshipService {
                 .price(request.getPrice())
                 .category(request.getCategory())
                 .name(request.getName())
-                .age(request.getAge())
+                .minAge(request.getMinAge())
+                .maxAge(request.getMaxAge())
                 .university(request.getUniversity())
                 .gender(request.getGender())
                 .grade(request.getGrade())
+                .province(request.getProvince())
                 .city(request.getCity())
                 .department(request.getDepartment())
                 .incomeQuantile(request.getIncomeQuantile())
@@ -90,10 +92,12 @@ public class ScholarshipService {
         return ScholarshipResponse.builder()
                 .id(scholarship.getId())
                 .name(scholarship.getName())
-                .age(scholarship.getAge())
+                .minAge(scholarship.getMinAge())
+                .maxAge(scholarship.getMaxAge())
                 .university(scholarship.getUniversity())
                 .gender(scholarship.getGender())
                 .grade(scholarship.getGrade())
+                .province(scholarship.getProvince())
                 .city(scholarship.getCity())
                 .department(scholarship.getDepartment())
                 .incomeQuantile(scholarship.getIncomeQuantile())
@@ -115,8 +119,10 @@ public class ScholarshipService {
                         scholarship.getName(),
                         scholarship.getDescription(),
                         scholarship.getUniversity(),
-                        scholarship.getAge(),
+                        scholarship.getMinAge(),
+                        scholarship.getMaxAge(),
                         scholarship.getGender(),
+                        scholarship.getProvince(),
                         scholarship.getCity(),
                         scholarship.getDepartment(),
                         scholarship.getGrade(),
@@ -139,8 +145,10 @@ public class ScholarshipService {
                         scholarship.getName(),
                         scholarship.getDescription(),
                         scholarship.getUniversity(),
-                        scholarship.getAge(),
+                        scholarship.getMinAge(),
+                        scholarship.getMaxAge(),
                         scholarship.getGender(),
+                        scholarship.getProvince(),
                         scholarship.getCity(),
                         scholarship.getDepartment(),
                         scholarship.getGrade(),
@@ -173,7 +181,7 @@ public class ScholarshipService {
     public List<Scholarship> getMyScholarship() {
         Member loginMember = jwtUtil.getLoginMember();
 
-        List<Scholarship> myScholarships = scholarShipRepository.findMyScholarships(loginMember);
+        List<Scholarship> myScholarships = scholarShipRepository.findMyScholarship(loginMember);
 
         return myScholarships;
     }

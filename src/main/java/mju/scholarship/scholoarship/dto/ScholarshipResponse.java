@@ -24,8 +24,10 @@ public class ScholarshipResponse {
     private Integer price;
     private String category;
     private String university;
-    private Integer age;
+    private Integer minAge;
+    private Integer maxAge;
     private String gender; //enum 으로 할까
+    private String province;
     private String city;
     private String department; // major -> 전공 (?)
     private Integer grade; // 1.0 - 4.5
@@ -38,8 +40,10 @@ public class ScholarshipResponse {
                                String name,
                                String description,
                                String university,
-                               Integer age,
+                               Integer minAge,
+                               Integer maxAge,
                                String gender,
+                               String province,
                                String city,
                                String department,
                                Integer grade,
@@ -50,8 +54,10 @@ public class ScholarshipResponse {
         this.name = name;
         this.description = description;
         this.university = university;
-        this.age = age;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
         this.gender = gender;
+        this.province = province;
         this.city = city;
         this.department = department;
         this.grade = grade;

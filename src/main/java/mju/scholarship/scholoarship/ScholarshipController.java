@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
+import mju.scholarship.result.ErrorResponse;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.scholoarship.dto.CreateScholarshipRequest;
 import mju.scholarship.scholoarship.dto.ScholarshipResponse;
@@ -135,10 +136,12 @@ public class ScholarshipController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "장학금 조회 성공",
                     content = @Content(schema = @Schema(implementation = Scholarship.class))),
-            @ApiResponse(responseCode = "404", description = "장학금 ID를 찾을 수 없음", content = @Content)
+            @ApiResponse(responseCode = "500", description = "서버 에러 발생",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-     @GetMapping("my-scholarship")
-     public ResponseEntity<List<Scholarship>> getMyScholarship() {
-         return ResponseEntity.ok().body(scholarshipService.getMyScholarship());
-     }
+    @GetMapping("my-scholarship")
+    public ResponseEntity<List<Scholarship>> getMyScholarship() {
+        return ResponseEntity.ok().body(scholarshipService.getMyScholarship());
+    }
+
 }

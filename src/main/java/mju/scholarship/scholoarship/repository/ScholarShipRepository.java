@@ -12,15 +12,5 @@ public interface ScholarShipRepository extends JpaRepository<Scholarship, Long> 
 
     Optional<Scholarship> findByName(String name);
 
-    @Query("SELECT s FROM Scholarship s " +
-            "WHERE s.university = :#{#member.university} " +
-            "AND s.age = :#{#member.age} " +
-            "AND s.gender = :#{#member.gender} " +
-            "AND s.city = :#{#member.city} " +
-            "AND s.department = :#{#member.department} " +
-            "AND s.grade = :#{#member.grade} " +
-            "AND s.incomeQuantile = :#{#member.incomeQuantile}")
-    List<Scholarship> findMyScholarships(Member member);
-
 
 }
