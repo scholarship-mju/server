@@ -21,7 +21,7 @@ public class MemberResponse {
     private String gender; //enum 으로 할까
     private String city;
     private String department; // major -> 전공 (?)
-    private Integer grade; // 1.0 - 4.5
+    private Double grade; // 1.0 - 4.5
     private Integer incomeQuantile; // 1-10
 
 

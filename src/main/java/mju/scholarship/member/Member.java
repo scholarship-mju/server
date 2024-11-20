@@ -43,7 +43,7 @@ public class Member {
     private String province;
     private String city;
     private String department; // major -> 전공 (?)
-    private Integer grade; // 1.0 - 4.5
+    private Double grade; // 1.0 - 4.5
     private Integer incomeQuantile; // 1-10
     private boolean isFirstLogin = true;
     private int total = 0;
@@ -94,7 +94,7 @@ public class Member {
                            String gender,
                            String city,
                            String department,
-                           Integer grade,
+                           Double grade,
                            Integer incomeQuantile) {
         this.nickname = nickname;
         this.university = university;
@@ -113,7 +113,7 @@ public class Member {
                            String gender,
                            String city,
                            String department,
-                           Integer grade,
+                           Double grade,
                            Integer incomeQuantile) {
         this.nickname = nickname;
         this.phone = phone;

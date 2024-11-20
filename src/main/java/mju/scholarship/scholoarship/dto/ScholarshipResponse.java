@@ -30,7 +30,7 @@ public class ScholarshipResponse {
     private String province;
     private String city;
     private String department; // major -> 전공 (?)
-    private Integer grade; // 1.0 - 4.5
+    private Double grade; // 1.0 - 4.5
     private Integer incomeQuantile; // 1-10
 
     @Builder
@@ -46,7 +46,7 @@ public class ScholarshipResponse {
                                String province,
                                String city,
                                String department,
-                               Integer grade,
+                               Double grade,
                                Integer incomeQuantile) {
         this.id = id;
         this.price = price;

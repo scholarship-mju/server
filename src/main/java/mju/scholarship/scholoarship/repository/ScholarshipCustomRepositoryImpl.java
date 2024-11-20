@@ -59,7 +59,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
         return scholarship.gender.eq("전체").or(scholarship.gender.eq(genderCond));
     }
 
-    private BooleanExpression gradeEq(Integer gradeCond) {
+    private BooleanExpression gradeEq(Double gradeCond) {
 
         if(gradeCond == null){
             return null;
