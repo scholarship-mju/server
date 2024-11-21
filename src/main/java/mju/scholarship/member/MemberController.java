@@ -86,4 +86,15 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.getRank());
     }
 
+
+    @Operation(summary = "사용자 랭킹 조회 mini", description = "장학금 많이 받은 순위 조회 mini")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "랭킹 조회 성공",
+                    content = @Content(schema = @Schema(implementation = MemberResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    @GetMapping("/rank/mini")
+    public ResponseEntity<RankResponse> getRankMini(){
+        return ResponseEntity.ok().body(memberService.getRankMini());
+    }
 }

@@ -109,4 +109,14 @@ public class MemberService {
         rankResponse.addRanker(rank);
         return rankResponse;
     }
+
+    public RankResponse getRankMini() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        List<Member> rank = memberRepository.getRank(pageRequest);
+
+        RankResponse rankResponse = new RankResponse();
+        rankResponse.addRanker(rank);
+        return rankResponse;
+    }
 }
