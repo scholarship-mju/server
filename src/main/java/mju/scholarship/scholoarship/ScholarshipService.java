@@ -6,12 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.Member;
 import mju.scholarship.member.MemberRepository;
+import mju.scholarship.result.exception.FileUploadException;
 import mju.scholarship.result.exception.ScholarshipNotFoundException;
+import mju.scholarship.s3.S3UploadService;
 import mju.scholarship.scholoarship.dto.CreateScholarshipRequest;
 import mju.scholarship.scholoarship.dto.ScholarshipResponse;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,11 +28,9 @@ public class ScholarshipService {
     private final ScholarShipRepository scholarShipRepository;
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
+    private final S3UploadService s3UploadService;
 
-    /**
-     * 장학금 생성 메소드
-     * @param request
-     */
+
     @Transactional
     public void createScholarship(CreateScholarshipRequest request) {
         Scholarship scholarship = Scholarship.builder()
@@ -184,6 +187,18 @@ public class ScholarshipService {
         List<Scholarship> myScholarships = scholarShipRepository.findMyScholarship(loginMember);
 
         return myScholarships;
+    }
+
+    @Transactional
+    public void validGotScholarship(List<MultipartFile> files) {
+
+        files.forEach(file -> {
+            try {
+                s3UploadService.upload(file, "valid");
+            } catch (IOException e) {
+                throw new FileUploadException();
+            }
+        });
     }
 
 

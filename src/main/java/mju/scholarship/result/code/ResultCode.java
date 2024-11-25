@@ -13,6 +13,7 @@ public enum ResultCode {
     InterestScholarshipSuccess(200, "S205", "장학금 찜하기 성공"),
     DeleteInterestScholarshipSuccess(200, "S206", "찜한 장학금 제거 성공"),
     AddGotScholarshipSuccess(200, "S206", "받은 장학금 등록 성공"),
+    ValidGotScholarshipSuccess(200, "S207", "장학금 검증 사지 등록 성공"),
     DeleteGotScholarshipSuccess(200, "S207", "받은 장학금 제거 성공"),
     FirstLoginSuccess(200, "L201", "첫번째 로그인 성공"),
     ;

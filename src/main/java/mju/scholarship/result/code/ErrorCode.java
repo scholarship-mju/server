@@ -16,6 +16,8 @@ public enum ErrorCode {
     RefreshTokenNotFoundException(500, "T505", "리프레시 토큰을 찾을 수 없음"),
     TokenNotFoundException(500, "T506", "토큰을 찾을 수 없습니다"),
     ScholarshipNotFoundException(500, "S501", "장학금을 찾을 수 없습니다"),
+    FileConvertException(500, "F501", "파일 변환 실패"),
+    FileUploadException(500, "F502", "파일 업로드 실패")
     ;
 
 

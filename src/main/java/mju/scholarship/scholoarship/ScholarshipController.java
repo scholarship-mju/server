@@ -12,8 +12,10 @@ import mju.scholarship.result.ErrorResponse;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.scholoarship.dto.CreateScholarshipRequest;
 import mju.scholarship.scholoarship.dto.ScholarshipResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -45,7 +47,7 @@ public class ScholarshipController {
                     content = @Content(schema = @Schema(implementation = ResultResponse.class))),
             @ApiResponse(responseCode = "404", description = "장학금 ID를 찾을 수 없음", content = @Content)
     })
-    @PostMapping("{scholarshipId}/got")
+    @PostMapping("/got/{scholarshipId}")
     public ResponseEntity<ResultResponse> addGotScholarships(@PathVariable @Parameter(description = "장학금 ID") Long scholarshipId) {
         scholarshipService.addGotScholarships(scholarshipId);
         return ResponseEntity.ok(ResultResponse.of(AddGotScholarshipSuccess));
@@ -104,7 +106,7 @@ public class ScholarshipController {
                     content = @Content(schema = @Schema(implementation = ResultResponse.class))),
             @ApiResponse(responseCode = "404", description = "장학금 ID를 찾을 수 없음", content = @Content)
     })
-    @DeleteMapping("{scholarshipId}/interest")
+    @DeleteMapping("interest/{scholarshipId}")
     public ResponseEntity<ResultResponse> deleteInterestScholarship(@PathVariable @Parameter(description = "장학금 ID") Long scholarshipId) {
         scholarshipService.deleteInterestScholarship(scholarshipId);
         return ResponseEntity.ok(ResultResponse.of(DeleteInterestScholarshipSuccess));
@@ -142,6 +144,16 @@ public class ScholarshipController {
     @GetMapping("my-scholarship")
     public ResponseEntity<List<Scholarship>> getMyScholarship() {
         return ResponseEntity.ok().body(scholarshipService.getMyScholarship());
+    }
+
+    @Operation(summary = "Validate Got Scholarship", description = "유저가 특정 장학금을 획득했는지 확인합니다.")
+    @PostMapping(path = "/got{scholarshipId}/valid", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResultResponse> validGotScholarship(
+            @Parameter(description = "증빙 파일", required = true)
+            @RequestParam("file") List<MultipartFile> files
+    ) {
+        scholarshipService.validGotScholarship(files);
+        return ResponseEntity.ok().body(ResultResponse.of(ValidGotScholarshipSuccess));
     }
 
 }
