@@ -15,6 +15,7 @@ public class CreateNewUserRequest {
     private String university;
     private Integer age;
     private String gender; //enum 으로 할까
+    private String province;
     private String city;
     private String department; // major -> 전공 (?)
     private Double grade; // 1.0 - 4.5

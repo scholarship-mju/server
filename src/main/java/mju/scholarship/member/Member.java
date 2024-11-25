@@ -111,6 +111,7 @@ public class Member {
                            String university,
                            Integer age,
                            String gender,
+                           String province,
                            String city,
                            String department,
                            Double grade,
@@ -120,6 +121,7 @@ public class Member {
         this.university = university;
         this.age = age;
         this.gender = gender;
+        this.province = province;
         this.city = city;
         this.department = department;
         this.grade = grade;

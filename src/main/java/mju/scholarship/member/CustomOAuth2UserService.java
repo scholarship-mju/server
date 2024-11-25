@@ -24,6 +24,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> userAttribute = super.loadUser(userRequest).getAttributes();
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
