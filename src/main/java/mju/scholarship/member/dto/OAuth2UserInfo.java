@@ -2,7 +2,7 @@ package mju.scholarship.member.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import mju.scholarship.member.Member;
+import mju.scholarship.member.entity.Member;
 import mju.scholarship.result.exception.IllegalRegistrationIdException;
 
 import java.util.Map;

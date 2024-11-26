@@ -3,6 +3,8 @@ package mju.scholarship.member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.member.dto.OAuth2UserInfo;
+import mju.scholarship.member.entity.Member;
+import mju.scholarship.member.repository.MemberRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

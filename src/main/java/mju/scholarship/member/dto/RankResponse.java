@@ -2,7 +2,7 @@ package mju.scholarship.member.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mju.scholarship.member.Member;
+import mju.scholarship.member.entity.Member;
 
 import java.util.ArrayList;
 import java.util.List;

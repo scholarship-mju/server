@@ -4,7 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import mju.scholarship.member.Member;
+import mju.scholarship.member.entity.Member;
 import mju.scholarship.scholoarship.Scholarship;
 
 import java.util.List;

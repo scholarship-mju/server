@@ -1,6 +1,5 @@
-package mju.scholarship.member;
+package mju.scholarship.member.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,12 +48,12 @@ public class Member {
     private int total = 0;
 
     // 이미 받은 장학금
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Scholarship> gotScholarships = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberGot> gotScholarships = new ArrayList<>();
 
     // 찜한 장학금
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Scholarship> interestScholarships = new ArrayList<>();
+    private List<MemberInterest> interestScholarships = new ArrayList<>();
 
     @Builder
     public Member(String username, String email) {
@@ -67,26 +66,19 @@ public class Member {
     }
 
 
-    public void addInterestScholarship(Scholarship scholarship) {
-        interestScholarships.add(scholarship);
-    }
-
-    public void deleteInterestScholarship(Scholarship scholarship) {
-        interestScholarships.remove(scholarship);
-    }
-
     public void addGotScholarship(Scholarship scholarship) {
-        gotScholarships.add(scholarship);
+        MemberGot memberGot = MemberGot.builder()
+                .member(this)
+                .scholarship(scholarship)
+                .build();
+
+        gotScholarships.add(memberGot);
     }
 
     public void addTotal(int price){
         this.total += price;
     }
 
-
-    public void deleteGotScholarship(Scholarship scholarship) {
-        gotScholarships.remove(scholarship);
-    }
 
     public void createInfo(String nickname,
                            String university,
