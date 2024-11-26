@@ -6,14 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.entity.MemberGot;
+import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.member.repository.MemberGotRepository;
 import mju.scholarship.member.repository.MemberInterRepository;
 import mju.scholarship.member.repository.MemberRepository;
 import mju.scholarship.member.entity.MemberInterest;
 import mju.scholarship.result.exception.*;
 import mju.scholarship.s3.S3UploadService;
-import mju.scholarship.scholoarship.dto.CreateScholarshipRequest;
-import mju.scholarship.scholoarship.dto.ScholarshipResponse;
+import mju.scholarship.scholoarship.dto.*;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,9 +55,36 @@ public class ScholarshipService {
         scholarShipRepository.save(scholarship);
     }
 
-    public List<Scholarship> getAllScholarships() {
-        return scholarShipRepository.findAll();
+    public List<AllScholarshipResponse> getAllScholarships() {
+        // 현재 로그인된 사용자 가져오기
+        Member loginMember = jwtUtil.getLoginMember();
+
+        // 관심 장학금 ID 리스트 가져오기
+        List<Long> interestedIds = memberInterRepository.findScholarshipIdByMember(loginMember);
+
+        // 전체 장학금 조회 및 관심 여부 설정
+        return scholarShipRepository.findAll().stream()
+                .map(scholarship -> AllScholarshipResponse.builder()
+                        .id(scholarship.getId())
+                        .price(scholarship.getPrice())
+                        .category(scholarship.getCategory())
+                        .name(scholarship.getName())
+                        .description(scholarship.getDescription())
+                        .university(scholarship.getUniversity())
+                        .minAge(scholarship.getMinAge())
+                        .maxAge(scholarship.getMaxAge())
+                        .gender(scholarship.getGender())
+                        .province(scholarship.getProvince())
+                        .city(scholarship.getCity())
+                        .department(scholarship.getDepartment())
+                        .grade(scholarship.getGrade())
+                        .incomeQuantile(scholarship.getIncomeQuantile())
+                        .isInterested(interestedIds.contains(scholarship.getId())) // 관심 여부 체크
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
+
 
     @Transactional
     public void addGotScholarships(Long scholarshipId) {
@@ -77,7 +104,6 @@ public class ScholarshipService {
                 .build();
 
         memberGotRepository.save(memberGot);
-
     }
 
     @Transactional
@@ -119,18 +145,17 @@ public class ScholarshipService {
                 .build();
     }
 
-    public List<ScholarshipResponse> getAllGotScholarships() {
-
+    public List<GotScholarshipResponse> getAllGotScholarships() {
         Member loginMember = jwtUtil.getLoginMember();
 
-        // 관심 장학금 조회 (브릿지 테이블을 통한 조회)
+        // 브릿지 테이블(MemberGot)에서 로그인한 회원의 모든 정보 조회
         List<MemberGot> memberGots = memberGotRepository.findByMember(loginMember);
 
-        // MemberInterest -> ScholarshipResponse 변환
+        // MemberGot -> GotScholarshipResponse 변환
         return memberGots.stream()
                 .map(got -> {
                     Scholarship scholarship = got.getScholarship();
-                    return ScholarshipResponse.builder()
+                    return GotScholarshipResponse.builder()
                             .id(scholarship.getId())
                             .name(scholarship.getName())
                             .minAge(scholarship.getMinAge())
@@ -142,10 +167,12 @@ public class ScholarshipService {
                             .city(scholarship.getCity())
                             .department(scholarship.getDepartment())
                             .incomeQuantile(scholarship.getIncomeQuantile())
+                            .status(got.getStatus()) // MemberGot에서 상태 가져오기
                             .build();
                 })
                 .collect(Collectors.toList());
     }
+
 
     public List<ScholarshipResponse> getAllInterestScholarships() {
 
@@ -211,7 +238,15 @@ public class ScholarshipService {
     }
 
     @Transactional
-    public void validGotScholarship(List<MultipartFile> files) {
+    public void validGotScholarship(Long scholarshipId, List<MultipartFile> files) {
+
+        Member loginMember = jwtUtil.getLoginMember();
+
+        Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
+                .orElseThrow(ScholarshipNotFoundException::new);
+
+        MemberGot memberGot = memberGotRepository.findByMemberAndScholarship(loginMember, scholarship)
+                .orElseThrow(MemberNotFoundException::new);
 
         files.forEach(file -> {
             try {
@@ -219,6 +254,7 @@ public class ScholarshipService {
             } catch (IOException e) {
                 throw new FileUploadException();
             }
+            memberGot.changeStatus(ScholarshipStatus.IN_PROGRESS);
         });
     }
 
@@ -233,6 +269,22 @@ public class ScholarshipService {
                 .orElseThrow(InterestedScholarshipNotFoundException::new);
 
         memberGotRepository.delete(memberGot);
+    }
+
+    @Transactional
+    public void validAddGotScholarship(ValidAddScholarshipRequest request) {
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        Scholarship scholarship = scholarShipRepository.findById(request.getScholarshipId())
+                .orElseThrow(ScholarshipNotFoundException::new);
+
+        MemberGot memberGot = memberGotRepository.findByMemberAndScholarship(member, scholarship)
+                .orElseThrow(GotScholarshipNotFoundException::new);
+
+        memberGot.changeStatus(ScholarshipStatus.VERIFIED);
+
+        member.addTotal(scholarship.getPrice());
     }
 
 

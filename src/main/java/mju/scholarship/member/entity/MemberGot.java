@@ -23,9 +23,19 @@ public class MemberGot {
     @JoinColumn(name = "scholarship_id")
     private Scholarship scholarship;
 
+    @Enumerated(EnumType.ORDINAL) // Enum 값을 정수로 저장
+    @Column(nullable = false)
+    private ScholarshipStatus status = ScholarshipStatus.NOT_VERIFIED;
+
     @Builder
-    public MemberGot(Member member, Scholarship scholarship) {
+    public MemberGot(Member member, Scholarship scholarship, ScholarshipStatus status) {
         this.member = member;
         this.scholarship = scholarship;
+        this.status = status != null ? status : ScholarshipStatus.NOT_VERIFIED;
+    }
+
+    // 상태 변경 메서드
+    public void changeStatus(ScholarshipStatus newStatus) {
+        this.status = newStatus;
     }
 }

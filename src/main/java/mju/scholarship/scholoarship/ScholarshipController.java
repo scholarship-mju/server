@@ -10,8 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.result.ErrorResponse;
 import mju.scholarship.result.ResultResponse;
-import mju.scholarship.scholoarship.dto.CreateScholarshipRequest;
-import mju.scholarship.scholoarship.dto.ScholarshipResponse;
+import mju.scholarship.scholoarship.dto.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,14 +52,25 @@ public class ScholarshipController {
         return ResponseEntity.ok(ResultResponse.of(AddGotScholarshipSuccess));
     }
 
+    @Operation(summary = "받은 장학금 등록 인증 함으로 변경", description = "받은 장학금 인증으로 상태 변경 성공")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증된 장학금으로 변경 성공",
+                    content = @Content(schema = @Schema(implementation = ResultResponse.class))),
+            @ApiResponse(responseCode = "404", description = "장학금 ID를 찾을 수 없음", content = @Content)
+    })
+    @PostMapping("/got/validAdd")
+    public ResponseEntity<ResultResponse> validAddGotScholarship(@RequestBody ValidAddScholarshipRequest request) {
+        scholarshipService.validAddGotScholarship(request);
+        return ResponseEntity.ok(ResultResponse.of(ValidAddGotScholarshipSuccess));
+    }
+
     @Operation(summary = "받은 장학금 조회", description = "이미 받은 장학금을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "받은 장학금 조회 성공",
                     content = @Content(schema = @Schema(implementation = List.class))),
-            @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
     @GetMapping("got")
-    public ResponseEntity<List<ScholarshipResponse>> getAllGotScholarships() {
+    public ResponseEntity<List<GotScholarshipResponse>> getAllGotScholarships() {
         return ResponseEntity.ok().body(scholarshipService.getAllGotScholarships());
     }
 
@@ -119,7 +129,7 @@ public class ScholarshipController {
             @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
     @GetMapping("/all")
-    public ResponseEntity<List<Scholarship>> getAllScholarships() {
+    public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships() {
         return ResponseEntity.ok().body(scholarshipService.getAllScholarships());
     }
 
@@ -147,13 +157,16 @@ public class ScholarshipController {
     }
 
     @Operation(summary = "Validate Got Scholarship", description = "유저가 특정 장학금을 획득했는지 확인합니다.")
-    @PostMapping(path = "/got{scholarshipId}/valid", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/got/{scholarshipId}/valid", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResultResponse> validGotScholarship(
             @Parameter(description = "증빙 파일", required = true)
+            @PathVariable Long scholarshipId,
             @RequestParam("file") List<MultipartFile> files
     ) {
-        scholarshipService.validGotScholarship(files);
+        scholarshipService.validGotScholarship(scholarshipId, files);
         return ResponseEntity.ok().body(ResultResponse.of(ValidGotScholarshipSuccess));
     }
+
+
 
 }
