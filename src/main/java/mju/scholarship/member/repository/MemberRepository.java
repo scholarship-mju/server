@@ -1,5 +1,6 @@
-package mju.scholarship.member;
+package mju.scholarship.member.repository;
 
+import mju.scholarship.member.entity.Member;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

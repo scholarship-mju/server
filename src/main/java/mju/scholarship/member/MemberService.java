@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.dto.*;
+import mju.scholarship.member.entity.Member;
+import mju.scholarship.member.repository.MemberRepository;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

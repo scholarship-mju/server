@@ -73,7 +73,7 @@ public class ScholarshipController {
     })
     @DeleteMapping("/got/{scholarshipId}")
     public ResponseEntity<ResultResponse> deleteGotScholarship(@PathVariable Long scholarshipId){
-        scholarshipService.deleteScholarship(scholarshipId);
+        scholarshipService.deleteGotScholarship(scholarshipId);
         return ResponseEntity.ok().body(ResultResponse.of(DeleteGotScholarshipSuccess));
     }
 

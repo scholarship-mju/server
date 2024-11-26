@@ -2,8 +2,8 @@ package mju.scholarship.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mju.scholarship.member.Member;
-import mju.scholarship.member.MemberRepository;
+import mju.scholarship.member.entity.Member;
+import mju.scholarship.member.repository.MemberRepository;
 import mju.scholarship.result.exception.MemberNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

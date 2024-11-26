@@ -15,7 +15,14 @@ public enum ErrorCode {
     JwtSignatureInvalid(500, "T504", "서명이 검증되지 않음"),
     RefreshTokenNotFoundException(500, "T505", "리프레시 토큰을 찾을 수 없음"),
     TokenNotFoundException(500, "T506", "토큰을 찾을 수 없습니다"),
-    ScholarshipNotFoundException(500, "S501", "장학금을 찾을 수 없습니다"),
+
+    ScholarshipNotFoundException(500, "S507", "장학금을 찾을 수 없습니다"),
+    AlreadyGotScholarshipException(500, "S508", "이미 받은 장학금에 등록되었습니다"),
+    AlreadyInterestedScholarshipException(500, "S509", "이미 찜하였습니다"),
+    GotScholarshipNotFoundException(500, "S510", "이미 받은 장학금을 찾을 수 없습니다"),
+    InterestedScholarshipNotFoundException(500, "S511", "찜한 장학금을 찾을 수 없습니다"),
+
+
     FileConvertException(500, "F501", "파일 변환 실패"),
     FileUploadException(500, "F502", "파일 업로드 실패")
     ;
