@@ -11,7 +11,6 @@ public class MemberResponse {
     private String username;
     private String email;
     private String phone;
-    private String password;
 
     /**
      * 장학금 조건
@@ -19,6 +18,7 @@ public class MemberResponse {
     private String university;
     private Integer age;
     private String gender; //enum 으로 할까
+    private String province;
     private String city;
     private String department; // major -> 전공 (?)
     private Double grade; // 1.0 - 4.5

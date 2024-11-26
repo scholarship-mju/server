@@ -95,6 +95,8 @@ public class MemberService {
                 .university(member.getUniversity())
                 .age(member.getAge())
                 .gender(member.getGender())
+                .grade(member.getGrade())
+                .province(member.getProvince())
                 .city(member.getCity())
                 .department(member.getDepartment())
                 .incomeQuantile(member.getIncomeQuantile())
