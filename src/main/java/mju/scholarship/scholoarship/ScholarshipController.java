@@ -129,8 +129,24 @@ public class ScholarshipController {
             @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
     @GetMapping("/all")
-    public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships() {
-        return ResponseEntity.ok().body(scholarshipService.getAllScholarships());
+    public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
+            @RequestParam(required = false) Integer minAge,
+            @RequestParam(required = false) Integer maxAge,
+            @RequestParam(required = false) String university,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) Integer incomeQuantile
+    ) {
+        ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
+                .minAge(minAge)
+                .maxAge(maxAge)
+                .university(university)
+                .department(department)
+                .gender(gender)
+                .incomeQuantile(incomeQuantile)
+                .build();
+
+        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(filterRequest));
     }
 
     @Operation(summary = "장학금 단건 조회", description = "특정 장학금을 조회합니다.")

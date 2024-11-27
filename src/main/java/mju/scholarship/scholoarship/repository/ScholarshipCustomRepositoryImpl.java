@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.scholoarship.Scholarship;
+import mju.scholarship.scholoarship.dto.ScholarshipFilterRequest;
 
 import java.util.List;
 
@@ -23,8 +24,20 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     @Override
-    public List<Scholarship> findMyScholarship(Member member) {
+    public List<Scholarship> findAllByFilter(ScholarshipFilterRequest filter) {
+        return jpaQueryFactory
+                .selectFrom(scholarship)
+                .where(
+                        universityFilter(filter.getUniversity()),
+                        genderFilter(filter.getGender()),
+                        incomeFilter(filter.getIncomeQuantile()),
+                        departmentFilter(filter.getDepartment()),
+                        ageFilter(filter.getMinAge(), filter.getMaxAge())
+                ).fetch();
+    }
 
+    @Override
+    public List<Scholarship> findMyScholarship(Member member) {
 
         return jpaQueryFactory
                 .selectFrom(scholarship)
@@ -38,6 +51,35 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                         addressEq(member.getProvince(), member.getCity())
                 )
                 .fetch();
+    }
+
+    private BooleanExpression ageFilter(Integer minAge, Integer maxAge) {
+        if (minAge == null && maxAge == null) {
+            return null;
+        }
+        if (minAge != null && maxAge != null) {
+            return scholarship.minAge.goe(minAge).and(scholarship.maxAge.loe(maxAge));
+        }
+        if (minAge != null) {
+            return scholarship.minAge.goe(minAge);
+        }
+        return scholarship.maxAge.loe(maxAge);
+    }
+
+    private BooleanExpression universityFilter(String universityCond) {
+        return universityCond != null ? scholarship.university.eq(universityCond) : null;
+    }
+
+    private BooleanExpression genderFilter(String genderCond) {
+        return genderCond != null ? scholarship.gender.eq(genderCond) : null;
+    }
+
+    private BooleanExpression incomeFilter(Integer incomeQuantileCond) {
+        return incomeQuantileCond != null ? scholarship.incomeQuantile.eq(incomeQuantileCond) : null;
+    }
+
+    private BooleanExpression departmentFilter(String departmentCond) {
+        return departmentCond != null ? scholarship.department.eq(departmentCond) : null;
     }
 
     private BooleanExpression universityEq(String universityCond) {
@@ -62,7 +104,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     private BooleanExpression gradeEq(Double gradeCond) {
 
         if(gradeCond == null){
-            return null;
+            return scholarship.grade.isNull();
         }
 
         // 장학금 최소 학점이 없는 경우 + 최소학점보다 내 학점이 높은 경우
@@ -72,7 +114,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     private BooleanExpression incomeEq(Integer incomeCond) {
 
         if(incomeCond == null){
-            return null;
+            return scholarship.incomeQuantile.isNull();
         }
 
         return scholarship.incomeQuantile.isNull().or(scholarship.incomeQuantile.goe(incomeCond));
@@ -80,7 +122,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
 
     private BooleanExpression departmentEq(String departmentCond) {
         if(departmentCond == null){
-            return null;
+            return scholarship.department.isNull();
         }
 
         return scholarship.department.isNull().or(scholarship.department.eq(departmentCond));
@@ -95,9 +137,8 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     private BooleanExpression addressEq(String provinceCond, String cityCond) {
-        // 1. 하나라도 없으면 null 반환
-        if (provinceCond == null || cityCond == null) {
-            return null;
+        if (provinceCond == null && cityCond == null) {
+            return scholarship.province.isNull().and(scholarship.city.isNull());
         }
 
         // 2. province와 city가 모두 있을 경우 둘 다 일치해야 함
