@@ -160,6 +160,8 @@ public class ScholarshipService {
                             .name(scholarship.getName())
                             .minAge(scholarship.getMinAge())
                             .maxAge(scholarship.getMaxAge())
+                            .price(scholarship.getPrice())
+                            .description(scholarship.getDescription())
                             .university(scholarship.getUniversity())
                             .gender(scholarship.getGender())
                             .grade(scholarship.getGrade())

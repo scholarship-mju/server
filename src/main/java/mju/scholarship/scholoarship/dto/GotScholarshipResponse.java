@@ -22,7 +22,6 @@ public class GotScholarshipResponse {
      * 장학금 조건 데이터
      */
     private Integer price;
-    private String category;
     private String university;
     private Integer minAge;
     private Integer maxAge;
@@ -41,7 +40,6 @@ public class GotScholarshipResponse {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.category = category;
         this.university = university;
         this.minAge = minAge;
         this.maxAge = maxAge;
