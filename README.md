@@ -33,4 +33,7 @@
 
 ## 💡Why?
 ***개발 과정 중에 있었던 어려움이나 기술을 채택한 이유에 대해 설명한 블로그 글입니다***
+
 QueryDsl 사용에 대한 글: <https://onetaek.tistory.com/4>
+
+Spring Security 사용에 대한 글: 
