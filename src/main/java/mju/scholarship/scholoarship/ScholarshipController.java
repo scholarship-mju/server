@@ -172,7 +172,7 @@ public class ScholarshipController {
         return ResponseEntity.ok().body(scholarshipService.getMyScholarship());
     }
 
-    @Operation(summary = "Validate Got Scholarship", description = "유저가 특정 장학금을 획득했는지 확인합니다.")
+    @Operation(summary = "장학금 검증 (사진 첨부)", description = "유저가 특정 장학금을 획득했는지 확인합니다.")
     @PostMapping(path = "/got/{scholarshipId}/valid", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResultResponse> validGotScholarship(
             @Parameter(description = "증빙 파일", required = true)
