@@ -36,9 +36,9 @@ jobs:
         run: |
           mkdir -p ./src/main/resources
           cd ./src/main/resources
-          touch application.properties
           echo "${{ secrets.PROPERTIES }}" > application.properties
         shell: bash
+
 
 
       #test를 제외한 프로젝트 빌드
