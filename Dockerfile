@@ -16,4 +16,4 @@ WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar /app/server.jar
 # 애플리케이션 실행
-CMD ["java", "-jar", "app/server.jar"]
+CMD ["java", "-jar", "/app/server.jar"]
