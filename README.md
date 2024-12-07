@@ -34,6 +34,6 @@
 ## 💡Why?
 ***개발 과정 중에 있었던 어려움이나 기술을 채택한 이유에 대해 설명한 블로그 글입니다***
 
-QueryDsl 사용에 대한 글: <https://onetaek.tistory.com/4>
-
-Spring Security 사용에 대한 글: 
+- 동적쿼리를 위한 QueryDsl 사용에 대한 글: (Spring Boot에서 Querydsl 사용): <https://onetaek.tistory.com/4>
+- 도커를 활용해서 EC2에 서버를 배포하기 까지: (Docker와 Docker compose): <https://onetaek.tistory.com/5>
+- Spring Security 사용에 대한 글: 
