@@ -59,8 +59,12 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            docker stop scholarship || true
-            docker rm scholarship || true
-            docker pull ${{ secrets.DOCKER_REPO }}/scholarship
-            docker run -d --name scholarship -p 8080:8080 ${{ secrets.DOCKER_REPO }}/scholarship
-            docker rmi -f $(docker images -f "dangling=true" -q) || true
+            
+            # 최신 이미지 가져오기
+            docker-compose pull
+            
+            # 기존 컨테이너를 새로운 이미지로 업데이트 및 재시작
+            docker-compose up -d --remove-orphans
+            
+            # 사용하지 않는 이미지 정리
+            docker image prune -f
