@@ -65,7 +65,5 @@ jobs:
             docker-compose pull
             
             # 기존 컨테이너를 새로운 이미지로 업데이트 및 재시작
-            docker-compose up -d --remove-orphans
+            docker-compose up -d
             
-            # 사용하지 않는 이미지 정리
-            docker image prune -f
