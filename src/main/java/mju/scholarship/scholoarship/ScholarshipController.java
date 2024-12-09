@@ -122,7 +122,7 @@ public class ScholarshipController {
         return ResponseEntity.ok(ResultResponse.of(DeleteInterestScholarshipSuccess));
     }
 
-    @Operation(summary = "전체 장학금 조회ㅇㅇㅇㅇㅇ", description = "모든 장학금을 조회합니다.")
+    @Operation(summary = "전체 장학금 조회", description = "모든 장학금을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "전체 장학금 조회 성공",
                     content = @Content(schema = @Schema(implementation = List.class))),
