@@ -32,7 +32,8 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                         genderFilter(filter.getGender()),
                         incomeFilter(filter.getIncomeQuantile()),
                         departmentFilter(filter.getDepartment()),
-                        ageFilter(filter.getMinAge(), filter.getMaxAge())
+                        ageFilter(filter.getMinAge(), filter.getMaxAge()),
+                        nameFilter(filter.getScholarshipName())
                 ).fetch();
     }
 
@@ -52,6 +53,14 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                 )
                 .fetch();
     }
+
+    private BooleanExpression nameFilter(String name){
+        if(name == null){
+            return null;
+        }
+        return scholarship.name.eq(name);
+    }
+
 
     private BooleanExpression ageFilter(Integer minAge, Integer maxAge) {
         if (minAge == null && maxAge == null) {

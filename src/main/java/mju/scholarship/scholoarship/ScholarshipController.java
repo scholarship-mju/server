@@ -135,7 +135,8 @@ public class ScholarshipController {
             @RequestParam(required = false) String university,
             @RequestParam(required = false) String department,
             @RequestParam(required = false) String gender,
-            @RequestParam(required = false) Integer incomeQuantile
+            @RequestParam(required = false) Integer incomeQuantile,
+            @RequestParam(required = false) String scholarshipName
     ) {
         ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
                 .minAge(minAge)
@@ -144,6 +145,7 @@ public class ScholarshipController {
                 .department(department)
                 .gender(gender)
                 .incomeQuantile(incomeQuantile)
+                .scholarshipName(scholarshipName)
                 .build();
 
         return ResponseEntity.ok().body(scholarshipService.getAllScholarships(filterRequest));

@@ -19,4 +19,6 @@ public class ScholarshipFilterRequest {
     private String gender;
 
     private Integer incomeQuantile;
+
+    private String scholarshipName;
 }
