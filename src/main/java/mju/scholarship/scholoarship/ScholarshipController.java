@@ -130,12 +130,19 @@ public class ScholarshipController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
+            @Parameter(description = "최소 나이", example = "18")
             @RequestParam(required = false) Integer minAge,
+            @Parameter(description = "최대 나이", example = "30")
             @RequestParam(required = false) Integer maxAge,
+            @Parameter(description = "대학교 이름", example = "서울대학교")
             @RequestParam(required = false) String university,
+            @Parameter(description = "학과 이름", example = "컴퓨터공학과")
             @RequestParam(required = false) String department,
+            @Parameter(description = "성별", example = "남성")
             @RequestParam(required = false) String gender,
+            @Parameter(description = "소득분위", example = "3")
             @RequestParam(required = false) Integer incomeQuantile,
+            @Parameter(description = "장학금 이름", example = "국가장학금")
             @RequestParam(required = false) String scholarshipName
     ) {
         ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
