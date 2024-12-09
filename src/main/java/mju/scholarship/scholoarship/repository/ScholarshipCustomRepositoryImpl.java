@@ -58,7 +58,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
         if(name == null){
             return null;
         }
-        return scholarship.name.eq(name);
+        return scholarship.name.contains(name);
     }
 
 
