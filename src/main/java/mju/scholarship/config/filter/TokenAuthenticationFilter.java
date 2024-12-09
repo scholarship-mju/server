@@ -32,13 +32,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         // accessToken 검증
         if (tokenProvider.validateToken(accessToken) && tokenProvider.validTokenInRedis(accessToken)) {
-            log.info("Token = {}", accessToken);
             setAuthentication(accessToken);
         } else {
             // 만료되었을 경우 accessToken 재발급
-            log.info("reissueToken 로직 들어옴");
             String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
-            log.info("reissuetoken = {}", reissueAccessToken);
 
             if (StringUtils.hasText(reissueAccessToken)) {
                 setAuthentication(reissueAccessToken);
