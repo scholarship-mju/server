@@ -146,27 +146,31 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     private BooleanExpression addressEq(String provinceCond, String cityCond) {
+        // 1. province와 city가 모두 null인 데이터를 항상 포함
+        BooleanExpression nullCondition = scholarship.province.isNull().and(scholarship.city.isNull());
+
+        // 2. province와 city 조건이 모두 null인 경우
         if (provinceCond == null && cityCond == null) {
-            return scholarship.province.isNull().and(scholarship.city.isNull());
+            return nullCondition;
         }
 
-        // 2. province와 city가 모두 있을 경우 둘 다 일치해야 함
-        if (scholarship.province != null && scholarship.city != null) {
-            return scholarship.province.eq(provinceCond).and(scholarship.city.eq(cityCond));
+        // 3. province와 city가 모두 있는 경우
+        if (provinceCond != null && cityCond != null) {
+            return nullCondition.or(scholarship.province.eq(provinceCond).and(scholarship.city.eq(cityCond)));
         }
 
-        // 3. province만 있을 경우 province만 일치
-        if (scholarship.province != null) {
-            return scholarship.province.eq(provinceCond);
+        // 4. province만 있는 경우
+        if (provinceCond != null) {
+            return nullCondition.or(scholarship.province.eq(provinceCond));
         }
 
-        // 4. city만 있을 경우 city만 일치
-        if (scholarship.city != null) {
-            return scholarship.city.eq(cityCond);
+        // 5. city만 있는 경우
+        if (cityCond != null) {
+            return nullCondition.or(scholarship.city.eq(cityCond));
         }
 
-        // 5. province와 city 모두 없을 경우 (실제로는 첫 조건에서 걸러짐)
-        return null;
+        // 6. 기본적으로 null 조건을 포함
+        return nullCondition;
     }
 
 
