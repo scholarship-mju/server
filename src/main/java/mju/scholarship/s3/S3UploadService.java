@@ -27,16 +27,21 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+    public String upload(MultipartFile multipartFile, String dirName, Long memberId, Long scholarshipId) throws IOException {
 
         File uploadFile = convert(multipartFile)
                 .orElseThrow(FileConvertException::new);
 
-        return upload(uploadFile, dirName);
+        return upload(uploadFile, dirName, memberId, scholarshipId);
     }
 
-    public String upload(File uploadFile, String dirName){
-        final String fileName = dirName + "/" + uploadFile.getName();
+    public String upload(File uploadFile, String dirName, Long memberId, Long scholarshipId) throws IOException {
+
+        String mid = String.valueOf(memberId);
+        String sid = String.valueOf(scholarshipId);
+
+
+        final String fileName = dirName + "/" + uploadFile.getName() + "_" + mid + "_" + sid;
         final String uploadImageUrl = putS3(uploadFile, fileName);
 
         removeNewFile(uploadFile);

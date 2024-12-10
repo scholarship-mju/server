@@ -244,6 +244,8 @@ public class ScholarshipService {
 
         Member loginMember = jwtUtil.getLoginMember();
 
+        String sid = String.valueOf(scholarshipId);
+
         Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
                 .orElseThrow(ScholarshipNotFoundException::new);
 
@@ -252,7 +254,7 @@ public class ScholarshipService {
 
         files.forEach(file -> {
             try {
-                s3UploadService.upload(file, "valid");
+                s3UploadService.upload(file, "valid", loginMember.getId(), scholarshipId);
             } catch (IOException e) {
                 throw new FileUploadException();
             }
