@@ -15,6 +15,12 @@
 - **Docker Compose**를 활용한 서버와 Redis의 컨테이너 통합 관리
 - **AWS EC2** 환경에서 Docker 컨테이너 배포
 
+## API 소개
+서버 url : <http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/>
+<img width="1470" alt="image" src="https://github.com/user-attachments/assets/92dadb3a-4563-485a-9324-02083e68517e">
+<img width="1470" alt="image" src="https://github.com/user-attachments/assets/f14d1ba9-e15b-40fe-a881-16d9e4375209">
+
+
 ## 기술 스택
 
 | **구분**       | **기술/도구**                     |
