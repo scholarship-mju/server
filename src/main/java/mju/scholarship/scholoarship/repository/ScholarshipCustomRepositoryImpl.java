@@ -63,22 +63,16 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
 
 
     private BooleanExpression ageFilter(Integer minAge, Integer maxAge) {
-        // minAge와 maxAge가 null인 장학금은 항상 포함
-        BooleanExpression nullCondition = scholarship.minAge.isNull().and(scholarship.maxAge.isNull());
-
         if (minAge == null && maxAge == null) {
-            return nullCondition;
+            return null;
         }
-
         if (minAge != null && maxAge != null) {
-            return nullCondition.or(scholarship.minAge.goe(minAge).and(scholarship.maxAge.loe(maxAge)));
+            return scholarship.minAge.goe(minAge).and(scholarship.maxAge.loe(maxAge));
         }
-
         if (minAge != null) {
-            return nullCondition.or(scholarship.minAge.goe(minAge));
+            return scholarship.minAge.goe(minAge);
         }
-
-        return nullCondition.or(scholarship.maxAge.loe(maxAge));
+        return scholarship.maxAge.loe(maxAge);
     }
 
     private BooleanExpression universityFilter(String universityCond) {
