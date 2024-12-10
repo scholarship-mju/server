@@ -82,7 +82,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     @GetMapping("/rank")
-    @CrossOrigin(origins = {"http://localhost:3000", "http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com"})
+    @CrossOrigin(origins = {"http://localhost:3000", "http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com", "http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com"})
     public ResponseEntity<RankResponse> getRank(){
         return ResponseEntity.ok().body(memberService.getRank());
     }
@@ -95,7 +95,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     @GetMapping("/rank/mini")
-    @CrossOrigin(origins = {"http://localhost:3000", "http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com"})
+    @CrossOrigin(origins = {"http://localhost:3000", "http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com", "http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com"})
     public ResponseEntity<RankResponse> getRankMini(){
         return ResponseEntity.ok().body(memberService.getRankMini());
     }

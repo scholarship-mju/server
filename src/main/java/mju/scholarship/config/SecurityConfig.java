@@ -48,6 +48,7 @@ public class SecurityConfig {
                     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                     CorsConfiguration config = new CorsConfiguration();
                     config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 도메인 허용
+                    config.addAllowedOrigin("http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com"); // 프론트엔드 도메인 허용
                     config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
                     config.addAllowedHeader("*"); // 모든 헤더 허용
                     config.setAllowCredentials(true); // 인증 정보 허용

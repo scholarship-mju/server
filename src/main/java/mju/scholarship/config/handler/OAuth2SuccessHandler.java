@@ -35,7 +35,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         boolean isFirstLogin = checkNewUser(authentication);
 
         // 토큰과 첫 로그인 여부를 포함하여 리다이렉트 URL 생성
-        String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth/success")
+        String redirectUrl = UriComponentsBuilder.fromUriString("http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com/auth/success")
                 .queryParam("accessToken", accessToken)
                 .queryParam("isFirstLogin", isFirstLogin) // 첫 로그인 여부 추가
                 .build().toUriString();
