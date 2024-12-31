@@ -1,5 +1,6 @@
 # 맞춤 장학금 서비스
-<사진>
+<img width="1470" alt="image" src="https://github.com/user-attachments/assets/f143680f-1607-435b-a916-29ae6986dc8c" />
+
 
 ## 소개
 이 프로젝트는 대학생들에게 장학금 정보를 제공하고, 더 나아가 입력받은 정보를 토대로 맞춤 장학금 정보를 제공하는 서비스의 서버 코드 입니다.
