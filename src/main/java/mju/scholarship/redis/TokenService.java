@@ -18,39 +18,17 @@ public class TokenService {
     private final TokenRepository tokenRepository;
     private final StringRedisTemplate redisTemplate;
 
-    public void deleteRefreshToken(String authToken) {
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(authToken))) {
-            redisTemplate.delete(authToken);
-            tokenRepository.deleteById(authToken);
-            log.info("Redis에서 토큰이 성공적으로 삭제되었습니다.");
-        } else {
-            log.warn("삭제하려는 토큰이 Redis에 존재하지 않습니다.");
-        }
+    public void saveAccessToken(String accessToken) {
+        Token token = new Token(accessToken); // Token 객체 생성
+        tokenRepository.save(token); // Redis에 저장
     }
 
-    @Transactional
-    public boolean validTokenInRedis(String accessToken) {
+    public void deleteAccessToken(String id) {
+        tokenRepository.deleteById(id); // Redis에서 ID로 삭제
+    }
+
+    public boolean validAccessToken(String accessToken) {
         return tokenRepository.findByAccessToken(accessToken).isPresent();
-    }
-
-    @Transactional
-    public void saveOrUpdate(String memberKey, String refreshToken, String accessToken) {
-        Token token = tokenRepository.findByAccessToken(accessToken)
-                .map(o -> o.updateRefreshToken(refreshToken))
-                .orElseGet(() -> new Token(memberKey, refreshToken, accessToken));
-
-        tokenRepository.save(token);
-    }
-
-    public Token findByAccessTokenOrThrow(String accessToken) {
-        return tokenRepository.findByAccessToken(accessToken)
-                .orElseThrow(TokenNotFoundException::new);
-    }
-
-    @Transactional
-    public void updateToken(String accessToken, Token token) {
-        token.updateAccessToken(accessToken);
-        tokenRepository.save(token);
     }
 
 

@@ -6,14 +6,20 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mju.scholarship.config.JwtUtil;
+import mju.scholarship.member.entity.Member;
+import mju.scholarship.member.repository.MemberRepository;
 import mju.scholarship.redis.Token;
+import mju.scholarship.redis.TokenRepository;
 import mju.scholarship.redis.TokenService;
 import mju.scholarship.result.exception.JwtSignatureInvalidException;
+import mju.scholarship.result.exception.MemberNotFoundException;
+import mju.scholarship.result.exception.RefreshTokenNotFoundException;
 import mju.scholarship.result.exception.TokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,24 +31,31 @@ import org.springframework.security.core.GrantedAuthority;
 
 
 import javax.crypto.SecretKey;
+import javax.lang.model.type.ErrorType;
+import java.io.IOException;
+import java.sql.Ref;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class TokenProvider {
 
+    private final TokenRepository tokenRepository;
+    private final JwtUtil jwtUtil;
+    private final MemberRepository memberRepository;
     @Value("${jwt.key}")
     private String key;
     private SecretKey secretKey;
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 10L; // 1시간
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 20L; // 1주일
+
     private static final String KEY_ROLE = "role";
     private final TokenService tokenService;
-    private final StringRedisTemplate redisTemplate;
 
 
     @PostConstruct
@@ -51,13 +64,13 @@ public class TokenProvider {
     }
 
     public String generateAccessToken(Authentication authentication) {
-        return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
+        String accessToken = generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
+        tokenService.saveAccessToken(accessToken);
+        return accessToken;
     }
 
-    public void generateRefreshToken(Authentication authentication, String accessToken) {
-        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
-        log.info("Refresh token: {}", refreshToken);
-        tokenService.saveOrUpdate(authentication.getName(), refreshToken, accessToken); // redis에 저장
+    public String generateRefreshToken(Authentication authentication, String accessToken) {
+        return generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
     }
 
     private String generateToken(Authentication authentication, long expireTime) {
@@ -68,9 +81,12 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
+        log.info("Authentication Authorities: {}", authentication.getAuthorities());
+
         String jwt = Jwts.builder()
                 .subject(authentication.getName())
                 .issuedAt(now)
+                .claim(KEY_ROLE, authorities)
                 .expiration(expiredDate)
                 .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
@@ -81,11 +97,16 @@ public class TokenProvider {
 
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
-        List<SimpleGrantedAuthority> authorities = getAuthorities(claims);
 
-        // 2. security의 User 객체 생성
-        User principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token);
+        // 사용자 ID (subject) 추출
+        String username = claims.getSubject();
+
+        // 권한 정보를 고정값으로 설정 ("USER")
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        // Security의 User 객체 생성
+        User principal = new User(username, "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
     private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
@@ -95,18 +116,54 @@ public class TokenProvider {
 
     public String reissueAccessToken(String accessToken) {
         if (StringUtils.hasText(accessToken)) {
-            log.info("hasText");
-            Token token = tokenService.findByAccessTokenOrThrow(accessToken);
-            String refreshToken = token.getRefreshToken();
+            log.info("accesToken = {}", accessToken);
 
-            if (validTokenInRedis(accessToken)) {
-                log.info("validTokenInRedis");
+            String username = extractUserIdFromAccessToken(accessToken);
+            log.info("username = {}", username);
+            Member member = memberRepository.findByUsername(username)
+                    .orElseThrow(MemberNotFoundException::new);
+            String refreshToken = member.getRefreshToken();
+
+            // 리프레시 토큰 검증 후 괜찮은거면 액세스 토큰 재 발금
+            if (validRefreshToken(refreshToken)) {
                 String reissueAccessToken = generateAccessToken(getAuthentication(refreshToken));
-                tokenService.updateToken(reissueAccessToken, token);
+                log.info("재발급 됨");
                 return reissueAccessToken;
             }
         }
         return null;
+    }
+
+    public String extractUserIdFromAccessToken(String expiredAccessToken) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(expiredAccessToken)
+                    .getBody();
+            return claims.getSubject(); // 사용자 ID 또는 유니크 정보
+        } catch (ExpiredJwtException e) {
+            // 만료된 토큰에서도 Claims를 가져올 수 있음
+            return e.getClaims().getSubject();
+        }
+    }
+
+
+    private boolean validRefreshToken(String refreshToken) {
+        try {
+            // JWT 파싱 및 만료 시간 확인
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretKey) // 서명 키 설정
+                    .build()
+                    .parseClaimsJws(refreshToken)
+                    .getBody();
+
+            Date expiration = claims.getExpiration(); // 만료 시간 가져오기
+            return !expiration.before(new Date()); // 현재 시간보다 미래이면 유효
+        } catch (Exception e) {
+            // 토큰 파싱 실패 또는 만료된 경우
+            return false; // 유효하지 않은 것으로 간주
+        }
     }
 
     public boolean validateToken(String token) {
@@ -119,8 +176,9 @@ public class TokenProvider {
     }
 
     public boolean validTokenInRedis(String token) {
-        return tokenService.validTokenInRedis(token);
+        return tokenService.validAccessToken(token);
     }
+
 
     public Claims parseClaims(String token) {
         try {
@@ -135,8 +193,4 @@ public class TokenProvider {
         }
     }
 
-
-    public void removeTokenFromRedis(String authToken) {
-        tokenService.deleteRefreshToken(authToken);
-    }
 }

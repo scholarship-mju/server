@@ -46,6 +46,7 @@ public class Member {
     private Integer incomeQuantile; // 1-10
     private boolean isFirstLogin = true;
     private int total = 0;
+    private String refreshToken;
 
     // 이미 받은 장학금
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -65,6 +66,9 @@ public class Member {
         isFirstLogin = false;
     }
 
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
 
     public void addGotScholarship(Scholarship scholarship) {
         MemberGot memberGot = MemberGot.builder()
@@ -78,7 +82,6 @@ public class Member {
     public void addTotal(int price){
         this.total += price;
     }
-
 
     public void createInfo(String nickname,
                            String university,
