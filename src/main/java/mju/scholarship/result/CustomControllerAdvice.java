@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class CustomControllerAdvice {
 
-    /**
-     * BusinessException을 처리하고 에러 응답 반환
-     */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
         ErrorCode errorCode = ex.getErrorCode(); // 예외에서 ErrorCode 추출
