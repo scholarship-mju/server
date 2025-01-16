@@ -48,6 +48,8 @@ public class SecurityConfig {
                     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                     CorsConfiguration config = new CorsConfiguration();
                     config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 도메인 허용
+                    config.addAllowedHeader("https://*.vercel.app");
+                    config.addAllowedOrigin("https://taek-scholarship.vercel.app");
                     config.addAllowedOrigin("http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com"); // 프론트엔드 도메인 허용
                     config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
                     config.addAllowedHeader("*"); // 모든 헤더 허용
@@ -64,17 +66,16 @@ public class SecurityConfig {
                 .sessionManagement(c ->
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용하지 않음
 
-                // request 인증, 인가 설정
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(
-                                new AntPathRequestMatcher("/**"),
-                                new AntPathRequestMatcher("/api-docs"),
-                                new AntPathRequestMatcher("/api-docs/**"),
-                                new AntPathRequestMatcher("/swagger-ui/**"),
-                                new AntPathRequestMatcher("/oauth2/authorization/*"),
-                                new AntPathRequestMatcher("/auth/success"))
-                                .permitAll()
-                .anyRequest().authenticated()
+                                        new AntPathRequestMatcher("/**"),
+                                        new AntPathRequestMatcher("/api-docs"),
+                                        new AntPathRequestMatcher("/api-docs/**"),
+                                        new AntPathRequestMatcher("/swagger-ui/**"),
+                                        new AntPathRequestMatcher("/oauth2/authorization/*"),
+                                        new AntPathRequestMatcher("/auth/success")
+                                ).permitAll()
+                                .anyRequest().authenticated()
                 )
 
 //                 oauth2 설정
@@ -83,10 +84,8 @@ public class SecurityConfig {
                         .successHandler(oAuth2SuccessHandler)
                )
 
-//                 jwt 관련 설정
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass())
-
+                .addFilterBefore(new TokenExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions
