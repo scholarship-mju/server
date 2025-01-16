@@ -1,5 +1,8 @@
 package mju.scholarship.member.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum ScholarshipStatus {
 
     NOT_VERIFIED(0),   // 인증안됨
@@ -10,10 +13,6 @@ public enum ScholarshipStatus {
 
     ScholarshipStatus(int value) {
         this.value = value;
-    }
-
-    public int getValue() {
-        return value;
     }
 
     public static ScholarshipStatus fromValue(int value) {

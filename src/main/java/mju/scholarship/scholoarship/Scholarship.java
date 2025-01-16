@@ -1,9 +1,6 @@
 package mju.scholarship.scholoarship;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,55 +10,42 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Scholarship {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "scholarship_id")
     private Long id;
 
-    /**
-     * 장학금 관련 데이터
-     */
-    private String name;
-    private String description;
+    private String name; // 장학금 이름
+    private String detailEligibility; //신청 자격
+    private String price; //
+    private String university; // 대학교
+    private Integer minAge; // 최소 나이
+    private Integer maxAge; // 최대 나이
+    private String gender; // 성별
+    private String startDate; // 신청 시작 날짜
+    private String endDate; // 신청 종료 날짜
+    private String submission; // 제출 파일
+    private String province; // 도/광역시
+    private String city; // 시
+    private String department; // 학과
+    private Double grade; // 학점
+    private Integer incomeQuantile; // 소득분위
 
-    /**
-     * 장학금 조건 데이터
-     */
-    private Integer price;
-    private String category;
-    private String university;
-    private Integer minAge;
-    private Integer maxAge;
-    private String gender; //enum 으로 할까
-    private String province;
-    private String city;
-    private String department; // major -> 전공 (?)
-    private Double grade; // 1.0 - 4.5
-    private Integer incomeQuantile; // 1-10
+    @Enumerated(EnumType.STRING)
+    private ScholarshipProgressStatus progressStatus;
+
 
     @Builder
-    public Scholarship(String name,
-                       Integer price,
-                       String category,
-                       String description,
-                       String university,
-                       Integer minAge,
-                       Integer maxAge,
-                       String gender,
-                       String province,
-                       String city,
-                       String department,
-                       Double grade,
-                       Integer incomeQuantile) {
-
-        this.price = price;
-
-        this.category = category;
+    public Scholarship(String name, String detailEligibility, String price, String university, Integer minAge, Integer maxAge, String gender, String startDate, String endDate, String submission, String province, String city, String department, Double grade, Integer incomeQuantile) {
         this.name = name;
-        this.description = description;
+        this.detailEligibility = detailEligibility;
+        this.price = price;
         this.university = university;
         this.minAge = minAge;
         this.maxAge = maxAge;
         this.gender = gender;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.submission = submission;
         this.province = province;
         this.city = city;
         this.department = department;

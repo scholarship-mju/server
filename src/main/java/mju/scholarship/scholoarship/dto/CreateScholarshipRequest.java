@@ -1,20 +1,25 @@
 package mju.scholarship.scholoarship.dto;
 
 import lombok.Getter;
+import mju.scholarship.scholoarship.Scholarship;
+import mju.scholarship.scholoarship.ScholarshipProgressStatus;
 
 @Getter
 public class CreateScholarshipRequest {
 
-    private Integer price;
-    private String category;
-    private String name;
-    private String university;
-    private Integer minAge;
-    private Integer maxAge;
-    private String gender; //enum 으로 할까
-    private String province;
-    private String city;
-    private String department; // major -> 전공 (?)
-    private Double grade; // 1.0 - 4.5
-    private Integer incomeQuantile; // 1-10
+    private String name; // 장학금 이름
+    private String detailEligibility; //신청 자격
+    private String price; //
+    private String university; // 대학교
+    private Integer minAge; // 최소 나이
+    private Integer maxAge; // 최대 나이
+    private String gender; // 성별
+    private String startDate; // 신청 시작 날짜
+    private String endDate; // 신청 종료 날짜
+    private String submission; // 제출 파일
+    private String province; // 도/광역시
+    private String city; // 시
+    private String department; // 학과
+    private Double grade; // 학점
+    private Integer incomeQuantile; // 소득분위
 }

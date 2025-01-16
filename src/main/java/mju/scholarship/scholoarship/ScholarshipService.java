@@ -38,8 +38,11 @@ public class ScholarshipService {
     @Transactional
     public void createScholarship(CreateScholarshipRequest request) {
         Scholarship scholarship = Scholarship.builder()
+                .name(request.getName())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .detailEligibility(request.getDetailEligibility())
                 .price(request.getPrice())
-                .category(request.getCategory())
                 .name(request.getName())
                 .minAge(request.getMinAge())
                 .maxAge(request.getMaxAge())
@@ -50,6 +53,7 @@ public class ScholarshipService {
                 .city(request.getCity())
                 .department(request.getDepartment())
                 .incomeQuantile(request.getIncomeQuantile())
+
                 .build();
 
         scholarShipRepository.save(scholarship);
@@ -67,9 +71,7 @@ public class ScholarshipService {
                 .map(scholarship -> AllScholarshipResponse.builder()
                         .id(scholarship.getId())
                         .price(scholarship.getPrice())
-                        .category(scholarship.getCategory())
                         .name(scholarship.getName())
-                        .description(scholarship.getDescription())
                         .university(scholarship.getUniversity())
                         .minAge(scholarship.getMinAge())
                         .maxAge(scholarship.getMaxAge())
@@ -158,10 +160,9 @@ public class ScholarshipService {
                     return GotScholarshipResponse.builder()
                             .id(scholarship.getId())
                             .name(scholarship.getName())
+                            .price(scholarship.getPrice())
                             .minAge(scholarship.getMinAge())
                             .maxAge(scholarship.getMaxAge())
-                            .price(scholarship.getPrice())
-                            .description(scholarship.getDescription())
                             .university(scholarship.getUniversity())
                             .gender(scholarship.getGender())
                             .grade(scholarship.getGrade())
@@ -169,8 +170,13 @@ public class ScholarshipService {
                             .city(scholarship.getCity())
                             .department(scholarship.getDepartment())
                             .incomeQuantile(scholarship.getIncomeQuantile())
-                            .status(got.getStatus()) // MemberGot에서 상태 가져오기
+                            .detailEligibility(scholarship.getDetailEligibility())
+                            .startDate(scholarship.getStartDate())
+                            .endDate(scholarship.getEndDate())
+                            .submission(scholarship.getSubmission())
+                            .progressStatus(scholarship.getProgressStatus())
                             .build();
+
                 })
                 .collect(Collectors.toList());
     }
@@ -187,22 +193,25 @@ public class ScholarshipService {
         return interests.stream()
                 .map(interest -> {
                     Scholarship scholarship = interest.getScholarship();
-                    return new ScholarshipResponse(
-                            scholarship.getId(),
-                            scholarship.getPrice(),
-                            scholarship.getCategory(),
-                            scholarship.getName(),
-                            scholarship.getDescription(),
-                            scholarship.getUniversity(),
-                            scholarship.getMinAge(),
-                            scholarship.getMaxAge(),
-                            scholarship.getGender(),
-                            scholarship.getProvince(),
-                            scholarship.getCity(),
-                            scholarship.getDepartment(),
-                            scholarship.getGrade(),
-                            scholarship.getIncomeQuantile()
-                    );
+                    return ScholarshipResponse.builder()
+                            .id(scholarship.getId())
+                            .name(scholarship.getName())
+                            .price(scholarship.getPrice())
+                            .minAge(scholarship.getMinAge())
+                            .maxAge(scholarship.getMaxAge())
+                            .university(scholarship.getUniversity())
+                            .gender(scholarship.getGender())
+                            .grade(scholarship.getGrade())
+                            .province(scholarship.getProvince())
+                            .city(scholarship.getCity())
+                            .department(scholarship.getDepartment())
+                            .incomeQuantile(scholarship.getIncomeQuantile())
+                            .detailEligibility(scholarship.getDetailEligibility())
+                            .startDate(scholarship.getStartDate())
+                            .endDate(scholarship.getEndDate())
+                            .submission(scholarship.getSubmission())
+                            .progressStatus(scholarship.getProgressStatus())
+                            .build();
                 })
                 .collect(Collectors.toList());
     }
@@ -288,7 +297,8 @@ public class ScholarshipService {
 
         memberGot.changeStatus(ScholarshipStatus.VERIFIED);
 
-        member.addTotal(scholarship.getPrice());
+        member.addTotal(Integer.parseInt(scholarship.getPrice())); // 변환된 int 값을 전달
+
     }
 
 
