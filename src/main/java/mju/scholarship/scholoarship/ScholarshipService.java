@@ -15,10 +15,12 @@ import mju.scholarship.result.exception.*;
 import mju.scholarship.s3.S3UploadService;
 import mju.scholarship.scholoarship.dto.*;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,20 @@ public class ScholarshipService {
     private final MemberInterRepository memberInterRepository;
     private final MemberGotRepository memberGotRepository;
     private final S3UploadService s3UploadService;
+
+    // 매일 자정 실행
+    @Scheduled(cron = "0 0 0 * * ?") // cron 표현식: 매일 00:00:00
+    @Transactional
+    public void updateProgressStatus() {
+        List<Scholarship> scholarships = scholarShipRepository.findAll();
+
+        for (Scholarship scholarship : scholarships) {
+            scholarship.updateProgressStatus(); // 상태 업데이트
+        }
+
+        scholarShipRepository.saveAll(scholarships); // 일괄 저장
+        System.out.println("Scholarship progressStatus updated at: " + LocalDate.now());
+    }
 
 
     @Transactional

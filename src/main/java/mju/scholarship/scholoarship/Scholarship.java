@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -32,6 +34,20 @@ public class Scholarship {
 
     @Enumerated(EnumType.STRING)
     private ScholarshipProgressStatus progressStatus;
+
+    public void updateProgressStatus() {
+        LocalDate today = LocalDate.now();
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        if (today.isBefore(start)) {
+            this.progressStatus = ScholarshipProgressStatus.UPCOMING;
+        } else if (!today.isAfter(end)) { // today >= start && today <= end
+            this.progressStatus = ScholarshipProgressStatus.ONGOING;
+        } else {
+            this.progressStatus = ScholarshipProgressStatus.ENDED;
+        }
+    }
 
 
     @Builder
