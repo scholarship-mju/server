@@ -32,6 +32,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
     private final CustomExceptionHandler exceptionHandler;
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        // 로그인 및 공용 엔드포인트를 필터링 대상에서 제외
+        return path.equals("/auth/login") || path.startsWith("/oauth2") || path.equals("/rank");
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -39,7 +46,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String accessToken = resolveToken(request);
-            if (StringUtils.hasText(accessToken) && tokenProvider.validateToken(accessToken)) {
+            if (StringUtils.hasText(accessToken)) {
                 if (tokenProvider.validTokenInRedis(accessToken)) {
                     setAuthentication(accessToken);
                 } else {
@@ -47,7 +54,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 }
             } else {
                 String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
-
                 if (StringUtils.hasText(reissueAccessToken)) {
                     setAuthentication(reissueAccessToken);
                     response.setHeader(AUTHORIZATION, "Bearer " + reissueAccessToken);
