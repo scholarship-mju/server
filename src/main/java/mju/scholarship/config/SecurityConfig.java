@@ -7,6 +7,7 @@ import mju.scholarship.config.handler.*;
 import mju.scholarship.member.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,7 +37,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
-                .requestMatchers("/error", "/favicon.ico", "/api-docs", "swagger-ui/**", "/login", "/rank", "/rank/mini");
+                .requestMatchers("/error", "/favicon.ico", "/api-docs", "swagger-ui/**", "/login", "/rank/mini");
     }
 
     @Bean
@@ -47,13 +48,16 @@ public class SecurityConfig {
                 .cors(cors -> {
                     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                     CorsConfiguration config = new CorsConfiguration();
-                    config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 도메인 허용
-                    config.addAllowedHeader("https://*.vercel.app");
-                    config.addAllowedOrigin("https://taek-scholarship.vercel.app");
-                    config.addAllowedOrigin("http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com"); // 프론트엔드 도메인 허용
+
+                    config.addAllowedOriginPattern("http://localhost:3000"); // 로컬 개발 환경
+                    config.addAllowedOriginPattern("https://*.vercel.app"); // Vercel의 서브도메인
+                    config.addAllowedOriginPattern("http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com");
+
                     config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
                     config.addAllowedHeader("*"); // 모든 헤더 허용
                     config.setAllowCredentials(true); // 인증 정보 허용
+
+                    config.addExposedHeader("Access-Control-Allow-Private-Network");
 
                     source.registerCorsConfiguration("/**", config);
                     cors.configurationSource(source);
@@ -66,17 +70,13 @@ public class SecurityConfig {
                 .sessionManagement(c ->
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용하지 않음
 
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers(
-                                        new AntPathRequestMatcher("/**"),
-                                        new AntPathRequestMatcher("/api-docs"),
-                                        new AntPathRequestMatcher("/api-docs/**"),
-                                        new AntPathRequestMatcher("/swagger-ui/**"),
-                                        new AntPathRequestMatcher("/oauth2/authorization/*"),
-                                        new AntPathRequestMatcher("/auth/success")
-                                ).permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용
+                        .requestMatchers("/rank").permitAll() // /rank 요청 허용
+                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+                        .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )
+
 
 //                 oauth2 설정
                 .oauth2Login(oauth -> // OAuth2 로그인 기능에 대한 여러 설정의 진입점
