@@ -69,7 +69,6 @@ public class ScholarshipService {
                 .city(request.getCity())
                 .department(request.getDepartment())
                 .incomeQuantile(request.getIncomeQuantile())
-
                 .build();
 
         scholarShipRepository.save(scholarship);
@@ -97,6 +96,11 @@ public class ScholarshipService {
                         .department(scholarship.getDepartment())
                         .grade(scholarship.getGrade())
                         .incomeQuantile(scholarship.getIncomeQuantile())
+                        .progressStatus(scholarship.getProgressStatus())
+                        .detailEligibility(scholarship.getDetailEligibility())
+                        .startDate(scholarship.getStartDate())
+                        .endDate(scholarship.getEndDate())
+                        .submission(scholarship.getSubmission())
                         .isInterested(interestedIds.contains(scholarship.getId())) // 관심 여부 체크
                         .build()
                 )
@@ -157,7 +161,13 @@ public class ScholarshipService {
                 .gender(scholarship.getGender())
                 .grade(scholarship.getGrade())
                 .province(scholarship.getProvince())
+                .price(scholarship.getPrice())
                 .city(scholarship.getCity())
+                .progressStatus(scholarship.getProgressStatus())
+                .submission(scholarship.getSubmission())
+                .startDate(scholarship.getStartDate())
+                .endDate(scholarship.getEndDate())
+                .detailEligibility(scholarship.getDetailEligibility())
                 .department(scholarship.getDepartment())
                 .incomeQuantile(scholarship.getIncomeQuantile())
                 .build();
