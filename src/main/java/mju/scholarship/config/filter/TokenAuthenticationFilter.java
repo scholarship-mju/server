@@ -46,13 +46,15 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String accessToken = resolveToken(request);
+            log.info("Access token: {}", accessToken);
             if (StringUtils.hasText(accessToken)) {
                 if (tokenProvider.validTokenInRedis(accessToken)) {
                     setAuthentication(accessToken);
                 } else {
                     throw new IllegalArgumentException("Invalid token in Redis");
                 }
-            } else {
+            }else {
+                //액세스 토큰이 있는데 만료되었을 때
                 String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
                 if (StringUtils.hasText(reissueAccessToken)) {
                     setAuthentication(reissueAccessToken);
