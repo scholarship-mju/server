@@ -22,7 +22,7 @@ import static mju.scholarship.result.code.ResultCode.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("scholarship")
+@RequestMapping("/scholarship")
 @Tag(name = "Scholarship", description = "장학금 관리 API")
 public class ScholarshipController {
 
@@ -69,7 +69,7 @@ public class ScholarshipController {
             @ApiResponse(responseCode = "200", description = "받은 장학금 조회 성공",
                     content = @Content(schema = @Schema(implementation = List.class))),
     })
-    @GetMapping("got")
+    @GetMapping("/got")
     public ResponseEntity<List<GotScholarshipResponse>> getAllGotScholarships() {
         return ResponseEntity.ok().body(scholarshipService.getAllGotScholarships());
     }
@@ -105,7 +105,7 @@ public class ScholarshipController {
                     content = @Content(schema = @Schema(implementation = List.class))),
             @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
-    @GetMapping("interest")
+    @GetMapping("/interest")
     public ResponseEntity<List<ScholarshipResponse>> getAllInterestScholarships() {
         return ResponseEntity.ok().body(scholarshipService.getAllInterestScholarships());
     }
@@ -116,7 +116,7 @@ public class ScholarshipController {
                     content = @Content(schema = @Schema(implementation = ResultResponse.class))),
             @ApiResponse(responseCode = "404", description = "장학금 ID를 찾을 수 없음", content = @Content)
     })
-    @DeleteMapping("interest/{scholarshipId}")
+    @DeleteMapping("/interest/{scholarshipId}")
     public ResponseEntity<ResultResponse> deleteInterestScholarship(@PathVariable @Parameter(description = "장학금 ID") Long scholarshipId) {
         scholarshipService.deleteInterestScholarship(scholarshipId);
         return ResponseEntity.ok(ResultResponse.of(DeleteInterestScholarshipSuccess));

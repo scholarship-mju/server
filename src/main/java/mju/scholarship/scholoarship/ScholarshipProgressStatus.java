@@ -6,6 +6,6 @@ import lombok.Getter;
 public enum ScholarshipProgressStatus {
     UPCOMING,    // 예정
     ONGOING,     // 진행 중
-    ENDED;
+    ENDED; // 종료
 
 }

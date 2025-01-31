@@ -25,7 +25,7 @@ public class ScholarshipResponse {
     private String department; // 학과
     private Double grade; // 학점
     private Integer incomeQuantile; // 소득분위
-    private ScholarshipProgressStatus progressStatus;
+    private ScholarshipProgressStatus progressStatus; // 장학금 신청 상태
 
     @Builder
     public ScholarshipResponse(Long id, String name, String detailEligibility, String price, String university, Integer minAge, Integer maxAge, String gender, String startDate, String endDate, String submission, String province, String city, String department, Double grade, Integer incomeQuantile, ScholarshipProgressStatus progressStatus) {
