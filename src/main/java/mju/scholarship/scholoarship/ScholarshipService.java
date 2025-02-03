@@ -263,7 +263,9 @@ public class ScholarshipService {
 
         files.forEach(file -> {
             try {
-                s3UploadService.upload(file, "valid", loginMember.getId(), scholarshipId);
+                String url = s3UploadService.upload(file, "valid", loginMember.getId(), scholarshipId);
+                log.info("url = {}", url);
+                memberGot.addImageUrl(url);
             } catch (IOException e) {
                 throw new FileUploadException();
             }

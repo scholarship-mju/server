@@ -29,6 +29,7 @@ public class AdminService {
                     .memberName(memberGot.getMember().getNickname())
                     .memberId(memberGot.getMember().getId())
                     .status(memberGot.getStatus())
+                    .imageUrl(memberGot.getImageUrl())
                     .build();
 
             allByStatusResponse.add(memberGotResponse);

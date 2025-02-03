@@ -27,6 +27,8 @@ public class MemberGot {
     @Column(nullable = false)
     private ScholarshipStatus status = ScholarshipStatus.NOT_VERIFIED;
 
+    private String imageUrl;
+
     @Builder
     public MemberGot(Member member, Scholarship scholarship, ScholarshipStatus status) {
         this.member = member;
@@ -37,5 +39,9 @@ public class MemberGot {
     // 상태 변경 메서드
     public void changeStatus(ScholarshipStatus newStatus) {
         this.status = newStatus;
+    }
+
+    public void addImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

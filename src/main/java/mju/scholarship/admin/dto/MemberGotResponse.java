@@ -20,14 +20,16 @@ public class MemberGotResponse {
 
     private ScholarshipStatus status;
 
+    private String imageUrl;
 
     @Builder
-    public MemberGotResponse(Long memberGotId, Long memberId, String memberName, Long scholarshipId, String scholarshipName, ScholarshipStatus status) {
+    public MemberGotResponse(Long memberGotId, Long memberId, String memberName, Long scholarshipId, String scholarshipName, ScholarshipStatus status, String imageUrl) {
         this.memberGotId = memberGotId;
         this.memberId = memberId;
         this.memberName = memberName;
         this.scholarshipId = scholarshipId;
         this.scholarshipName = scholarshipName;
         this.status = status;
+        this.imageUrl = imageUrl;
     }
 }
