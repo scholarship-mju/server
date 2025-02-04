@@ -1,10 +1,20 @@
 package mju.scholarship.admin;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.admin.dto.MemberGotResponse;
+import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.entity.MemberGot;
 import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.member.repository.MemberGotRepository;
+import mju.scholarship.member.repository.MemberRepository;
+import mju.scholarship.result.exception.GotScholarshipNotFoundException;
+import mju.scholarship.result.exception.MemberNotFoundException;
+import mju.scholarship.result.exception.ScholarshipNotFoundException;
+import mju.scholarship.scholoarship.Scholarship;
+import mju.scholarship.scholoarship.ScholarshipService;
+import mju.scholarship.scholoarship.dto.ValidAddScholarshipRequest;
+import mju.scholarship.scholoarship.repository.ScholarShipRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +25,8 @@ import java.util.List;
 public class AdminService {
 
     private final MemberGotRepository memberGotRepository;
+    private final MemberRepository memberRepository;
+    private final ScholarShipRepository scholarShipRepository;
 
     public List<MemberGotResponse> gotScholarshipConfirm(ScholarshipStatus status) {
 
@@ -36,5 +48,21 @@ public class AdminService {
         }
 
         return allByStatusResponse;
+    }
+
+    @Transactional
+    public void validAddGotScholarship(ValidAddScholarshipRequest request) {
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        Scholarship scholarship = scholarShipRepository.findById(request.getScholarshipId())
+                .orElseThrow(ScholarshipNotFoundException::new);
+
+        MemberGot memberGot = memberGotRepository.findByMemberAndScholarship(member, scholarship)
+                .orElseThrow(GotScholarshipNotFoundException::new);
+
+        memberGot.changeStatus(ScholarshipStatus.VERIFIED);
+
+        member.addTotal(Integer.parseInt(scholarship.getPrice())); // 변환된 int 값을 전달
     }
 }

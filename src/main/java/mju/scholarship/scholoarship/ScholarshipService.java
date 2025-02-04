@@ -286,22 +286,7 @@ public class ScholarshipService {
         memberGotRepository.delete(memberGot);
     }
 
-    @Transactional
-    public void validAddGotScholarship(ValidAddScholarshipRequest request) {
-        Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(MemberNotFoundException::new);
 
-        Scholarship scholarship = scholarShipRepository.findById(request.getScholarshipId())
-                .orElseThrow(ScholarshipNotFoundException::new);
-
-        MemberGot memberGot = memberGotRepository.findByMemberAndScholarship(member, scholarship)
-                .orElseThrow(GotScholarshipNotFoundException::new);
-
-        memberGot.changeStatus(ScholarshipStatus.VERIFIED);
-
-        member.addTotal(Integer.parseInt(scholarship.getPrice())); // 변환된 int 값을 전달
-
-    }
 
 
 //    public List<Scholarship> getMyScholarship() {

@@ -52,17 +52,7 @@ public class ScholarshipController {
         return ResponseEntity.ok(ResultResponse.of(AddGotScholarshipSuccess));
     }
 
-    @Operation(summary = "받은 장학금 등록 인증 함으로 변경", description = "받은 장학금 인증으로 상태 변경 성공")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인증된 장학금으로 변경 성공",
-                    content = @Content(schema = @Schema(implementation = ResultResponse.class))),
-            @ApiResponse(responseCode = "404", description = "장학금 ID를 찾을 수 없음", content = @Content)
-    })
-    @PostMapping("/got/validAdd")
-    public ResponseEntity<ResultResponse> validAddGotScholarship(@RequestBody ValidAddScholarshipRequest request) {
-        scholarshipService.validAddGotScholarship(request);
-        return ResponseEntity.ok(ResultResponse.of(ValidAddGotScholarshipSuccess));
-    }
+
 
     @Operation(summary = "받은 장학금 조회", description = "이미 받은 장학금을 조회합니다.")
     @ApiResponses(value = {
