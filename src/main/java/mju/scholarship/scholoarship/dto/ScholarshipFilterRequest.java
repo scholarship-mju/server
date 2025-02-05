@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ScholarshipFilterRequest {
 
-    private Integer minAge;
+    private Integer age;
 
-    private Integer maxAge;
 
     private String university;
 

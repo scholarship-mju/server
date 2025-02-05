@@ -52,8 +52,6 @@ public class ScholarshipController {
         return ResponseEntity.ok(ResultResponse.of(AddGotScholarshipSuccess));
     }
 
-
-
     @Operation(summary = "받은 장학금 조회", description = "이미 받은 장학금을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "받은 장학금 조회 성공",
@@ -120,10 +118,7 @@ public class ScholarshipController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
-            @Parameter(description = "최소 나이", example = "18")
-            @RequestParam(required = false) Integer minAge,
-            @Parameter(description = "최대 나이", example = "30")
-            @RequestParam(required = false) Integer maxAge,
+            @RequestParam(required = false) Integer age,
             @Parameter(description = "대학교 이름", example = "서울대학교")
             @RequestParam(required = false) String university,
             @Parameter(description = "학과 이름", example = "컴퓨터공학과")
@@ -136,8 +131,7 @@ public class ScholarshipController {
             @RequestParam(required = false) String scholarshipName
     ) {
         ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
-                .minAge(minAge)
-                .maxAge(maxAge)
+                .age(age)
                 .university(university)
                 .department(department)
                 .gender(gender)
