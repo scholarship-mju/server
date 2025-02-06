@@ -17,6 +17,7 @@ public class Scholarship {
     private Long id;
 
     private String name; // 장학금 이름
+    @Column(length = 1000)
     private String detailEligibility; //신청 자격
     private String price; //
     private String university; // 대학교
@@ -31,6 +32,9 @@ public class Scholarship {
     private String department; // 학과
     private Double grade; // 학점
     private Integer incomeQuantile; // 소득분위
+    private int minSemester; // 최소 학기
+    private int viewCount = 0;
+    private String scholarshipUrl;
 
     @Enumerated(EnumType.STRING)
     private ScholarshipProgressStatus progressStatus;
@@ -49,9 +53,13 @@ public class Scholarship {
         }
     }
 
+    public void addViewCount() {
+        this.viewCount++;
+    }
 
     @Builder
-    public Scholarship(String name, String detailEligibility, String price, String university, Integer minAge, Integer maxAge, String gender, String startDate, String endDate, String submission, String province, String city, String department, Double grade, Integer incomeQuantile) {
+    public Scholarship(Long id, String name, String detailEligibility, String price, String university, Integer minAge, Integer maxAge, String gender, String startDate, String endDate, String submission, String province, String city, String department, Double grade, Integer incomeQuantile, int minSemester, String scholarshipUrl) {
+        this.id = id;
         this.name = name;
         this.detailEligibility = detailEligibility;
         this.price = price;
@@ -67,5 +75,7 @@ public class Scholarship {
         this.department = department;
         this.grade = grade;
         this.incomeQuantile = incomeQuantile;
+        this.minSemester = minSemester;
+        this.scholarshipUrl = scholarshipUrl;
     }
 }

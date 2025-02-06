@@ -26,9 +26,12 @@ public class ScholarshipResponse {
     private Double grade; // 학점
     private Integer incomeQuantile; // 소득분위
     private ScholarshipProgressStatus progressStatus; // 장학금 신청 상태
+    private int minSemester;
+    private int viewCount;
+    private String scholarshipUrl;
 
     @Builder
-    public ScholarshipResponse(Long id, String name, String detailEligibility, String price, String university, Integer minAge, Integer maxAge, String gender, String startDate, String endDate, String submission, String province, String city, String department, Double grade, Integer incomeQuantile, ScholarshipProgressStatus progressStatus) {
+    public ScholarshipResponse(Long id, String name, String detailEligibility, String price, String university, Integer minAge, Integer maxAge, String gender, String startDate, String endDate, String submission, String province, String city, String department, Double grade, Integer incomeQuantile, ScholarshipProgressStatus progressStatus, int minSemester, int viewCount, String scholarshipUrl) {
         this.id = id;
         this.name = name;
         this.detailEligibility = detailEligibility;
@@ -46,5 +49,6 @@ public class ScholarshipResponse {
         this.grade = grade;
         this.incomeQuantile = incomeQuantile;
         this.progressStatus = progressStatus;
+        this.scholarshipUrl = scholarshipUrl;
     }
 }

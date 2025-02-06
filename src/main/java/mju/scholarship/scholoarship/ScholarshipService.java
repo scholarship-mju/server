@@ -69,6 +69,8 @@ public class ScholarshipService {
                 .city(request.getCity())
                 .department(request.getDepartment())
                 .incomeQuantile(request.getIncomeQuantile())
+                .minSemester(request.getMinSemester())
+                .scholarshipUrl(request.getScholarshipUrl())
                 .build();
 
         scholarShipRepository.save(scholarship);
@@ -89,6 +91,7 @@ public class ScholarshipService {
                         .name(scholarship.getName())
                         .isInterested(interestedIds.contains(scholarship.getId())) // 관심 여부 체크
                         .progressStatus(scholarship.getProgressStatus())
+                        .viewCount(scholarship.getViewCount())
                         .build()
                 )
                 .collect(Collectors.toList());
@@ -135,9 +138,12 @@ public class ScholarshipService {
         memberInterRepository.save(memberInterest);
     }
 
+    @Transactional
     public ScholarshipResponse getOneScholarship(Long scholarshipId) {
         Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
                 .orElseThrow(ScholarshipNotFoundException::new);
+
+        scholarship.addViewCount();
 
         return ScholarshipResponse.builder()
                 .id(scholarship.getId())
@@ -157,6 +163,9 @@ public class ScholarshipService {
                 .detailEligibility(scholarship.getDetailEligibility())
                 .department(scholarship.getDepartment())
                 .incomeQuantile(scholarship.getIncomeQuantile())
+                .minSemester(scholarship.getMinSemester())
+                .viewCount(scholarship.getViewCount())
+                .scholarshipUrl(scholarship.getScholarshipUrl())
                 .build();
     }
 
