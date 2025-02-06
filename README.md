@@ -1,5 +1,6 @@
 # 맞춤 장학금 서비스
-<img width="1470" alt="image" src="https://github.com/user-attachments/assets/f143680f-1607-435b-a916-29ae6986dc8c" />
+<img width="1470" alt="image" src="https://github.com/user-attachments/assets/c60c972e-b815-4fbd-b60e-1cde604cc472" />
+
 
 
 ## 소개
@@ -10,7 +11,6 @@
 - **JWT 및 OAuth2 인증 및 권한 관리**
 - **CRUD 기능**: 데이터 생성, 조회, 수정, 삭제
 - **AWS S3**를 통한 파일 업로드 및 관리
-- **Redis 캐싱**으로 빠른 데이터 처리
 - **QueryDSL**을 활용한 동적 검색 쿼리
 - **Swagger UI**로 직관적인 API 문서 제공
 - **Docker Compose**를 활용한 서버와 Redis의 컨테이너 통합 관리
