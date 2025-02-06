@@ -5,7 +5,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.member.entity.Member;
+import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.scholoarship.Scholarship;
+import mju.scholarship.scholoarship.ScholarshipProgressStatus;
 import mju.scholarship.scholoarship.dto.ScholarshipFilterRequest;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     @Override
-    public List<Scholarship> findAllByFilter(ScholarshipFilterRequest filter) {
+    public List<Scholarship> findAllByFilter(ScholarshipFilterRequest filter, ScholarshipProgressStatus status) {
         return jpaQueryFactory
                 .selectFrom(scholarship)
                 .where(
@@ -33,7 +35,8 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                         incomeFilter(filter.getIncomeQuantile()),
                         departmentFilter(filter.getDepartment()),
                         ageFilter(filter.getAge()),
-                        nameFilter(filter.getScholarshipName())
+                        nameFilter(filter.getScholarshipName()),
+                        statusFilter(status)
                 ).fetch();
     }
 
@@ -52,6 +55,10 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                         addressEq(member.getProvince(), member.getCity())
                 )
                 .fetch();
+    }
+
+    private BooleanExpression statusFilter(ScholarshipProgressStatus status) {
+        return status != null ? scholarship.progressStatus.eq(status) : null;
     }
 
     private BooleanExpression nameFilter(String name){
