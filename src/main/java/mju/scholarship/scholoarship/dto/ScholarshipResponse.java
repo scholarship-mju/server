@@ -49,6 +49,8 @@ public class ScholarshipResponse {
         this.grade = grade;
         this.incomeQuantile = incomeQuantile;
         this.progressStatus = progressStatus;
+        this.minSemester = minSemester;
+        this.viewCount = viewCount;
         this.scholarshipUrl = scholarshipUrl;
     }
 }
