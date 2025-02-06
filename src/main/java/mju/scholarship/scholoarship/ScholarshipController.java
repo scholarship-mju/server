@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.result.ErrorResponse;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.scholoarship.dto.*;
@@ -24,6 +26,7 @@ import static mju.scholarship.result.code.ResultCode.*;
 @RequiredArgsConstructor
 @RequestMapping("/scholarship")
 @Tag(name = "Scholarship", description = "장학금 관리 API")
+@Slf4j
 public class ScholarshipController {
 
     private final ScholarshipService scholarshipService;
@@ -116,7 +119,7 @@ public class ScholarshipController {
                     content = @Content(schema = @Schema(implementation = List.class))),
             @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
-    @GetMapping("/all")
+    @GetMapping("/all/{status}")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
             @RequestParam(required = false) Integer age,
             @Parameter(description = "대학교 이름", example = "서울대학교")
@@ -128,7 +131,8 @@ public class ScholarshipController {
             @Parameter(description = "소득분위", example = "3")
             @RequestParam(required = false) Integer incomeQuantile,
             @Parameter(description = "장학금 이름", example = "국가장학금")
-            @RequestParam(required = false) String scholarshipName
+            @RequestParam(required = false) String scholarshipName,
+            @PathVariable Integer status
     ) {
         ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
                 .age(age)
@@ -139,7 +143,9 @@ public class ScholarshipController {
                 .scholarshipName(scholarshipName)
                 .build();
 
-        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(filterRequest));
+        ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
+        log.info("scholarshipStauts = {}", scholarshipStatus);
+        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(filterRequest, scholarshipStatus));
     }
 
     @Operation(summary = "장학금 단건 조회", description = "특정 장학금을 조회합니다.")
