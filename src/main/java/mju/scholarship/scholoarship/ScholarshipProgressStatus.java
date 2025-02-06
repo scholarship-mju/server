@@ -6,9 +6,10 @@ import mju.scholarship.member.entity.ScholarshipStatus;
 @Getter
 public enum ScholarshipProgressStatus {
 
-    UPCOMING(0),    // 예정
-    ONGOING(1),     // 진행 중
-    ENDED(2); // 종료
+    ALL(0),
+    UPCOMING(1),    // 예정
+    ONGOING(2),     // 진행 중
+    ENDED(3); // 종료
 
     private final int value;
 
