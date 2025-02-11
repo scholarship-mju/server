@@ -15,6 +15,7 @@ import mju.scholarship.result.exception.*;
 import mju.scholarship.s3.S3UploadService;
 import mju.scholarship.scholoarship.dto.*;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +36,9 @@ public class ScholarshipService {
     private final MemberInterRepository memberInterRepository;
     private final MemberGotRepository memberGotRepository;
     private final S3UploadService s3UploadService;
+    private final StringRedisTemplate redisTemplate;
+
+    private static final String VIEW_COUNT_KEY = "scholarship:viewCount:";
 
     // 매일 자정 실행
     @Scheduled(cron = "0 0 0 * * ?") // cron 표현식: 매일 00:00:00
@@ -169,6 +173,50 @@ public class ScholarshipService {
                 .build();
     }
 
+    public ScholarshipResponse getOneScholarshipInRedis(Long scholarshipId) {
+
+        Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
+                .orElseThrow(ScholarshipNotFoundException::new);
+
+        incrementViewCount(scholarshipId);
+
+        int viewCount = getViewCount(scholarshipId);
+
+        return ScholarshipResponse.builder()
+                .id(scholarship.getId())
+                .name(scholarship.getName())
+                .minAge(scholarship.getMinAge())
+                .maxAge(scholarship.getMaxAge())
+                .university(scholarship.getUniversity())
+                .gender(scholarship.getGender())
+                .grade(scholarship.getGrade())
+                .province(scholarship.getProvince())
+                .price(scholarship.getPrice())
+                .city(scholarship.getCity())
+                .progressStatus(scholarship.getProgressStatus())
+                .submission(scholarship.getSubmission())
+                .startDate(scholarship.getStartDate())
+                .endDate(scholarship.getEndDate())
+                .detailEligibility(scholarship.getDetailEligibility())
+                .department(scholarship.getDepartment())
+                .incomeQuantile(scholarship.getIncomeQuantile())
+                .minSemester(scholarship.getMinSemester())
+                .viewCount(viewCount)
+                .scholarshipUrl(scholarship.getScholarshipUrl())
+                .build();
+    }
+
+    public void incrementViewCount(Long scholarshipId) {
+        String key = VIEW_COUNT_KEY + scholarshipId;  // 고유 키 생성
+        redisTemplate.opsForValue().increment(key);
+    }
+
+    public int getViewCount(Long scholarshipId) {
+        String key = VIEW_COUNT_KEY + scholarshipId;
+        String value = redisTemplate.opsForValue().get(key);
+        return value != null ? Integer.parseInt(value) : 0;
+    }
+
     public List<GotScholarshipResponse> getAllGotScholarships() {
         Member loginMember = jwtUtil.getLoginMember();
 
@@ -294,7 +342,6 @@ public class ScholarshipService {
 
         memberGotRepository.delete(memberGot);
     }
-
 
 
 

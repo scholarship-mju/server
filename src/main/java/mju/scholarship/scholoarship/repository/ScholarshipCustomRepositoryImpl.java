@@ -58,7 +58,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     private BooleanExpression statusFilter(ScholarshipProgressStatus status) {
-        return status != null ? scholarship.progressStatus.eq(status) : null;
+        return (status == null || status == ScholarshipProgressStatus.ALL) ? null : scholarship.progressStatus.eq(status);
     }
 
     private BooleanExpression nameFilter(String name){
