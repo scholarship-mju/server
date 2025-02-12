@@ -1,6 +1,10 @@
 package mju.scholarship.review;
 
 import lombok.RequiredArgsConstructor;
+import mju.scholarship.result.ResultResponse;
+import mju.scholarship.review.dto.ReviewRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,4 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/review")
 public class ReviewController {
+
+    private final ReviewService reviewService;
+
+    @PostMapping("")
+    public ResponseEntity<ResultResponse> createReview(ReviewRequest reviewRequest) {
+        reviewService.createReview(reviewRequest);
+    }
+
 }
