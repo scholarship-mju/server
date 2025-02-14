@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.result.exception.ScholarshipNotFoundException;
+import mju.scholarship.review.dto.AllReviewResponse;
 import mju.scholarship.review.dto.ReviewRequest;
 import mju.scholarship.review.dto.ReviewResponse;
 import mju.scholarship.scholoarship.Scholarship;
@@ -55,5 +56,25 @@ public class ReviewService {
         }
 
         return reviewResponseList;
+    }
+
+    public List<AllReviewResponse> getAllReview() {
+
+        List<Review> allReview = reviewRepository.findAll();
+
+        List<AllReviewResponse> allReviewResponseList = new ArrayList<>();
+
+        for (Review review : allReview) {
+            AllReviewResponse response = AllReviewResponse.builder()
+                    .content(review.getContent())
+                    .price(review.getPrice())
+                    .reviewId(review.getId())
+                    .scholarshipName(review.getScholarship().getName())
+                    .likes(review.getLikes())
+                    .build();
+            allReviewResponseList.add(response);
+        }
+
+        return allReviewResponseList;
     }
 }

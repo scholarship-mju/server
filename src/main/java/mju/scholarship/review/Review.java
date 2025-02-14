@@ -27,6 +27,8 @@ public class Review extends BaseTimeEntity {
 
     private int likes = 0;
 
+    private String price;
+
     public void addLikes(){
         this.likes++;
     }

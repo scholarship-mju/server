@@ -3,6 +3,7 @@ package mju.scholarship.review;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.result.code.ResultCode;
+import mju.scholarship.review.dto.AllReviewResponse;
 import mju.scholarship.review.dto.ReviewRequest;
 import mju.scholarship.review.dto.ReviewResponse;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,10 @@ public class ReviewController {
     @GetMapping("/{scholarshipId}")
     public ResponseEntity<List<ReviewResponse>> getScholarshipReview(@PathVariable Long scholarshipId) {
         return ResponseEntity.ok().body(reviewService.getScholarshipReview(scholarshipId));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AllReviewResponse>> getAllReviews() {
+        return ResponseEntity.ok().body(reviewService.getAllReview());
     }
 }
