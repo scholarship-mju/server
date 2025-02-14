@@ -2,6 +2,7 @@ package mju.scholarship.review;
 
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.result.ResultResponse;
+import mju.scholarship.result.code.ResultCode;
 import mju.scholarship.review.dto.ReviewRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ public class ReviewController {
     @PostMapping("")
     public ResponseEntity<ResultResponse> createReview(ReviewRequest reviewRequest) {
         reviewService.createReview(reviewRequest);
+        ResponseEntity.ok().body(ResultResponse.of(ResultCode.CreateReviewSuccess));
     }
 
 }
