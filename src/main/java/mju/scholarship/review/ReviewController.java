@@ -26,6 +26,5 @@ public class ReviewController {
     @GetMapping("/{scholarshipId}")
     public ResponseEntity<List<ReviewResponse>> getScholarshipReview(@PathVariable Long scholarshipId) {
         return ResponseEntity.ok().body(reviewService.getScholarshipReview(scholarshipId));
-
-
+    }
 }
