@@ -2,6 +2,7 @@ package mju.scholarship.review;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.scholoarship.Scholarship;
@@ -9,6 +10,7 @@ import mju.scholarship.util.BaseTimeEntity;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Review extends BaseTimeEntity {
 
     @Id
