@@ -15,6 +15,7 @@ import mju.scholarship.result.exception.*;
 import mju.scholarship.s3.S3UploadService;
 import mju.scholarship.scholoarship.dto.*;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,6 +40,8 @@ public class ScholarshipService {
     private final MemberGotRepository memberGotRepository;
     private final S3UploadService s3UploadService;
     private final StringRedisTemplate redisTemplate;
+    private static final int BATCH_SIZE = 10; // 100개씩 모아서 실행
+    private final ConcurrentHashMap<Long, AtomicInteger> localCounter = new ConcurrentHashMap<>();
 
     private static final String VIEW_COUNT_KEY = "scholarship:viewCount:";
 
@@ -178,7 +183,7 @@ public class ScholarshipService {
         Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
                 .orElseThrow(ScholarshipNotFoundException::new);
 
-        incrementViewCount(scholarshipId);
+        incrementViewCountBatchAndPipe(scholarshipId);
 
         int viewCount = getViewCount(scholarshipId);
 
@@ -209,6 +214,36 @@ public class ScholarshipService {
     public void incrementViewCount(Long scholarshipId) {
         String key = VIEW_COUNT_KEY + scholarshipId;  // 고유 키 생성
         redisTemplate.opsForValue().increment(key);
+    }
+
+    public void incrementViewCountBatch(Long scholarshipId) {
+        String key = VIEW_COUNT_KEY + scholarshipId;
+        redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            connection.stringCommands().incr(key.getBytes()); // 여러 요청을 한 번에 처리
+            return null;
+        });
+    }
+
+    public void incrementViewCountBatchAndPipe(Long scholarshipId) {
+        localCounter.putIfAbsent(scholarshipId, new AtomicInteger(0));
+        int currentCount = localCounter.get(scholarshipId).incrementAndGet();
+
+        // 한번에 10개씩 모아서 전송
+        if (currentCount >= BATCH_SIZE) {
+            synchronized (this) {
+                if (localCounter.get(scholarshipId).get() >= BATCH_SIZE) {
+                    String key = VIEW_COUNT_KEY + scholarshipId;
+
+                    // 🚀 Pipeline 적용: 네트워크 오버헤드 최소화!
+                    redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+                        connection.stringCommands().incrBy(key.getBytes(), currentCount);
+                        return null;
+                    });
+
+                    localCounter.get(scholarshipId).set(0); // 로컬 카운터 초기화
+                }
+            }
+        }
     }
 
     public int getViewCount(Long scholarshipId) {
