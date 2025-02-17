@@ -2,6 +2,7 @@ package mju.scholarship.review;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.result.exception.ScholarshipNotFoundException;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReviewService {
 
     private final JwtUtil jwtUtil;
@@ -52,6 +54,7 @@ public class ReviewService {
             ReviewResponse reviewResponse = ReviewResponse.builder()
                     .content(review.getContent())
                     .memberName(review.getMember().getNickname())
+                    .id(review.getId())
                     .likes(review.getLikes())
                     .build();
             reviewResponseList.add(reviewResponse);
@@ -65,6 +68,7 @@ public class ReviewService {
         List<Review> allReview = reviewRepository.findAll();
 
         List<AllReviewResponse> allReviewResponseList = new ArrayList<>();
+
 
         for (Review review : allReview) {
             AllReviewResponse response = AllReviewResponse.builder()

@@ -20,8 +20,10 @@ public class ReviewResponse {
 
     private int likes;
 
+
     @Builder
-    public ReviewResponse(String memberName, String content, int likes) {
+    public ReviewResponse(Long id, String memberName, String content, int likes) {
+        this.id = id;
         this.memberName = memberName;
         this.content = content;
         this.likes = likes;
