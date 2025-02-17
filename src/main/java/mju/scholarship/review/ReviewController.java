@@ -10,6 +10,7 @@ import mju.scholarship.review.dto.ReviewResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.transform.Result;
 import java.util.List;
 
 @RestController
@@ -39,6 +40,12 @@ public class ReviewController {
     public ResponseEntity<ResultResponse> likeReview(@PathVariable Long reviewId){
         reviewService.likeReview(reviewId);
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.LikeReviewSuccess));
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<ResultResponse> deleteReview(@PathVariable Long reviewId){
+        reviewService.deleteReview(reviewId);
+        return ResponseEntity.ok().body(ResultResponse.of(ResultCode.DeleteReviewSuccess));
     }
 
 

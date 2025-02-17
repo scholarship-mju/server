@@ -18,7 +18,8 @@ public enum ResultCode {
     ValidAddGotScholarshipSuccess(200, "S208", "인증된 받은 장학금 추가"),
     FirstLoginSuccess(200, "L201", "첫번째 로그인 성공"),
     CreateReviewSuccess(200, "R001", "리뷰 생성 성공"),
-    LikeReviewSuccess(200, "R002", "리뷰 좋아요 성공")
+    LikeReviewSuccess(200, "R002", "리뷰 좋아요 성공"),
+    DeleteReviewSuccess(200, "R003", "리뷰 삭제 성공")
     ;
 
     private final int status;

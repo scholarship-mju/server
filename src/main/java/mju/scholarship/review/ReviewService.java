@@ -70,7 +70,6 @@ public class ReviewService {
 
         List<AllReviewResponse> allReviewResponseList = new ArrayList<>();
 
-
         for (Review review : allReview) {
             AllReviewResponse response = AllReviewResponse.builder()
                     .content(review.getContent())
@@ -92,5 +91,11 @@ public class ReviewService {
                 .orElseThrow(ReviewNotFoundException::new);
 
         review.addLikes();
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId) {
+
+        reviewRepository.deleteById(reviewId);
     }
 }
