@@ -19,7 +19,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("")
-    public ResponseEntity<ResultResponse> createReview(ReviewRequest reviewRequest) {
+    public ResponseEntity<ResultResponse> createReview(@RequestBody ReviewRequest reviewRequest) {
         reviewService.createReview(reviewRequest);
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.CreateReviewSuccess));
     }

@@ -20,7 +20,8 @@ public class Review extends BaseTimeEntity {
     @ManyToOne
     private Scholarship scholarship;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "member_id")
     private Member member;
 
     private String content;
