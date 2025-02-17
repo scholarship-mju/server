@@ -1,5 +1,6 @@
 package mju.scholarship.review;
 
+import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.result.code.ResultCode;
@@ -33,6 +34,13 @@ public class ReviewController {
     public ResponseEntity<List<AllReviewResponse>> getAllReviews() {
         return ResponseEntity.ok().body(reviewService.getAllReview());
     }
+
+    @PostMapping("/{reviewId}/like")
+    public ResponseEntity<ResultResponse> likeReview(@PathVariable Long reviewId){
+        reviewService.likeReview(reviewId);
+        return ResponseEntity.ok().body(ResultResponse.of(ResultCode.LikeReviewSuccess));
+    }
+
 
 
 
