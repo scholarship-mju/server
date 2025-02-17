@@ -24,7 +24,10 @@ public enum ErrorCode {
 
 
     FileConvertException(500, "F501", "파일 변환 실패"),
-    FileUploadException(500, "F502", "파일 업로드 실패")
+    FileUploadException(500, "F502", "파일 업로드 실패"),
+
+
+    ReviewNotFoundException(500, "R001", "리뷰를 찾을 수 없습니다")
     ;
 
 
