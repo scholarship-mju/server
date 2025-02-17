@@ -14,15 +14,15 @@ public class ReviewResponse {
 
     private Long id;
 
-    private Member member;
+    private String memberName;
 
     private String content;
 
     private int likes;
 
     @Builder
-    public ReviewResponse(Member member, String content, int likes) {
-        this.member = member;
+    public ReviewResponse(String memberName, String content, int likes) {
+        this.memberName = memberName;
         this.content = content;
         this.likes = likes;
     }

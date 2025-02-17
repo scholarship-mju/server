@@ -32,11 +32,13 @@ public class ReviewService {
         Scholarship scholarship = scholarShipRepository.findById(reviewRequest.getScholarshipId())
                 .orElseThrow(ScholarshipNotFoundException::new);
 
-        Review.builder()
+        Review review = Review.builder()
                 .member(loginMember)
                 .content(reviewRequest.getContent())
                 .scholarship(scholarship)
                 .build();
+
+        reviewRepository.save(review);
 
     }
 
@@ -49,7 +51,7 @@ public class ReviewService {
         for(Review review : reviewList) {
             ReviewResponse reviewResponse = ReviewResponse.builder()
                     .content(review.getContent())
-                    .member(review.getMember())
+                    .memberName(review.getMember().getNickname())
                     .likes(review.getLikes())
                     .build();
             reviewResponseList.add(reviewResponse);
@@ -71,6 +73,7 @@ public class ReviewService {
                     .reviewId(review.getId())
                     .scholarshipName(review.getScholarship().getName())
                     .likes(review.getLikes())
+                    .memberName(review.getMember().getNickname())
                     .build();
             allReviewResponseList.add(response);
         }
