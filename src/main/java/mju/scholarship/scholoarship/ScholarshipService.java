@@ -40,7 +40,7 @@ public class ScholarshipService {
     private final MemberGotRepository memberGotRepository;
     private final S3UploadService s3UploadService;
     private final StringRedisTemplate redisTemplate;
-    private static final int BATCH_SIZE = 10; // 100개씩 모아서 실행
+    private static final int BATCH_SIZE = 1; // 100개씩 모아서 실행
     private final ConcurrentHashMap<Long, AtomicInteger> localCounter = new ConcurrentHashMap<>();
 
     private static final String VIEW_COUNT_KEY = "scholarship:viewCount:";
@@ -262,11 +262,13 @@ public class ScholarshipService {
         return memberGots.stream()
                 .map(got -> {
                     Scholarship scholarship = got.getScholarship();
+
                     return GotScholarshipResponse.builder()
                             .id(scholarship.getId())
                             .name(scholarship.getName())
                             .price(scholarship.getPrice())
                             .status(got.getStatus())
+                            .viewCount(getViewCount(scholarship.getId()))
                             .build();
 
                 })
