@@ -156,13 +156,10 @@ public class ScholarshipController {
     })
     @GetMapping("{scholarshipId}")
     public ResponseEntity<ScholarshipResponse> getOneScholarship(@PathVariable @Parameter(description = "장학금 ID") Long scholarshipId) {
-        return ResponseEntity.ok().body(scholarshipService.getOneScholarship(scholarshipId));
-    }
-
-    @GetMapping("/{scholarshipId}/redis")
-    public ResponseEntity<ScholarshipResponse> getOneScholarshipInRedis(@PathVariable Long scholarshipId) {
         return ResponseEntity.ok().body(scholarshipService.getOneScholarshipInRedis(scholarshipId));
     }
+
+
 
     @Operation(summary = "맞춤 장학금 조회", description = "맞춤 장학금 조회.")
     @ApiResponses(value = {
