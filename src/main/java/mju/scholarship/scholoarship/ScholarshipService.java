@@ -100,7 +100,7 @@ public class ScholarshipService {
                         .name(scholarship.getName())
                         .isInterested(interestedIds.contains(scholarship.getId())) // 관심 여부 체크
                         .progressStatus(scholarship.getProgressStatus())
-                        .viewCount(scholarship.getViewCount())
+                        .viewCount(getViewCount(scholarship.getId()))
                         .build()
                 )
                 .collect(Collectors.toList());
