@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
     boolean existsByMemberAndReview(Member member, Review review);
+
+    Like findByMemberAndReview(Member member, Review review);
 }

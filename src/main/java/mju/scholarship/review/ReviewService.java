@@ -6,11 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.result.exception.AlreadyLikeReview;
+import mju.scholarship.result.exception.NotFoundLikeReview;
 import mju.scholarship.result.exception.ReviewNotFoundException;
 import mju.scholarship.result.exception.ScholarshipNotFoundException;
 import mju.scholarship.review.dto.AllReviewResponse;
 import mju.scholarship.review.dto.ReviewRequest;
 import mju.scholarship.review.dto.ReviewResponse;
+import mju.scholarship.review.entity.Like;
 import mju.scholarship.review.entity.Review;
 import mju.scholarship.scholoarship.Scholarship;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
@@ -108,5 +110,25 @@ public class ReviewService {
     public void deleteReview(Long reviewId) {
 
         reviewRepository.deleteById(reviewId);
+    }
+
+    @Transactional
+    public void cancelLikeReview(Long reviewId) {
+        Member loginMember = jwtUtil.getLoginMember();
+
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(ReviewNotFoundException::new);
+
+        boolean alreadyLike = likeRepository.existsByMemberAndReview(loginMember, review);
+
+        Like like = likeRepository.findByMemberAndReview(loginMember,review);
+
+        if(!alreadyLike) {
+            throw new NotFoundLikeReview();
+        }
+
+        review.minusLikes();
+
+        likeRepository.delete(like);
     }
 }

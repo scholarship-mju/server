@@ -29,6 +29,7 @@ public enum ErrorCode {
 
     ReviewNotFoundException(500, "R001", "리뷰를 찾을 수 없습니다"),
     AlreadyLikeReview(500, "R002", "이미 좋아요를 누른 리뷰입니다"),
+    NotFoundLikeReview(500, "R003", "리뷰에 좋아요를 누르지 않았습니다"),
     ;
 
 

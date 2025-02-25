@@ -34,6 +34,8 @@ public class Review extends BaseTimeEntity {
         this.likes++;
     }
 
+    public void minusLikes(){this.likes--;}
+
     @Builder
     public Review(Scholarship scholarship, Member member, String content) {
         this.scholarship = scholarship;
