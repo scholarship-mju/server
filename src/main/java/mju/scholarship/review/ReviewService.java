@@ -10,9 +10,9 @@ import mju.scholarship.result.exception.ScholarshipNotFoundException;
 import mju.scholarship.review.dto.AllReviewResponse;
 import mju.scholarship.review.dto.ReviewRequest;
 import mju.scholarship.review.dto.ReviewResponse;
+import mju.scholarship.review.entity.Review;
 import mju.scholarship.scholoarship.Scholarship;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
-import org.hibernate.query.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

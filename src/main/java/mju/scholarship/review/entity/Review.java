@@ -1,4 +1,4 @@
-package mju.scholarship.review;
+package mju.scholarship.review.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
