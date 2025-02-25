@@ -6,4 +6,5 @@ public class AlreadyLikeReview extends BusinessException {
 
     public AlreadyLikeReview() {
         super(ErrorCode.AlreadyLikeReview);
+    }
 }
