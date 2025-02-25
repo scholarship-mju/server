@@ -27,7 +27,8 @@ public enum ErrorCode {
     FileUploadException(500, "F502", "파일 업로드 실패"),
 
 
-    ReviewNotFoundException(500, "R001", "리뷰를 찾을 수 없습니다")
+    ReviewNotFoundException(500, "R001", "리뷰를 찾을 수 없습니다"),
+    AlreadyLikeReview(500, "R002", "이미 좋아요를 누른 리뷰입니다"),
     ;
 
 

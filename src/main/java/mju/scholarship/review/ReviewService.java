@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
+import mju.scholarship.result.exception.AlreadyLikeReview;
 import mju.scholarship.result.exception.ReviewNotFoundException;
 import mju.scholarship.result.exception.ScholarshipNotFoundException;
 import mju.scholarship.review.dto.AllReviewResponse;
@@ -26,6 +27,7 @@ public class ReviewService {
     private final JwtUtil jwtUtil;
     private final ScholarShipRepository scholarShipRepository;
     private final ReviewRepository reviewRepository;
+    private final LikeRepository likeRepository;
 
 
     @Transactional
@@ -87,8 +89,17 @@ public class ReviewService {
 
     @Transactional
     public void likeReview(Long reviewId) {
+
+        Member loginMember = jwtUtil.getLoginMember();
+
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
+
+        boolean alreadyLike = likeRepository.existsByMemberAndReview(loginMember, review);
+
+        if(alreadyLike) {
+            throw new AlreadyLikeReview();
+        }
 
         review.addLikes();
     }
