@@ -104,6 +104,13 @@ public class ReviewService {
         }
 
         review.addLikes();
+
+        ReviewLike reviewLike = ReviewLike.builder()
+                .review(review)
+                .member(loginMember)
+                .build();
+
+        reviewLikeRepository.save(reviewLike);
     }
 
     @Transactional
@@ -115,11 +122,11 @@ public class ReviewService {
 
         boolean alreadyLike = reviewLikeRepository.existsByMemberAndReview(loginMember, review);
 
-        ReviewLike like = reviewLikeRepository.findByMemberAndReview(loginMember,review);
-
         if(!alreadyLike) {
             throw new NotFoundLikeReview();
         }
+
+        ReviewLike like = reviewLikeRepository.findByMemberAndReview(loginMember,review);
 
         review.minusLikes();
 
