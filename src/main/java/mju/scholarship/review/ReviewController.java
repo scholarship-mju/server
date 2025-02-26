@@ -42,7 +42,7 @@ public class ReviewController {
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.LikeReviewSuccess));
     }
 
-    @PostMapping("/{reviewId}/dislike")
+    @PostMapping("/{reviewId}/like/cancel")
     public ResponseEntity<ResultResponse> cancelLikeReview(@PathVariable Long reviewId){
         reviewService.cancelLikeReview(reviewId);
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.CancelLikeReview));

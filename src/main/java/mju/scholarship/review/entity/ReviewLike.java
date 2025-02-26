@@ -11,7 +11,7 @@ import mju.scholarship.member.entity.Member;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Like {
+public class ReviewLike {
 
     @Id @GeneratedValue
     private Long id;

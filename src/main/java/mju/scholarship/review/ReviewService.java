@@ -12,8 +12,8 @@ import mju.scholarship.result.exception.ScholarshipNotFoundException;
 import mju.scholarship.review.dto.AllReviewResponse;
 import mju.scholarship.review.dto.ReviewRequest;
 import mju.scholarship.review.dto.ReviewResponse;
-import mju.scholarship.review.entity.Like;
 import mju.scholarship.review.entity.Review;
+import mju.scholarship.review.entity.ReviewLike;
 import mju.scholarship.scholoarship.Scholarship;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class ReviewService {
     private final JwtUtil jwtUtil;
     private final ScholarShipRepository scholarShipRepository;
     private final ReviewRepository reviewRepository;
-    private final LikeRepository likeRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
 
 
     @Transactional
@@ -97,7 +97,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
 
-        boolean alreadyLike = likeRepository.existsByMemberAndReview(loginMember, review);
+        boolean alreadyLike = reviewLikeRepository.existsByMemberAndReview(loginMember, review);
 
         if(alreadyLike) {
             throw new AlreadyLikeReview();
@@ -107,21 +107,15 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(Long reviewId) {
-
-        reviewRepository.deleteById(reviewId);
-    }
-
-    @Transactional
     public void cancelLikeReview(Long reviewId) {
         Member loginMember = jwtUtil.getLoginMember();
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
 
-        boolean alreadyLike = likeRepository.existsByMemberAndReview(loginMember, review);
+        boolean alreadyLike = reviewLikeRepository.existsByMemberAndReview(loginMember, review);
 
-        Like like = likeRepository.findByMemberAndReview(loginMember,review);
+        ReviewLike like = reviewLikeRepository.findByMemberAndReview(loginMember,review);
 
         if(!alreadyLike) {
             throw new NotFoundLikeReview();
@@ -129,6 +123,12 @@ public class ReviewService {
 
         review.minusLikes();
 
-        likeRepository.delete(like);
+        reviewLikeRepository.delete(like);
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId) {
+
+        reviewRepository.deleteById(reviewId);
     }
 }
