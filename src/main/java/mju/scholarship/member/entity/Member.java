@@ -79,8 +79,8 @@ public class Member {
         gotScholarships.add(memberGot);
     }
 
-    public void addTotal(int price){
-        this.total += price;
+    public void addTotal(){
+        this.total ++;
     }
 
     public void createInfo(String nickname,

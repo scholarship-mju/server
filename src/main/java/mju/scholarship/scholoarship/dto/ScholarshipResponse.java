@@ -1,5 +1,6 @@
 package mju.scholarship.scholoarship.dto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Builder;
@@ -11,46 +12,48 @@ public class ScholarshipResponse {
 
     private Long id;
     private String name; // 장학금 이름
-    private String detailEligibility; //신청 자격
-    private String price; //
-    private String university; // 대학교
-    private Integer minAge; // 최소 나이
-    private Integer maxAge; // 최대 나이
-    private String gender; // 성별
     private String startDate; // 신청 시작 날짜
     private String endDate; // 신청 종료 날짜
-    private String submission; // 제출 파일
-    private String province; // 도/광역시
-    private String city; // 시
-    private String department; // 학과
-    private Double grade; // 학점
-    private Integer incomeQuantile; // 소득분위
-    private ScholarshipProgressStatus progressStatus; // 장학금 신청 상태
-    private int minSemester;
-    private int viewCount;
+    private String organizationName; // 운영기관명
+    private String financialAidType; // 학자금유형구분
+    private String universityType; // 대학구분
+    private String gradeType; // 학년구분
+    private String departmentType; // 학과구분
+    private String gradeRequirement; // 성적기준
+    private String incomeRequirement; // 소득기준
+    private String supportDetails; // 지원내역
+    private String specialQualification; // 특정자격
+    private String residencyRequirement; // 지역거주여부
+    private String selectionMethod; // 선발방법
+    private Integer selectionCount; // 선발인원
+    private String eligibilityRestriction; // 자격제한
+    private Boolean recommendationRequired; // 추천필요여부
+    private String  submitDocumentDetail; //제출 서류 상세 내용
     private String scholarshipUrl;
+    private ScholarshipProgressStatus progressStatus;
 
     @Builder
-    public ScholarshipResponse(Long id, String name, String detailEligibility, String price, String university, Integer minAge, Integer maxAge, String gender, String startDate, String endDate, String submission, String province, String city, String department, Double grade, Integer incomeQuantile, ScholarshipProgressStatus progressStatus, int minSemester, int viewCount, String scholarshipUrl) {
+    public ScholarshipResponse(Long id, String name, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, Integer selectionCount, String eligibilityRestriction, Boolean recommendationRequired, String submitDocumentDetail, String scholarshipUrl, ScholarshipProgressStatus progressStatus) {
         this.id = id;
         this.name = name;
-        this.detailEligibility = detailEligibility;
-        this.price = price;
-        this.university = university;
-        this.minAge = minAge;
-        this.maxAge = maxAge;
-        this.gender = gender;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.submission = submission;
-        this.province = province;
-        this.city = city;
-        this.department = department;
-        this.grade = grade;
-        this.incomeQuantile = incomeQuantile;
-        this.progressStatus = progressStatus;
-        this.minSemester = minSemester;
-        this.viewCount = viewCount;
+        this.organizationName = organizationName;
+        this.financialAidType = financialAidType;
+        this.universityType = universityType;
+        this.gradeType = gradeType;
+        this.departmentType = departmentType;
+        this.gradeRequirement = gradeRequirement;
+        this.incomeRequirement = incomeRequirement;
+        this.supportDetails = supportDetails;
+        this.specialQualification = specialQualification;
+        this.residencyRequirement = residencyRequirement;
+        this.selectionMethod = selectionMethod;
+        this.selectionCount = selectionCount;
+        this.eligibilityRestriction = eligibilityRestriction;
+        this.recommendationRequired = recommendationRequired;
+        this.submitDocumentDetail = submitDocumentDetail;
         this.scholarshipUrl = scholarshipUrl;
+        this.progressStatus = progressStatus;
     }
 }

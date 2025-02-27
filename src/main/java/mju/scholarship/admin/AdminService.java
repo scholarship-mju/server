@@ -63,6 +63,6 @@ public class AdminService {
 
         memberGot.changeStatus(ScholarshipStatus.VERIFIED);
 
-        member.addTotal(Integer.parseInt(scholarship.getPrice())); // 변환된 int 값을 전달
+        member.addTotal();
     }
 }

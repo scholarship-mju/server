@@ -31,17 +31,17 @@ public class ScholarshipController {
 
     private final ScholarshipService scholarshipService;
 
-    @Operation(summary = "장학금 생성", description = "새로운 장학금을 생성합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "장학금 생성 성공",
-                    content = @Content(schema = @Schema(implementation = ResultResponse.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content)
-    })
-    @PostMapping("/create")
-    public ResponseEntity<ResultResponse> createScholarship(@RequestBody @Parameter(description = "생성할 장학금 정보") CreateScholarshipRequest scholarship) {
-        scholarshipService.createScholarship(scholarship);
-        return ResponseEntity.ok(ResultResponse.of(CreateScholarshipSuccess));
-    }
+//    @Operation(summary = "장학금 생성", description = "새로운 장학금을 생성합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "장학금 생성 성공",
+//                    content = @Content(schema = @Schema(implementation = ResultResponse.class))),
+//            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content)
+//    })
+//    @PostMapping("/create")
+//    public ResponseEntity<ResultResponse> createScholarship(@RequestBody @Parameter(description = "생성할 장학금 정보") CreateScholarshipRequest scholarship) {
+//        scholarshipService.createScholarship(scholarship);
+//        return ResponseEntity.ok(ResultResponse.of(CreateScholarshipSuccess));
+//    }
 
     @Operation(summary = "받은 장학금 등록", description = "이미 받은 장학금을 등록합니다.")
     @ApiResponses(value = {
@@ -97,7 +97,7 @@ public class ScholarshipController {
             @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
     @GetMapping("/interest")
-    public ResponseEntity<List<ScholarshipResponse>> getAllInterestScholarships() {
+    public ResponseEntity<List<InterestedScholarshipResponse>> getAllInterestScholarships() {
         return ResponseEntity.ok().body(scholarshipService.getAllInterestScholarships());
     }
 

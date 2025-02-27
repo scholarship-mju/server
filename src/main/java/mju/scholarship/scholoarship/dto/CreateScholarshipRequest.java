@@ -22,6 +22,6 @@ public class CreateScholarshipRequest {
     private String department; // 학과
     private Double grade; // 학점
     private Integer incomeQuantile; // 소득분위
-    private int minSemester;
-    private String scholarshipUrl;
+    private int minSemester; // 최소 학기
+    private String scholarshipUrl; // 관련 사이트 url
 }

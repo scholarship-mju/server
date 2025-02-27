@@ -60,31 +60,6 @@ public class ScholarshipService {
     }
 
 
-    @Transactional
-    public void createScholarship(CreateScholarshipRequest request) {
-        Scholarship scholarship = Scholarship.builder()
-                .name(request.getName())
-                .startDate(request.getStartDate())
-                .endDate(request.getEndDate())
-                .detailEligibility(request.getDetailEligibility())
-                .price(request.getPrice())
-                .name(request.getName())
-                .minAge(request.getMinAge())
-                .maxAge(request.getMaxAge())
-                .university(request.getUniversity())
-                .gender(request.getGender())
-                .grade(request.getGrade())
-                .province(request.getProvince())
-                .city(request.getCity())
-                .department(request.getDepartment())
-                .incomeQuantile(request.getIncomeQuantile())
-                .minSemester(request.getMinSemester())
-                .scholarshipUrl(request.getScholarshipUrl())
-                .build();
-
-        scholarShipRepository.save(scholarship);
-    }
-
     public List<AllScholarshipResponse> getAllScholarships(ScholarshipFilterRequest filterRequest, ScholarshipProgressStatus status) {
         // 현재 로그인된 사용자 가져오기
         Member loginMember = jwtUtil.getLoginMember();
@@ -96,7 +71,7 @@ public class ScholarshipService {
         return scholarShipRepository.findAllByFilter(filterRequest, status).stream()
                 .map(scholarship -> AllScholarshipResponse.builder()
                         .id(scholarship.getId())
-                        .price(scholarship.getPrice())
+                        .supportDetails(scholarship.getSupportDetails())
                         .name(scholarship.getName())
                         .isInterested(interestedIds.contains(scholarship.getId())) // 관심 여부 체크
                         .progressStatus(scholarship.getProgressStatus())
@@ -147,37 +122,6 @@ public class ScholarshipService {
         memberInterRepository.save(memberInterest);
     }
 
-    @Transactional
-    public ScholarshipResponse getOneScholarship(Long scholarshipId) {
-        Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
-                .orElseThrow(ScholarshipNotFoundException::new);
-
-        scholarship.addViewCount();
-
-        return ScholarshipResponse.builder()
-                .id(scholarship.getId())
-                .name(scholarship.getName())
-                .minAge(scholarship.getMinAge())
-                .maxAge(scholarship.getMaxAge())
-                .university(scholarship.getUniversity())
-                .gender(scholarship.getGender())
-                .grade(scholarship.getGrade())
-                .province(scholarship.getProvince())
-                .price(scholarship.getPrice())
-                .city(scholarship.getCity())
-                .progressStatus(scholarship.getProgressStatus())
-                .submission(scholarship.getSubmission())
-                .startDate(scholarship.getStartDate())
-                .endDate(scholarship.getEndDate())
-                .detailEligibility(scholarship.getDetailEligibility())
-                .department(scholarship.getDepartment())
-                .incomeQuantile(scholarship.getIncomeQuantile())
-                .minSemester(scholarship.getMinSemester())
-                .viewCount(scholarship.getViewCount())
-                .scholarshipUrl(scholarship.getScholarshipUrl())
-                .build();
-    }
-
     public ScholarshipResponse getOneScholarshipInRedis(Long scholarshipId) {
 
         Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
@@ -190,24 +134,24 @@ public class ScholarshipService {
         return ScholarshipResponse.builder()
                 .id(scholarship.getId())
                 .name(scholarship.getName())
-                .minAge(scholarship.getMinAge())
-                .maxAge(scholarship.getMaxAge())
-                .university(scholarship.getUniversity())
-                .gender(scholarship.getGender())
-                .grade(scholarship.getGrade())
-                .province(scholarship.getProvince())
-                .price(scholarship.getPrice())
-                .city(scholarship.getCity())
-                .progressStatus(scholarship.getProgressStatus())
-                .submission(scholarship.getSubmission())
-                .startDate(scholarship.getStartDate())
+                .supportDetails(scholarship.getSupportDetails())
+                .departmentType(scholarship.getDepartmentType())
                 .endDate(scholarship.getEndDate())
-                .detailEligibility(scholarship.getDetailEligibility())
-                .department(scholarship.getDepartment())
-                .incomeQuantile(scholarship.getIncomeQuantile())
-                .minSemester(scholarship.getMinSemester())
-                .viewCount(viewCount)
                 .scholarshipUrl(scholarship.getScholarshipUrl())
+                .eligibilityRestriction(scholarship.getEligibilityRestriction())
+                .financialAidType(scholarship.getFinancialAidType())
+                .gradeRequirement(scholarship.getGradeRequirement())
+                .gradeType(scholarship.getGradeType())
+                .incomeRequirement(scholarship.getIncomeRequirement())
+                .organizationName(scholarship.getOrganizationName())
+                .startDate(scholarship.getStartDate())
+                .residencyRequirement(scholarship.getResidencyRequirement())
+                .selectionCount(scholarship.getSelectionCount())
+                .selectionMethod(scholarship.getSelectionMethod())
+                .specialQualification(scholarship.getSpecialQualification())
+                .submitDocumentDetail(scholarship.getSubmitDocumentDetail())
+                .universityType(scholarship.getUniversityType())
+                .recommendationRequired(scholarship.getRecommendationRequired())
                 .build();
     }
 
@@ -266,7 +210,7 @@ public class ScholarshipService {
                     return GotScholarshipResponse.builder()
                             .id(scholarship.getId())
                             .name(scholarship.getName())
-                            .price(scholarship.getPrice())
+                            .supportDetails(scholarship.getSupportDetails())
                             .status(got.getStatus())
                             .viewCount(getViewCount(scholarship.getId()))
                             .build();
@@ -276,7 +220,7 @@ public class ScholarshipService {
     }
 
 
-    public List<ScholarshipResponse> getAllInterestScholarships() {
+    public List<InterestedScholarshipResponse> getAllInterestScholarships() {
 
         Member loginMember = jwtUtil.getLoginMember();
 
@@ -287,23 +231,10 @@ public class ScholarshipService {
         return interests.stream()
                 .map(interest -> {
                     Scholarship scholarship = interest.getScholarship();
-                    return ScholarshipResponse.builder()
+                    return InterestedScholarshipResponse.builder()
                             .id(scholarship.getId())
                             .name(scholarship.getName())
-                            .price(scholarship.getPrice())
-                            .minAge(scholarship.getMinAge())
-                            .maxAge(scholarship.getMaxAge())
-                            .university(scholarship.getUniversity())
-                            .gender(scholarship.getGender())
-                            .grade(scholarship.getGrade())
-                            .province(scholarship.getProvince())
-                            .city(scholarship.getCity())
-                            .department(scholarship.getDepartment())
-                            .incomeQuantile(scholarship.getIncomeQuantile())
-                            .detailEligibility(scholarship.getDetailEligibility())
-                            .startDate(scholarship.getStartDate())
-                            .endDate(scholarship.getEndDate())
-                            .submission(scholarship.getSubmission())
+                            .supportDetails(scholarship.getSupportDetails())
                             .progressStatus(scholarship.getProgressStatus())
                             .build();
                 })
