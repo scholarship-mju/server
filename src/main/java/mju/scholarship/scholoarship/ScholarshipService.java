@@ -152,6 +152,7 @@ public class ScholarshipService {
                 .submitDocumentDetail(scholarship.getSubmitDocumentDetail())
                 .universityType(scholarship.getUniversityType())
                 .recommendationRequired(scholarship.getRecommendationRequired())
+                .viewCount(viewCount)
                 .build();
     }
 

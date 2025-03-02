@@ -31,9 +31,10 @@ public class ScholarshipResponse {
     private String  submitDocumentDetail; //제출 서류 상세 내용
     private String scholarshipUrl;
     private ScholarshipProgressStatus progressStatus;
+    private int viewCount;
 
     @Builder
-    public ScholarshipResponse(Long id, String name, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, Integer selectionCount, String eligibilityRestriction, Boolean recommendationRequired, String submitDocumentDetail, String scholarshipUrl, ScholarshipProgressStatus progressStatus) {
+    public ScholarshipResponse(int viewCount, Long id, String name, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, Integer selectionCount, String eligibilityRestriction, Boolean recommendationRequired, String submitDocumentDetail, String scholarshipUrl, ScholarshipProgressStatus progressStatus) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -55,5 +56,6 @@ public class ScholarshipResponse {
         this.submitDocumentDetail = submitDocumentDetail;
         this.scholarshipUrl = scholarshipUrl;
         this.progressStatus = progressStatus;
+        this.viewCount = viewCount;
     }
 }
