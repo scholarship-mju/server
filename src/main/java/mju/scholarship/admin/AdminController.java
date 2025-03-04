@@ -17,8 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static mju.scholarship.result.code.ResultCode.UploadScholarshipSuccess;
-import static mju.scholarship.result.code.ResultCode.ValidAddGotScholarshipSuccess;
+import static mju.scholarship.result.code.ResultCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +33,6 @@ public class AdminController {
         return ResponseEntity.ok().body(adminService.gotScholarshipConfirm(scholarshipStatus));
     }
 
-
     @PostMapping("/got/validAdd")
     public ResponseEntity<ResultResponse> validAddGotScholarship(@RequestBody ValidAddScholarshipRequest request) {
         adminService.validAddGotScholarship(request);
@@ -45,5 +43,12 @@ public class AdminController {
     public ResponseEntity<ResultResponse> uploadScholarshipCsv(@RequestParam("file") MultipartFile file) {
         adminService.uploadScholarshipCsv(file);
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
+    }
+
+    // TODO : 나중에는 스케줄링으로 돌리기 (자정에)
+    @PostMapping("/progressStatus")
+    public ResponseEntity<ResultResponse> setProgressStatus(){
+        adminService.setProgressStatus();
+        return ResponseEntity.ok().body(ResultResponse.of(SetProgressStatusSuccess));
     }
 }

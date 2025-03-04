@@ -122,4 +122,12 @@ public class AdminService {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+    @Transactional
+    public void setProgressStatus() {
+        List<Scholarship> all = scholarShipRepository.findAll();
+        for (Scholarship scholarship : all) {
+            scholarship.updateProgressStatusConvert();
+        }
+    }
 }

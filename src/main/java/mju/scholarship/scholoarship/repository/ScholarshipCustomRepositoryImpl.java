@@ -35,7 +35,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
 //                        incomeFilter(filter.getIncomeQuantile()),
 //                        departmentFilter(filter.getDepartment()),
 //                        nameFilter(filter.getScholarshipName()),
-//                        statusFilter(status)
+                        statusFilter(status)
                 ).fetch();
     }
 
@@ -56,9 +56,9 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                 .fetch();
     }
 
-//    private BooleanExpression statusFilter(ScholarshipProgressStatus status) {
-//        return (status == null || status == ScholarshipProgressStatus.ALL) ? null : scholarship.progressStatus.eq(status);
-//    }
+    private BooleanExpression statusFilter(ScholarshipProgressStatus status) {
+        return (status == null || status == ScholarshipProgressStatus.ALL) ? null : scholarship.progressStatus.eq(status);
+    }
 //
 //    private BooleanExpression nameFilter(String name){
 //        if(name == null){

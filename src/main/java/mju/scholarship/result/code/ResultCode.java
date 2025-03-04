@@ -19,6 +19,7 @@ public enum ResultCode {
     ValidGotScholarshipSuccess(200, "S207", "장학금 검증 사지 등록 성공"),
     DeleteGotScholarshipSuccess(200, "S207", "받은 장학금 제거 성공"),
     ValidAddGotScholarshipSuccess(200, "S208", "인증된 받은 장학금 추가"),
+    SetProgressStatusSuccess(200, "S209", "장학금 상태 세팅 성공"),
 
     //
     FirstLoginSuccess(200, "L201", "첫번째 로그인 성공"),

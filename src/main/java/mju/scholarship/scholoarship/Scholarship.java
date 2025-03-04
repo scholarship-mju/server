@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Entity
 @NoArgsConstructor
@@ -50,6 +52,10 @@ public class Scholarship {
 
     private int viewCount = 0;
 
+    /**
+     * db에 저장된 방법으로 날짜 계산
+     * csv 파일로 변환하기 전에 excel에서 날짜 형식 yyyy-mm-dd 형식으로 변환하는 작업 필요
+     */
     public void updateProgressStatus() {
         LocalDate today = LocalDate.now();
         LocalDate start = LocalDate.parse(startDate);
@@ -61,6 +67,32 @@ public class Scholarship {
             this.progressStatus = ScholarshipProgressStatus.ONGOING;
         } else {
             this.progressStatus = ScholarshipProgressStatus.ENDED;
+        }
+    }
+
+    /**
+     * 날짜 형식을 계산하기 전에 변환
+     */
+    public void updateProgressStatusConvert() {
+        LocalDate today = LocalDate.now();
+
+        // CSV에서 들어온 날짜 형식 지정 (M/d/yyyy)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+
+        try {
+            LocalDate start = LocalDate.parse(startDate, formatter);
+            LocalDate end = LocalDate.parse(endDate, formatter);
+
+            if (today.isBefore(start)) {
+                this.progressStatus = ScholarshipProgressStatus.UPCOMING;
+            } else if (!today.isAfter(end)) { // today >= start && today <= end
+                this.progressStatus = ScholarshipProgressStatus.ONGOING;
+            } else {
+                this.progressStatus = ScholarshipProgressStatus.ENDED;
+            }
+        } catch (DateTimeParseException e) {
+            System.err.println("⚠ 날짜 변환 오류: " + e.getMessage());
+            this.progressStatus = ScholarshipProgressStatus.ENDED; // 기본값 설정
         }
     }
 
