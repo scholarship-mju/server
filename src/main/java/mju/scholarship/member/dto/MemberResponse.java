@@ -21,7 +21,7 @@ public class MemberResponse {
     private String province;
     private String city;
     private String department; // major -> 전공 (?)
-    private Double grade; // 1.0 - 4.5
+    private String grade; // 1.0 - 4.5
     private Integer incomeQuantile; // 1-10
 
 
