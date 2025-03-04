@@ -27,6 +27,7 @@ public class Scholarship {
     private String universityType; // 대학구분
     private String gradeType; // 학년구분
     private String departmentType; // 학과구분
+    @Column(columnDefinition = "TEXT")
     private String gradeRequirement; // 성적기준
     private String incomeRequirement; // 소득기준
     @Column(columnDefinition = "TEXT")
@@ -38,6 +39,7 @@ public class Scholarship {
     private Integer selectionCount; // 선발인원
     private String eligibilityRestriction; // 자격제한
     private Boolean recommendationRequired; // 추천필요여부
+    @Column(columnDefinition = "TEXT")
     private String  submitDocumentDetail; //제출 서류 상세 내용
     private String scholarshipUrl; // 신청 주소
     private String startDate; // 신청 시작 날짜

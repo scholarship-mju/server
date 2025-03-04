@@ -13,9 +13,11 @@ import mju.scholarship.result.ResultResponse;
 import mju.scholarship.scholoarship.dto.ValidAddScholarshipRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static mju.scholarship.result.code.ResultCode.UploadScholarshipSuccess;
 import static mju.scholarship.result.code.ResultCode.ValidAddGotScholarshipSuccess;
 
 @RestController
@@ -39,4 +41,9 @@ public class AdminController {
         return ResponseEntity.ok(ResultResponse.of(ValidAddGotScholarshipSuccess));
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<ResultResponse> uploadScholarshipCsv(@RequestParam("file") MultipartFile file) {
+        adminService.uploadScholarshipCsv(file);
+        return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
+    }
 }
