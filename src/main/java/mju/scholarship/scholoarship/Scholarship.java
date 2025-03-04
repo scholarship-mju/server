@@ -19,11 +19,10 @@ public class Scholarship {
     /**
      * 장학금 조건
      */
-    private String name; // 장학금 이름
-    @Column(length = 1000)
-    private String startDate; // 신청 시작 날짜
-    private String endDate; // 신청 종료 날짜
     private String organizationName; // 운영기관명
+    private String name; // 장학금 이름
+    private String organizationType;
+    private String productType; // 상품구분
     private String financialAidType; // 학자금유형구분
     private String universityType; // 대학구분
     private String gradeType; // 학년구분
@@ -31,7 +30,8 @@ public class Scholarship {
     private String gradeRequirement; // 성적기준
     private String incomeRequirement; // 소득기준
     @Column(columnDefinition = "TEXT")
-    private String supportDetails; // 지원내역
+    private String supportDetails; // 지원내역 상세 내용
+
     private String specialQualification; // 특정자격
     private String residencyRequirement; // 지역거주여부
     private String selectionMethod; // 선발방법
@@ -39,7 +39,9 @@ public class Scholarship {
     private String eligibilityRestriction; // 자격제한
     private Boolean recommendationRequired; // 추천필요여부
     private String  submitDocumentDetail; //제출 서류 상세 내용
-    private String scholarshipUrl;
+    private String scholarshipUrl; // 신청 주소
+    private String startDate; // 신청 시작 날짜
+    private String endDate; // 신청 종료 날짜
 
     @Enumerated(EnumType.STRING)
     private ScholarshipProgressStatus progressStatus;
@@ -65,8 +67,10 @@ public class Scholarship {
     }
 
     @Builder
-    public Scholarship(String name, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, Integer selectionCount, String eligibilityRestriction, Boolean recommendationRequired, String submitDocumentDetail, String scholarshipUrl) {
+    public Scholarship(String name, String organizationType, String productType, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, Integer selectionCount, String eligibilityRestriction, Boolean recommendationRequired, String submitDocumentDetail, String scholarshipUrl) {
         this.name = name;
+        this.organizationType = organizationType;
+        this.productType = productType;
         this.startDate = startDate;
         this.endDate = endDate;
         this.organizationName = organizationName;

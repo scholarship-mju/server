@@ -12,6 +12,8 @@ public class ScholarshipResponse {
 
     private Long id;
     private String name; // 장학금 이름
+    private String organizationType;
+    private String productType; // 상품구분
     private String startDate; // 신청 시작 날짜
     private String endDate; // 신청 종료 날짜
     private String organizationName; // 운영기관명
@@ -34,10 +36,12 @@ public class ScholarshipResponse {
     private int viewCount;
 
     @Builder
-    public ScholarshipResponse(int viewCount, Long id, String name, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, Integer selectionCount, String eligibilityRestriction, Boolean recommendationRequired, String submitDocumentDetail, String scholarshipUrl, ScholarshipProgressStatus progressStatus) {
+    public ScholarshipResponse(int viewCount, String productType, String organizationType, Long id, String name, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, Integer selectionCount, String eligibilityRestriction, Boolean recommendationRequired, String submitDocumentDetail, String scholarshipUrl, ScholarshipProgressStatus progressStatus) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
+        this.productType = productType;
+        this.organizationType = organizationType;
         this.endDate = endDate;
         this.organizationName = organizationName;
         this.financialAidType = financialAidType;

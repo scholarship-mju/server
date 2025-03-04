@@ -136,6 +136,8 @@ public class ScholarshipService {
                 .name(scholarship.getName())
                 .supportDetails(scholarship.getSupportDetails())
                 .departmentType(scholarship.getDepartmentType())
+                .organizationType(scholarship.getOrganizationType())
+                .productType(scholarship.getProductType())
                 .endDate(scholarship.getEndDate())
                 .scholarshipUrl(scholarship.getScholarshipUrl())
                 .eligibilityRestriction(scholarship.getEligibilityRestriction())
