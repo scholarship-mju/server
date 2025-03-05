@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -314,6 +315,22 @@ public class ScholarshipService {
         memberGotRepository.delete(memberGot);
     }
 
+    public List<SearchScholarshipResponse> searchScholarship(String scholarshipName) {
+        List<Scholarship> byScholarshipName = scholarShipRepository.findByScholarshipName(scholarshipName);
+
+        List<SearchScholarshipResponse> response = new ArrayList<>();
+
+        for (Scholarship scholarship : byScholarshipName) {
+            SearchScholarshipResponse searchScholarshipResponse = SearchScholarshipResponse.builder()
+                    .scholarshipName(scholarship.getName())
+                    .scholarshipId(scholarship.getId())
+                    .build();
+
+            response.add(searchScholarshipResponse);
+        }
+
+        return response;
+    }
 
 
 //    public List<Scholarship> getMyScholarship() {

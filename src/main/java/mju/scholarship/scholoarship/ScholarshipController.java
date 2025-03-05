@@ -184,6 +184,11 @@ public class ScholarshipController {
         return ResponseEntity.ok().body(ResultResponse.of(ValidGotScholarshipSuccess));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchScholarshipResponse>> searchScholarship(@RequestParam String scholarshipName) {
+        return ResponseEntity.ok().body(scholarshipService.searchScholarship(scholarshipName));
+    }
+
 
 
 }
