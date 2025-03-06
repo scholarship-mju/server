@@ -1,8 +1,12 @@
 package mju.scholarship.member;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import mju.scholarship.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -18,11 +22,26 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
     private String attributeKey;
     private boolean isFirstLogin;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.ROLE_USER;
+
     public PrincipalDetails(Member member, Map<String, Object> attributes, String attributeKey, boolean isFirstLogin) {
         this.member = member;
         this.attributes = attributes;
         this.attributeKey = attributeKey;
         this.isFirstLogin = isFirstLogin;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));  // 역할 반환
+    }
+
+    public enum Role {
+        ROLE_USER,
+        ROLE_ADMIN
+
     }
 
     public boolean isFirstLogin() {
@@ -35,8 +54,8 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
         return "";
     }
 
-
     //리턴 해주는거 바꿔야함
+
     @Override
     public String getUsername() {
         return member.getUsername();
@@ -47,11 +66,6 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
     @Override
     public Map<String, Object> getAttributes() {
         return Map.of();
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
     }
 
     @Override

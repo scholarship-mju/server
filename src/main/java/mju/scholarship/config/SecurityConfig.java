@@ -71,6 +71,7 @@ public class SecurityConfig {
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용하지 않음
 
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용
                         .requestMatchers("/rank").permitAll() // /rank 요청 허용
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
