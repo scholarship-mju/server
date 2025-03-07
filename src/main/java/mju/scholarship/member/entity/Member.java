@@ -53,7 +53,7 @@ public class Member {
     private List<MemberGot> gotScholarships = new ArrayList<>();
 
     // 찜한 장학금
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberInterest> interestScholarships = new ArrayList<>();
 
     @Builder

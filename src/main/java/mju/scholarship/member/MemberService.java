@@ -125,4 +125,12 @@ public class MemberService {
         rankResponse.addRanker(rank);
         return rankResponse;
     }
+
+    @Transactional
+    public void deleteAccount() {
+
+        Member loginMember = jwtUtil.getLoginMember();
+
+        memberRepository.delete(jwtUtil.getLoginMember());
+    }
 }

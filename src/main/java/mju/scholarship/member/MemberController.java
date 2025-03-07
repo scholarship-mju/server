@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.member.dto.*;
 import mju.scholarship.result.ResultResponse;
+import mju.scholarship.result.code.ResultCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -97,5 +98,11 @@ public class MemberController {
     @CrossOrigin(origins = {"https://v0-scholarship-qj0ukyqoa2i-7lelo3qjo-51taeks-projects.vercel.app", "http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com", "http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com"})
     public ResponseEntity<RankResponse> getRankMini(){
         return ResponseEntity.ok().body(memberService.getRankMini());
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<ResultResponse> deleteAccount(){
+        memberService.deleteAccount();
+        return ResponseEntity.ok().body(ResultResponse.of(ResultCode.DELETE_ACCOUNT_SUCCESS));
     }
 }
