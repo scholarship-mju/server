@@ -7,6 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.io.IOException;
+import java.time.Instant;
 
 @Slf4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
@@ -16,8 +17,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException {
 //        log.error("AccessDeniedException is occurred. ", accessDeniedException);
 
-        log.info("deniedHandler 들어옴");
-        response.sendRedirect("http://localhost:3000/login");
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다.");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+        response.getWriter().write(
+                "{\"code\": \"ACCESS_DENIED\"," + "\n"
+                        + "\"status\": \"403\"," + "\n"
+                        + "\"message\": \"접근 권한이 없습니다.\"," + "\n"
+                        + "\"occurredAt\": \"" + Instant.now() + "\"}");
     }
 }
