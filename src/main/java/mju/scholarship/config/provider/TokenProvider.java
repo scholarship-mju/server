@@ -37,6 +37,7 @@ import java.sql.Ref;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -54,10 +55,8 @@ public class TokenProvider {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L; // 1시간
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7L; // 1주일
 
-
-    private static final String KEY_ROLE = "role";
     private final TokenService tokenService;
-
+    private static final String KEY_ROLE = "role"; // JWT의 역할(ROLE) 클레임 키
 
     @PostConstruct
     private void setSecretKey() {
@@ -78,16 +77,19 @@ public class TokenProvider {
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + expireTime);
 
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining());
+        String username = authentication.getName();
+        log.info("name = {}", username);
+
+        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+        String role = optionalMember.map(member -> member.getRole().name()).orElse("ROLE_USER");
+
 
         log.info("Authentication Authorities: {}", authentication.getAuthorities());
 
         String jwt = Jwts.builder()
                 .subject(authentication.getName())
                 .issuedAt(now)
-                .claim(KEY_ROLE, authorities)
+                .claim(KEY_ROLE, role) // Role을 Claim에 추가
                 .expiration(expiredDate)
                 .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
@@ -102,8 +104,14 @@ public class TokenProvider {
         // 사용자 ID (subject) 추출
         String username = claims.getSubject();
 
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(MemberNotFoundException::new);
+
+        String role = member.getRole().name();
+
+
         // 권한 정보를 고정값으로 설정 ("USER")
-        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 
         // Security의 User 객체 생성
         User principal = new User(username, "", authorities);

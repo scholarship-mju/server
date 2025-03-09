@@ -71,8 +71,8 @@ public class SecurityConfig {
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용하지 않음
 
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/rank").permitAll() // /rank 요청 허용
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
@@ -90,7 +90,7 @@ public class SecurityConfig {
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint(customExceptionHandler))
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler()));
 
 

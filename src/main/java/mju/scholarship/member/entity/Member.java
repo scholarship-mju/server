@@ -46,7 +46,15 @@ public class Member {
     private Integer incomeQuantile; // 1-10
     private boolean isFirstLogin = true;
     private int total = 0;
+    @Column(columnDefinition = "TEXT")
     private String refreshToken;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ROLE_USER;
+
+    public enum Role{
+        ROLE_USER, ROLE_ADMIN
+    }
 
     // 이미 받은 장학금
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)

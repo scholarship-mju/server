@@ -22,10 +22,6 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
     private String attributeKey;
     private boolean isFirstLogin;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.ROLE_USER;
-
     public PrincipalDetails(Member member, Map<String, Object> attributes, String attributeKey, boolean isFirstLogin) {
         this.member = member;
         this.attributes = attributes;
@@ -35,14 +31,10 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));  // 역할 반환
+        return List.of(new SimpleGrantedAuthority(member.getRole().name()));  // 역할 반환
     }
 
-    public enum Role {
-        ROLE_USER,
-        ROLE_ADMIN
 
-    }
 
     public boolean isFirstLogin() {
         return isFirstLogin;
