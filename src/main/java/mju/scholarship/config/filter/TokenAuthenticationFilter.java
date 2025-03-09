@@ -44,31 +44,22 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        try {
-            String accessToken = resolveToken(request);
-            log.info("Access token: {}", accessToken);
-            if (StringUtils.hasText(accessToken)) {
-                if (tokenProvider.validTokenInRedis(accessToken)) {
-                    setAuthentication(accessToken);
-                } else {
-                    throw new IllegalArgumentException("Invalid token in Redis");
-                }
-            }else {
-                //액세스 토큰이 있는데 만료되었을 때
-                String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
-                if (StringUtils.hasText(reissueAccessToken)) {
-                    setAuthentication(reissueAccessToken);
-                    response.setHeader(AUTHORIZATION, "Bearer " + reissueAccessToken);
-                } else {
-                    throw new IllegalStateException("Unable to reissue access token");
-                }
-            }
-            filterChain.doFilter(request, response);
+        String accessToken = resolveToken(request);
 
-        } catch (Exception e) {
-            log.error("필터 처리 중 예외 발생: {}", e.getMessage(), e);
-            exceptionHandler.handleException(request, response, e);
+        if(StringUtils.hasText(accessToken)) {
+            if(tokenProvider.validTokenInRedis(accessToken)) {
+                setAuthentication(accessToken);
+            }
+        } else {
+            String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
+
+            if (StringUtils.hasText(reissueAccessToken)) {
+                setAuthentication(reissueAccessToken);
+                response.setHeader(AUTHORIZATION, "Bearer " + reissueAccessToken);
+            }
         }
+
+        filterChain.doFilter(request, response);
     }
 
 
