@@ -11,11 +11,6 @@ import java.io.IOException;
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final CustomExceptionHandler exceptionHandler;
-
-    public CustomAuthenticationEntryPoint(CustomExceptionHandler exceptionHandler) {
-        this.exceptionHandler = exceptionHandler;
-    }
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
