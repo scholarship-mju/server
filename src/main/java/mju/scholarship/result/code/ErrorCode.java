@@ -10,6 +10,7 @@ public enum ErrorCode {
     // 유저
     MemberNotFoundException(404, "M401", "유저가 존재하지 않습니다(토큰오류)"),
     IllegalRegistrationIdException(401, "A501", "Oauth 로그인 오류"),
+    NotAdminException(403, "M402", "관리자 계정이 아닙니다"),
 
     // 토큰
     TokenException(401, "T401", "정상적인 토큰이 아닙니다"),

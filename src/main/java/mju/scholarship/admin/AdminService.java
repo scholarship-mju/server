@@ -3,15 +3,14 @@ package mju.scholarship.admin;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.admin.dto.MemberGotResponse;
+import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.entity.MemberGot;
 import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.member.repository.MemberGotRepository;
 import mju.scholarship.member.repository.MemberRepository;
-import mju.scholarship.result.exception.CsvParsingException;
-import mju.scholarship.result.exception.GotScholarshipNotFoundException;
-import mju.scholarship.result.exception.MemberNotFoundException;
-import mju.scholarship.result.exception.ScholarshipNotFoundException;
+import mju.scholarship.result.ResultResponse;
+import mju.scholarship.result.exception.*;
 import mju.scholarship.scholoarship.Scholarship;
 import mju.scholarship.scholoarship.ScholarshipService;
 import mju.scholarship.scholoarship.dto.ValidAddScholarshipRequest;
@@ -36,6 +35,7 @@ public class AdminService {
     private final MemberGotRepository memberGotRepository;
     private final MemberRepository memberRepository;
     private final ScholarShipRepository scholarShipRepository;
+    private final JwtUtil jwtUtil;
 
     public List<MemberGotResponse> gotScholarshipConfirm(ScholarshipStatus status) {
 

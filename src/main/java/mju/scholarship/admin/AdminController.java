@@ -54,4 +54,9 @@ public class AdminController {
         adminService.setProgressStatus();
         return ResponseEntity.ok().body(ResultResponse.of(SetProgressStatusSuccess));
     }
+
+    @GetMapping("/isAdmin")
+    public ResponseEntity<ResultResponse> isAdmin(){
+        return ResponseEntity.ok().body(ResultResponse.of(AdminAccessSuccess));
+    }
 }

@@ -24,6 +24,7 @@ public enum ResultCode {
 
     //
     FirstLoginSuccess(200, "L201", "첫번째 로그인 성공"),
+    AdminAccessSuccess(200, "L202", "어드민 계정 인증 성공"),
 
     //리뷰
     CreateReviewSuccess(200, "R001", "리뷰 생성 성공"),
