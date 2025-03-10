@@ -26,6 +26,7 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    //받은 장학금 검증 안된것들 조회 API
     @GetMapping("/got/{status}")
     public ResponseEntity<List<MemberGotResponse>> gotScholarshipConfirm(@PathVariable Integer status) {
 
@@ -33,12 +34,14 @@ public class AdminController {
         return ResponseEntity.ok().body(adminService.gotScholarshipConfirm(scholarshipStatus));
     }
 
+    // 검증 안된 받은 장학금 검증 확인 해주는 API
     @PostMapping("/got/validAdd")
     public ResponseEntity<ResultResponse> validAddGotScholarship(@RequestBody ValidAddScholarshipRequest request) {
         adminService.validAddGotScholarship(request);
         return ResponseEntity.ok(ResultResponse.of(ValidAddGotScholarshipSuccess));
     }
 
+    // 장학금 csv 올리는 API
     @PostMapping("/upload")
     public ResponseEntity<ResultResponse> uploadScholarshipCsv(@RequestParam("file") MultipartFile file) {
         adminService.uploadScholarshipCsv(file);
