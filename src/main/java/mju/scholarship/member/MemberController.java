@@ -28,6 +28,7 @@ public class MemberController {
     private final MemberService memberService;
 
 
+    // 유저 생성
     @Operation(summary = "내 정보 생성", description = "사용자의 개인 정보를 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "정보 생성 성공",
@@ -40,6 +41,7 @@ public class MemberController {
         return ResponseEntity.ok().body(ResultResponse.of(CreateInfoSuccess));
     }
 
+    // 유저 프로필 수정
     @Operation(summary = "내 정보 수정", description = "사용자의 개인 정보를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "정보 수정 성공",
@@ -53,6 +55,7 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.updateInfo(request));
     }
 
+    // 유저 프로필 조회
     @Operation(summary = "내 정보 조회", description = "사용자의 개인 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "정보 조회 성공",
@@ -64,6 +67,7 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.getMyInfo());
     }
 
+    //회원가입 시 유저 정보 등록
     @Operation(summary = "첫번째 로그인 사용자 데이터 추가", description = "처음 로그인 한 유저의 정보 등록")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용자 정보 등록 성공",
@@ -76,6 +80,7 @@ public class MemberController {
         return ResponseEntity.ok().body(ResultResponse.of(FirstLoginSuccess));
     }
 
+    // 유저 랭킹
     @Operation(summary = "사용자 랭킹 조회", description = "장학금 많이 받은 순위 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "랭킹 조회 성공",
@@ -86,7 +91,6 @@ public class MemberController {
     public ResponseEntity<RankResponse> getRank(){
         return ResponseEntity.ok().body(memberService.getRank());
     }
-
 
     @Operation(summary = "사용자 랭킹 조회 mini", description = "장학금 많이 받은 순위 조회 mini")
     @ApiResponses(value = {
@@ -99,7 +103,7 @@ public class MemberController {
     public ResponseEntity<RankResponse> getRankMini(){
         return ResponseEntity.ok().body(memberService.getRankMini());
     }
-
+    //회원 탈퇴
     @DeleteMapping("")
     public ResponseEntity<ResultResponse> deleteAccount(){
         memberService.deleteAccount();
