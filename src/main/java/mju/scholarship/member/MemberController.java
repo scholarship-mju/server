@@ -92,17 +92,6 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.getRank());
     }
 
-    @Operation(summary = "사용자 랭킹 조회 mini", description = "장학금 많이 받은 순위 조회 mini")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "랭킹 조회 성공",
-                    content = @Content(schema = @Schema(implementation = MemberResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
-    })
-    @GetMapping("/rank/mini")
-    @CrossOrigin(origins = {"https://v0-scholarship-qj0ukyqoa2i-7lelo3qjo-51taeks-projects.vercel.app", "http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com", "http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com"})
-    public ResponseEntity<RankResponse> getRankMini(){
-        return ResponseEntity.ok().body(memberService.getRankMini());
-    }
     //회원 탈퇴
     @DeleteMapping("")
     public ResponseEntity<ResultResponse> deleteAccount(){
