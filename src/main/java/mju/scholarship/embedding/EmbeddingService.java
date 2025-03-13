@@ -1,7 +1,7 @@
 package mju.scholarship.embedding;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,8 +13,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmbeddingService {
 
-    @Value("${spring.ai.openai.api-key}")
-    private final String apiKey;
+    @Value("${openai.api-key}")
+    private  String apiKey;
 
     private final RestTemplate restTemplate;
     private static final String openaiUrl = "https://api.openai.com/v1/embeddings";
