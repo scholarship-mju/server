@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -46,6 +47,9 @@ public class Scholarship {
     private String scholarshipUrl; // 신청 주소
     private String startDate; // 신청 시작 날짜
     private String endDate; // 신청 종료 날짜
+
+    @ElementCollection
+    private List<Float> embedding;
 
     @Enumerated(EnumType.STRING)
     private ScholarshipProgressStatus progressStatus;
