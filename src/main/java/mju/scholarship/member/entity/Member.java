@@ -32,9 +32,6 @@ public class Member {
 
     private String phone;
 
-    /**
-     * 장학금 조건
-     */
     private String university;
 
     private Integer age;

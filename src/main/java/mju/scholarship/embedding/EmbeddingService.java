@@ -48,7 +48,7 @@ public class EmbeddingService {
         String scholarshipText = generateEmbeddingScholarship(scholarship);
         List<Float> embedding = getEmbedding(scholarshipText);
 
-        pineconeService.saveVector(String.valueOf(scholarship.getId()), embedding);
+        pineconeService.saveScholarshipVector(String.valueOf(scholarship.getId()), embedding);
     }
 
     public void embeddingAllScholarship(){
@@ -57,8 +57,25 @@ public class EmbeddingService {
         for (Scholarship scholarship : all) {
             String scholarshipText = generateEmbeddingScholarship(scholarship);
             List<Float> embedding = getEmbedding(scholarshipText);
-            pineconeService.saveVector(String.valueOf(scholarship.getId()), embedding);
+            pineconeService.saveScholarshipVector(String.valueOf(scholarship.getId()), embedding);
         }
+    }
+
+    public void embeddingMember(Member member) {
+        String memberText = generateEmbeddingMember(member);
+        List<Float> embedding = getEmbedding(memberText);
+        pineconeService.saveMemberVector(String.valueOf(member.getId()), embedding);
+    }
+
+    public String generateEmbeddingMember(Member member){
+        return member.getUniversity() + " " +
+                member.getAge() + " " +
+                member.getGender() + " " +
+                member.getProvince() + " " +
+                member.getCity() + " " +
+                member.getDepartment() + " " +
+                member.getGrade() + " " +
+                "소득분위 " + member.getIncomeQuantile();
     }
 
     private String generateEmbeddingScholarship(Scholarship scholarship) {

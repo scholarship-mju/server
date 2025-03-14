@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
+import mju.scholarship.embedding.EmbeddingService;
 import mju.scholarship.member.dto.*;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.repository.MemberRepository;
@@ -21,6 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final ScholarShipRepository scholarShipRepository;
+    private final EmbeddingService embeddingService;
 
     @Transactional
     public void createInfo(MemberInfoRequest memberInfoRequest) {
@@ -79,6 +81,9 @@ public class MemberService {
                 createNewUserRequest.getGrade(),
                 createNewUserRequest.getIncomeQuantile()
         );
+
+        embeddingService.embeddingMember(loginMember);
+
         loginMember.updateFirstLogin();
     }
 

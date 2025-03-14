@@ -15,15 +15,18 @@ public class PineconeService {
 
     @Value("${pinecone.api-key}")
     private String apiKey;
-    @Value("${pinecone.index-name}")
-    private String indexName;
+    @Value("${pinecone.scholarship.index-name}")
+    private String scholarshipIndexName;
+
+    @Value("${pinecone.member.index-name}")
+    private String memberIndexName;
 
     private final EmbeddingService embeddingService;
 
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public void saveVector(String id, List<Float> vector) {
+    public void saveScholarshipVector(String id, List<Float> vector) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Api-Key", apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -31,9 +34,24 @@ public class PineconeService {
         Map<String, Object> requestBody = Map.of("vectors", List.of(Map.of("id", id, "values", vector)));
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-        restTemplate.exchange("https://" + indexName + ".svc.pinecone.io/vectors/upsert", HttpMethod.POST, entity, String.class);
+        restTemplate.exchange("https://" + scholarshipIndexName + ".svc.pinecone.io/vectors/upsert", HttpMethod.POST, entity, String.class);
     }
 
+    public void saveMemberVector(String id, List<Float> vector) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Api-Key", apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = Map.of("vectors", List.of(Map.of("id", id, "values", vector)));
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+        restTemplate.exchange("https://" + memberIndexName + ".svc.pinecone.io/vectors/upsert", HttpMethod.POST, entity, String.class);
+    }
+
+
+    /**
+     * 검색어를 기반으로 장학금 추천
+     */
     public List<String> searchSimilarScholarships(String userQuery) {
         List<Float> userEmbedding = embeddingService.getEmbedding(userQuery);
 
@@ -47,7 +65,7 @@ public class PineconeService {
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-        ResponseEntity<Map> response = restTemplate.exchange("https://" + indexName + ".svc.pinecone.io/query", HttpMethod.POST, entity, Map.class);
+        ResponseEntity<Map> response = restTemplate.exchange("https://" + scholarshipIndexName + ".svc.pinecone.io/query", HttpMethod.POST, entity, Map.class);
 
         List<Map<String, Object>> matches = (List<Map<String, Object>>) response.getBody().get("matches");
         return matches.stream().map(match -> (String) match.get("id")).toList();
