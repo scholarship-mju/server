@@ -48,8 +48,6 @@ public class Scholarship {
     private String startDate; // 신청 시작 날짜
     private String endDate; // 신청 종료 날짜
 
-    @ElementCollection
-    private List<Float> embedding;
 
     @Enumerated(EnumType.STRING)
     private ScholarshipProgressStatus progressStatus;
