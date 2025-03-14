@@ -22,6 +22,9 @@ public enum ResultCode {
     ValidAddGotScholarshipSuccess(200, "S208", "인증된 받은 장학금 추가"),
     SetProgressStatusSuccess(200, "S209", "장학금 상태 세팅 성공"),
 
+    //임베딩
+    EmbeddingScholarshipSuccess(200, "E200", "장학금 임데이 성공"),
+
     //
     FirstLoginSuccess(200, "L201", "첫번째 로그인 성공"),
     AdminAccessSuccess(200, "L202", "어드민 계정 인증 성공"),
