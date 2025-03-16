@@ -1,6 +1,7 @@
 package mju.scholarship.embedding;
 
 import lombok.RequiredArgsConstructor;
+import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.repository.MemberRepository;
 import mju.scholarship.result.exception.MemberNotFoundException;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class PineconeService {
 
     private final ScholarShipRepository scholarShipRepository;
+    private final JwtUtil jwtUtil;
     @Value("${pinecone.api-key}")
     private String apiKey;
     @Value("${pinecone.scholarship.index-name}")
@@ -98,11 +100,10 @@ public class PineconeService {
 
     }
 
-
     /**
      * 검색어를 기반으로 장학금 추천
      */
-    public List<String> searchSimilarScholarships(String userQuery) {
+    public List<String> searchScholarshipByWord(String userQuery) {
         List<Float> userEmbedding = embeddingService.getEmbedding(userQuery);
 
         HttpHeaders headers = new HttpHeaders();
@@ -126,9 +127,11 @@ public class PineconeService {
      * 유저 데이터를 DB에서 가져와서 벡터화 후 벡터화된 데이터를
      * @return
      */
-    public List<String> searchScholarshipByDB(Long memberId) {
+    public List<String> searchScholarshipByDB() {
 
-        List<Float> vector = embeddingService.embeddingMember(memberId);
+        Member loginMember = jwtUtil.getLoginMember();
+
+        List<Float> vector = embeddingService.embeddingMember(loginMember.getId());
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Api-Key", apiKey);
@@ -160,9 +163,12 @@ public class PineconeService {
      * pinecone에 member index에서 유저 데이터 가져온 후
      * pinecone에 scholarhsip index에 추천 장학금 요청
      */
-    public List<String> sarchScholarshipByPinecone(Long userId) {
+    public List<String> searchScholarshipByPinecone() {
+
+        Member loginMember = jwtUtil.getLoginMember();
+
         // 1️⃣ Pinecone에서 유저 벡터 가져오기
-        List<Float> userEmbedding = getUserEmbeddingFromPinecone(userId);
+        List<Float> userEmbedding = getUserEmbeddingFromPinecone(loginMember.getId());
         if (userEmbedding == null) {
             throw new RuntimeException("유저 벡터를 찾을 수 없습니다. Pinecone에 저장되어 있는지 확인하세요.");
         }

@@ -189,6 +189,12 @@ public class ScholarshipController {
         return ResponseEntity.ok().body(scholarshipService.searchScholarship(scholarshipName));
     }
 
+    //추천 장학금 by 유저 DB
+    @GetMapping("/recommend/db")
+    public ResponseEntity<List<Scholarship>> getRecommendScholarship(){
+        return ResponseEntity.ok().body(scholarshipService.getRecommendedScholarships());
+    }
+
 
 
 }

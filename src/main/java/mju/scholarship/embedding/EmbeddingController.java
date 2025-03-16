@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/embedding")
+@RequestMapping("/embedding")
 public class EmbeddingController {
 
     private final EmbeddingService embeddingService;

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
+import mju.scholarship.embedding.PineconeService;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.entity.MemberGot;
 import mju.scholarship.member.entity.ScholarshipStatus;
@@ -41,6 +42,7 @@ public class ScholarshipService {
     private final MemberGotRepository memberGotRepository;
     private final S3UploadService s3UploadService;
     private final StringRedisTemplate redisTemplate;
+    private final PineconeService pineconeService;
     private static final int BATCH_SIZE = 1; // 100개씩 모아서 실행
     private final ConcurrentHashMap<Long, AtomicInteger> localCounter = new ConcurrentHashMap<>();
 
@@ -330,6 +332,16 @@ public class ScholarshipService {
         }
 
         return response;
+    }
+
+    public List<Scholarship> getRecommendedScholarships() {
+        List<String> recommendedIds = pineconeService.searchScholarshipByDB();
+
+        List<Long> scholarshipIds = recommendedIds.stream()
+                .map(Long::parseLong) // String -> Long 변환
+                .toList();
+
+        return scholarShipRepository.findAllById(scholarshipIds);
     }
 
 
