@@ -24,7 +24,6 @@ public class EmbeddingService {
     private  String apiKey;
 
     private final ScholarShipRepository scholarShipRepository;
-    private final PineconeService pineconeService;
 
 
     private final RestTemplate restTemplate;
