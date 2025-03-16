@@ -2,6 +2,8 @@ package mju.scholarship.embedding;
 
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.member.entity.Member;
+import mju.scholarship.member.repository.MemberRepository;
+import mju.scholarship.result.exception.MemberNotFoundException;
 import mju.scholarship.result.exception.ScholarshipNotFoundException;
 import mju.scholarship.scholoarship.Scholarship;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
@@ -17,6 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmbeddingService {
 
+    private final MemberRepository memberRepository;
     @Value("${openai.api-key}")
     private  String apiKey;
 
@@ -27,7 +30,7 @@ public class EmbeddingService {
     private final RestTemplate restTemplate;
     private static final String openaiUrl = "https://api.openai.com/v1/embeddings";
 
-
+    // 텍스트를 임베딩
     public List<Float> getEmbedding(String text) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + apiKey);
@@ -41,33 +44,25 @@ public class EmbeddingService {
         return (List<Float>) ((List<Map<String, Object>>) response.getBody().get("data")).get(0).get("embedding");
     }
 
-    public void embeddingScholarship(Long scholarshipId) {
+    public List<Float> embeddingScholarship(Long scholarshipId) {
         Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
                 .orElseThrow(ScholarshipNotFoundException::new);
 
-        String scholarshipText = generateEmbeddingScholarship(scholarship);
-        List<Float> embedding = getEmbedding(scholarshipText);
-
-        pineconeService.saveScholarshipVector(String.valueOf(scholarship.getId()), embedding);
+        String scholarshipText = generateScholarshipText(scholarship);
+       return getEmbedding(scholarshipText);
     }
 
-    public void embeddingAllScholarship(){
-        List<Scholarship> all = scholarShipRepository.findAll();
+    // 유저 임베딩
+    public List<Float> embeddingMember(Long memberId) {
 
-        for (Scholarship scholarship : all) {
-            String scholarshipText = generateEmbeddingScholarship(scholarship);
-            List<Float> embedding = getEmbedding(scholarshipText);
-            pineconeService.saveScholarshipVector(String.valueOf(scholarship.getId()), embedding);
-        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        String memberText = generateMemberText(member);
+        return getEmbedding(memberText);
     }
 
-    public void embeddingMember(Member member) {
-        String memberText = generateEmbeddingMember(member);
-        List<Float> embedding = getEmbedding(memberText);
-        pineconeService.saveMemberVector(String.valueOf(member.getId()), embedding);
-    }
-
-    public String generateEmbeddingMember(Member member){
+    public String generateMemberText(Member member){
         return member.getUniversity() + " " +
                 member.getAge() + " " +
                 member.getGender() + " " +
@@ -78,7 +73,7 @@ public class EmbeddingService {
                 "소득분위 " + member.getIncomeQuantile();
     }
 
-    private String generateEmbeddingScholarship(Scholarship scholarship) {
+    private String generateScholarshipText(Scholarship scholarship) {
         return scholarship.getName() + " " +
                 scholarship.getOrganizationType() + " " +
                 scholarship.getProductType() + " " +

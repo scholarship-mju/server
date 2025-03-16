@@ -3,6 +3,10 @@ package mju.scholarship.embedding;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.repository.MemberRepository;
+import mju.scholarship.result.exception.MemberNotFoundException;
+import mju.scholarship.result.exception.ScholarshipNotFoundException;
+import mju.scholarship.scholoarship.Scholarship;
+import mju.scholarship.scholoarship.repository.ScholarShipRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PineconeService {
 
+    private final ScholarShipRepository scholarShipRepository;
     @Value("${pinecone.api-key}")
     private String apiKey;
     @Value("${pinecone.scholarship.index-name}")
@@ -29,7 +34,13 @@ public class PineconeService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public void saveScholarshipVector(String id, List<Float> vector) {
+    public void saveScholarshipVector(Long scholarshipId) {
+
+
+        //pinecone에 저장할 id와 vector data
+        String id = String.valueOf(scholarshipId);
+        List<Float> vector = embeddingService.embeddingScholarship(scholarshipId);
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("Api-Key", apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -40,7 +51,12 @@ public class PineconeService {
         restTemplate.exchange("https://" + scholarshipIndexName + ".svc.pinecone.io/vectors/upsert", HttpMethod.POST, entity, String.class);
     }
 
-    public void saveMemberVector(String id, List<Float> vector) {
+    public void saveMemberVector(Long memberId) {
+
+        //pinecone에 저장할 id와 vector data
+        String id = String.valueOf(memberId);
+        List<Float> vector = embeddingService.embeddingMember(memberId);
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("Api-Key", apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -49,6 +65,37 @@ public class PineconeService {
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
         restTemplate.exchange("https://" + memberIndexName + ".svc.pinecone.io/vectors/upsert", HttpMethod.POST, entity, String.class);
+    }
+
+    public void saveAllScholarshipVector() {
+
+        List<Member> allScholarships = memberRepository.findAll();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Api-Key", apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 2️⃣ Pinecone에 저장할 벡터 리스트 생성
+        List<Map<String, Object>> vectorList = allScholarships.stream()
+                .map(scholarship -> {
+                    String id = String.valueOf(scholarship.getId()); // Long -> String 변환
+                    List<Float> vector = embeddingService.embeddingScholarship(scholarship.getId());
+                    return Map.of("id", id, "values", vector);
+                })
+                .toList();
+
+        Map<String, Object> requestBody = Map.of("vectors", vectorList);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+        // 3️⃣ Pinecone API 호출하여 모든 장학금 벡터 저장
+        restTemplate.exchange(
+                "https://" + scholarshipIndexName + ".svc.pinecone.io/vectors/upsert",
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
+
     }
 
 
@@ -77,15 +124,11 @@ public class PineconeService {
     /**
      * 유저 데이터 기준으로 장학금 추천
      * 유저 데이터를 DB에서 가져와서 벡터화 후 벡터화된 데이터를
-     * @param userId
      * @return
      */
-    public List<String> searchScholarshipByDB(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유저 정보를 찾을 수 없습니다."));
+    public List<String> searchScholarshipByDB(Long memberId) {
 
-        String memberText = embeddingService.generateEmbeddingMember(member);
-        List<Float> userEmbedding = embeddingService.getEmbedding(memberText);
+        List<Float> vector = embeddingService.embeddingMember(memberId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Api-Key", apiKey);
@@ -93,7 +136,7 @@ public class PineconeService {
 
         //  Pinecone 벡터 검색 요청 데이터 생성 (유저 벡터 기반 검색)
         Map<String, Object> requestBody = Map.of(
-                "queries", List.of(Map.of("values", userEmbedding)),
+                "queries", List.of(Map.of("values", vector)),
                 "topK", 5 // 가장 유사한 5개의 장학금 추천
         );
 

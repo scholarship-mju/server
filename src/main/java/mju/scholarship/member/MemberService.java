@@ -82,7 +82,7 @@ public class MemberService {
                 createNewUserRequest.getIncomeQuantile()
         );
 
-        embeddingService.embeddingMember(loginMember);
+        embeddingService.embeddingMember(loginMember.getId());
 
         loginMember.updateFirstLogin();
     }

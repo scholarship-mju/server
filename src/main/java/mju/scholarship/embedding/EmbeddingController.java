@@ -15,18 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmbeddingController {
 
     private final EmbeddingService embeddingService;
+    private final PineconeService pineconeService;
 
     // 특정 장학금 임베딩
     @PostMapping("/{scholarshipId}")
     public ResponseEntity<ResultResponse> embeddingScholarship(@PathVariable Long scholarshipId) {
-        embeddingService.embeddingScholarship(scholarshipId);
+        pineconeService.saveScholarshipVector(scholarshipId);
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.EmbeddingScholarshipSuccess));
     }
 
     // 전체 장학금 임베딩
     @PostMapping("/all")
     public ResponseEntity<ResultResponse> embeddingAllScholarship() {
-        embeddingService.embeddingAllScholarship();
+        pineconeService.saveAllScholarshipVector();
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.EmbeddingScholarshipSuccess));
     }
 }
