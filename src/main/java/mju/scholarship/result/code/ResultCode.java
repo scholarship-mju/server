@@ -23,7 +23,7 @@ public enum ResultCode {
     SetProgressStatusSuccess(200, "S209", "장학금 상태 세팅 성공"),
 
     //임베딩
-    EmbeddingScholarshipSuccess(200, "E200", "장학금 임데이 성공"),
+    EmbeddingScholarshipSuccess(200, "E200", "장학금 임베딩 성공"),
 
     //
     FirstLoginSuccess(200, "L201", "첫번째 로그인 성공"),

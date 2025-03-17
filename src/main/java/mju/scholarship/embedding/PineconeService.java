@@ -1,6 +1,7 @@
 package mju.scholarship.embedding;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.repository.MemberRepository;
@@ -16,8 +17,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PineconeService {
 
     private final ScholarShipRepository scholarShipRepository;
@@ -69,6 +72,32 @@ public class PineconeService {
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
         restTemplate.exchange(memberHost + "/vectors/upsert", HttpMethod.POST, entity, String.class);
+    }
+
+    public void saveAllMember() {
+        List<Member> allMember = memberRepository.findAll();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Api-Key", apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        List<Map<String, Object>> vectorList = allMember.stream()
+                .map(member -> {
+                    String id = String.valueOf(member.getId());
+                    List<Float> vector = embeddingService.embeddingMember(member.getId());
+                    return Map.of("id", id, "values", vector);
+                })
+                .toList();
+
+        Map<String, Object> request = Map.of("vectors", vectorList);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
+
+        restTemplate.exchange(
+                memberHost + "/vectors/upsert",
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
     }
 
     public void saveAllScholarshipVector() {
@@ -208,19 +237,16 @@ public class PineconeService {
      * @return
      */
     public List<Float> getUserEmbeddingFromPinecone(Long memberId) {
-        // 1️⃣ Pinecone API 요청을 위한 HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.set("Api-Key", apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // 2️⃣ Pinecone 벡터 검색 요청 데이터 생성 (유저 ID를 기반으로 검색)
         Map<String, Object> requestBody = Map.of(
                 "ids", List.of(String.valueOf(memberId))
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-        // 3️⃣ Pinecone에서 유저 벡터 검색
         ResponseEntity<Map> response = restTemplate.exchange(
                 memberHost + "/vectors/fetch",
                 HttpMethod.POST,
@@ -228,14 +254,33 @@ public class PineconeService {
                 Map.class
         );
 
-        // 4️⃣ Pinecone 응답에서 유저 벡터 추출
-        Map<String, Object> vectors = (Map<String, Object>) response.getBody().get("vectors");
-        if (vectors == null || vectors.isEmpty()) {
+        log.info("Pinecone API 응답: {}", response.getBody());
+
+        if (response.getBody() == null || !response.getBody().containsKey("vectors")) {
+            log.warn("Pinecone 응답에 'vectors' 필드가 없습니다.");
             return null;
         }
 
-        return (List<Float>) vectors.get(String.valueOf(memberId));
+        Map<String, Object> vectors = (Map<String, Object>) response.getBody().get("vectors");
+        log.info("Pinecone 응답 vector 키: {}", vectors.keySet());
+
+        Object vectorData = vectors.get(String.valueOf(memberId));
+        if (vectorData == null) {
+            vectorData = vectors.get(memberId); // 정수형 키일 가능성 고려
+        }
+
+        if (vectorData instanceof Map) {
+            Map<String, Object> vectorMap = (Map<String, Object>) vectorData;
+            if (vectorMap.containsKey("values")) {
+                return (List<Float>) vectorMap.get("values");
+            }
+        }
+
+        log.warn("Pinecone 응답에 'values' 필드가 없습니다.");
+        return null;
     }
+
+
 
 
 }

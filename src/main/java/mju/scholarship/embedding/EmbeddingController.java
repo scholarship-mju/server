@@ -25,9 +25,15 @@ public class EmbeddingController {
     }
 
     // 전체 장학금 임베딩
-    @PostMapping("/all")
+    @PostMapping("/scholarship/all")
     public ResponseEntity<ResultResponse> embeddingAllScholarship() {
         pineconeService.saveAllScholarshipVector();
+        return ResponseEntity.ok().body(ResultResponse.of(ResultCode.EmbeddingScholarshipSuccess));
+    }
+
+    @PostMapping("/member")
+    public ResponseEntity<ResultResponse> embeddingAllMember() {
+        pineconeService.saveAllMember();
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.EmbeddingScholarshipSuccess));
     }
 }
