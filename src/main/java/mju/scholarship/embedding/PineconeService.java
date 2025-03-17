@@ -141,15 +141,15 @@ public class PineconeService {
 
         //  Pinecone 벡터 검색 요청 데이터 생성 (유저 벡터 기반 검색)
         Map<String, Object> requestBody = Map.of(
-                "queries", List.of(Map.of("values", vector)),
-                "topK", 5 // 가장 유사한 5개의 장학금 추천
+                "vector", vector,
+                "topK", 5
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         // Pinecone의 `query` API 호출하여 유사한 장학금 검색
         ResponseEntity<Map> response = restTemplate.exchange(
-                 scholarshipHost + "/query",
+                scholarshipHost + "/query",
                 HttpMethod.POST,
                 entity,
                 Map.class
