@@ -24,11 +24,13 @@ public class PineconeService {
     private final JwtUtil jwtUtil;
     @Value("${pinecone.api-key}")
     private String apiKey;
+
     @Value("${pinecone.scholarship.index-name}")
-    private String scholarshipIndexName;
+    private String scholarshipHost;
 
     @Value("${pinecone.member.index-name}")
-    private String memberIndexName;
+    private String memberHost;
+
 
     private final EmbeddingService embeddingService;
     private final MemberRepository memberRepository;
@@ -50,7 +52,7 @@ public class PineconeService {
         Map<String, Object> requestBody = Map.of("vectors", List.of(Map.of("id", id, "values", vector)));
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-        restTemplate.exchange("https://" + scholarshipIndexName + ".svc.pinecone.io/vectors/upsert", HttpMethod.POST, entity, String.class);
+        restTemplate.exchange(scholarshipHost + "/vectors/upsert", HttpMethod.POST, entity, String.class);
     }
 
     public void saveMemberVector(Long memberId) {
@@ -66,12 +68,12 @@ public class PineconeService {
         Map<String, Object> requestBody = Map.of("vectors", List.of(Map.of("id", id, "values", vector)));
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-        restTemplate.exchange("https://" + memberIndexName + ".svc.pinecone.io/vectors/upsert", HttpMethod.POST, entity, String.class);
+        restTemplate.exchange(memberHost + "/vectors/upsert", HttpMethod.POST, entity, String.class);
     }
 
     public void saveAllScholarshipVector() {
 
-        List<Member> allScholarships = memberRepository.findAll();
+        List<Scholarship> allScholarships = scholarShipRepository.findAll();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Api-Key", apiKey);
@@ -92,7 +94,7 @@ public class PineconeService {
 
         // 3️⃣ Pinecone API 호출하여 모든 장학금 벡터 저장
         restTemplate.exchange(
-                "https://" + scholarshipIndexName + ".svc.pinecone.io/vectors/upsert",
+                scholarshipHost + "/vectors/upsert",
                 HttpMethod.POST,
                 entity,
                 String.class
@@ -116,7 +118,7 @@ public class PineconeService {
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-        ResponseEntity<Map> response = restTemplate.exchange("https://" + scholarshipIndexName + ".svc.pinecone.io/query", HttpMethod.POST, entity, Map.class);
+        ResponseEntity<Map> response = restTemplate.exchange(scholarshipHost + "/query", HttpMethod.POST, entity, Map.class);
 
         List<Map<String, Object>> matches = (List<Map<String, Object>>) response.getBody().get("matches");
         return matches.stream().map(match -> (String) match.get("id")).toList();
@@ -147,7 +149,7 @@ public class PineconeService {
 
         // Pinecone의 `query` API 호출하여 유사한 장학금 검색
         ResponseEntity<Map> response = restTemplate.exchange(
-                "https://" + scholarshipIndexName + ".svc.pinecone.io/query",
+                 scholarshipHost + "/query",
                 HttpMethod.POST,
                 entity,
                 Map.class
@@ -188,7 +190,7 @@ public class PineconeService {
 
         // 4️⃣ Pinecone의 `query` API 호출하여 유사한 장학금 검색
         ResponseEntity<Map> response = restTemplate.exchange(
-                "https://" + scholarshipIndexName + ".svc.pinecone.io/query",
+                 scholarshipHost + "/query",
                 HttpMethod.POST,
                 entity,
                 Map.class
@@ -220,7 +222,7 @@ public class PineconeService {
 
         // 3️⃣ Pinecone에서 유저 벡터 검색
         ResponseEntity<Map> response = restTemplate.exchange(
-                "https://" + memberIndexName + ".svc.pinecone.io/vectors/fetch",
+                memberHost + "/vectors/fetch",
                 HttpMethod.POST,
                 entity,
                 Map.class
