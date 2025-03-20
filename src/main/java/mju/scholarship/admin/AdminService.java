@@ -130,4 +130,15 @@ public class AdminService {
             scholarship.updateProgressStatusConvert();
         }
     }
+
+    public String getScholarshipImage(Long scholarshipId) {
+
+        Scholarship scholarship = scholarShipRepository.findById(scholarshipId).
+                orElseThrow(ScholarshipNotFoundException::new);
+
+        List<MemberGot> allScholarship = memberGotRepository.findAllByScholarship(scholarship);
+
+
+        return scholarship.getScholarshipUrl();
+    }
 }

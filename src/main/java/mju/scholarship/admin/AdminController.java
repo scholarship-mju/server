@@ -35,7 +35,7 @@ public class AdminController {
     }
 
     // 검증 안된 받은 장학금 검증 확인 해주는 API
-    @PostMapping("/got/validAdd")
+    @PutMapping("/got/validAdd")
     public ResponseEntity<ResultResponse> validAddGotScholarship(@RequestBody ValidAddScholarshipRequest request) {
         adminService.validAddGotScholarship(request);
         return ResponseEntity.ok(ResultResponse.of(ValidAddGotScholarshipSuccess));
@@ -58,5 +58,11 @@ public class AdminController {
     @GetMapping("/isAdmin")
     public ResponseEntity<ResultResponse> isAdmin(){
         return ResponseEntity.ok().body(ResultResponse.of(AdminAccessSuccess));
+    }
+
+    //받은 장학금 검증 사진 조회
+    @GetMapping("/got/valid/{scholarshipId}/image")
+    public ResponseEntity<String> getScholarshipImage(@PathVariable Long scholarshipId){
+        return ResponseEntity.ok().body(adminService.getScholarshipImage(scholarshipId));
     }
 }

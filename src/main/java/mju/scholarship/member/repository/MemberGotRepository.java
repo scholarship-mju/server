@@ -24,6 +24,8 @@ public interface MemberGotRepository extends JpaRepository<MemberGot, Long> {
     @Query("SELECT mg FROM MemberGot mg WHERE (:status IS NULL OR mg.status = :status)")
     List<MemberGot> findAllByStatus(ScholarshipStatus status);
 
+    List<MemberGot> findAllByScholarship(Scholarship scholarship);
+
 
 
 }
