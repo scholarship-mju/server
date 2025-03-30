@@ -1,23 +1,33 @@
 # 맞춤 장학금 서비스
-<img width="1470" alt="image" src="https://github.com/user-attachments/assets/c60c972e-b815-4fbd-b60e-1cde604cc472" />
-
+<img width="1455" alt="image" src="https://github.com/user-attachments/assets/070f010a-0ba2-45ee-bf48-9f4710a558d6" />
 
 
 ## 소개
-이 프로젝트는 대학생들에게 장학금 정보를 제공하고, 더 나아가 입력받은 정보를 토대로 맞춤 장학금 정보를 제공하는 서비스의 서버 코드 입니다.
-장학금 정보를 제공하는데 필요한 여러 API 들이 구현되어 있습니다.
+이 프로젝트는 청년들에게 지원되는 장학금의 수가 많고 다양한 것에 비해 장학금 정보를 찾기가 어렵고 자신이 조건이 되는 것에도 불구하고 정보의 부족으로
+장학금을 받지 못하는 청년들이 많다고 생각되어 시작하게 된 프로젝트입니다. 단 한사람이라도 이 사이트를 통해서 장학금을 정보를 얻고 장학금을 받을 수 있도록
+돕는 것이 이 프로젝트의 목적입니다.
+
+---
 
 ## 구현 내용
-- **JWT 및 OAuth2 인증 및 권한 관리**
-- **CRUD 기능**: 데이터 생성, 조회, 수정, 삭제
-- **AWS S3**를 통한 파일 업로드 및 관리
-- **QueryDSL**을 활용한 동적 검색 쿼리
-- **Swagger UI**로 직관적인 API 문서 제공
-- **Docker Compose**를 활용한 서버와 Redis의 컨테이너 통합 관리
-- **AWS EC2** 환경에서 Docker 컨테이너 배포
+- 로그인 : OAuth2 사용
+- 인증/인가 : JWT & Spring Security 사용
+- 맞춤(추천) 장학금 : QueryDsl -> AI 활용
+- 배포 : Docker & AWS EC2
+- CI/CD : Github Actions
+
+  ---
+## 💡Why?
+***개발 과정 중에 있었던 어려움이나 기술을 채택한 이유에 대해 설명한 블로그 글입니다***
+
+- 동적쿼리를 위한 QueryDsl 사용에 대한 글: (Spring Boot에서 Querydsl 사용): <https://onetaek.tistory.com/4>
+- 도커를 활용해서 EC2에 서버를 배포하기 까지: (Docker와 Docker compose): <https://onetaek.tistory.com/5>
+- Spring Security 사용에 대한 글: 
+
+  ---
 
 ## API 소개
-서버 url : <http://ec2-15-164-84-210.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/>
+처음 프로젝트 시작 후 협업할 때는 스웨거를 통해 명세를 했지만 이후 혼자서 프로젝트를 진행하기 때문에 명세는 잠시 중단했습니다.
 <img width="1470" alt="image" src="https://github.com/user-attachments/assets/92dadb3a-4563-485a-9324-02083e68517e">
 <img width="1470" alt="image" src="https://github.com/user-attachments/assets/f14d1ba9-e15b-40fe-a881-16d9e4375209">
 
@@ -38,9 +48,4 @@
 | **배포**       | AWS EC2                           |
 
 
-## 💡Why?
-***개발 과정 중에 있었던 어려움이나 기술을 채택한 이유에 대해 설명한 블로그 글입니다***
 
-- 동적쿼리를 위한 QueryDsl 사용에 대한 글: (Spring Boot에서 Querydsl 사용): <https://onetaek.tistory.com/4>
-- 도커를 활용해서 EC2에 서버를 배포하기 까지: (Docker와 Docker compose): <https://onetaek.tistory.com/5>
-- Spring Security 사용에 대한 글: 
