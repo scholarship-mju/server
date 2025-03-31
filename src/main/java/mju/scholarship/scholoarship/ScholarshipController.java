@@ -144,7 +144,7 @@ public class ScholarshipController {
                 .build();
 
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
-        log.info("scholarshipStauts = {}", scholarshipStatus);
+
         return ResponseEntity.ok().body(scholarshipService.getAllScholarships(filterRequest, scholarshipStatus));
     }
 
@@ -191,9 +191,15 @@ public class ScholarshipController {
 
     //추천 장학금 by 유저 DB
     @GetMapping("/recommend/db")
-    public ResponseEntity<List<Scholarship>> getRecommendScholarship(){
-        return ResponseEntity.ok().body(scholarshipService.getRecommendedScholarships());
+    public ResponseEntity<List<Scholarship>> getRecommendScholarshipByDB(){
+        return ResponseEntity.ok().body(scholarshipService.getRecommendScholarshipByDB());
     }
+
+    //추천 장학금 by 유저 Pinecone
+//    @GetMapping("/recommend/pinecone")
+//    public ResponseEntity<List<Scholarship>> getRecommendScholarshipByPinecone(){
+//        return ResponseEntity.ok().body(scholarshipService.getRecommendScholarshipByPinecone());
+//    }
 
 
 

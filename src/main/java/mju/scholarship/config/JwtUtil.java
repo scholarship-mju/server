@@ -22,8 +22,6 @@ public class JwtUtil {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        log.info("name = {}", name);
-
         return memberRepository.findByUsername(name)
                 .orElseThrow(MemberNotFoundException::new);
     }

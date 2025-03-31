@@ -55,7 +55,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     // 첫 로그인 여부 확인 메서드
     private boolean checkNewUser(Authentication authentication) {
         String username = authentication.getName(); // 인증 객체에서 이메일 추출
-        log.info("check new user {}", username);
         return memberRepository.findByUsername(username)
                 .map(Member::isFirstLogin) // 첫 로그인 여부 반환
                 .orElse(true); // 사용자가 없을 경우 false 반환 (예외 처리 가능)
