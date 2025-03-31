@@ -69,7 +69,16 @@ public class EmbeddingService {
                 member.getCity() + " " +
                 member.getDepartment() + " " +
                 member.getGrade() + " " +
-                "소득분위 " + member.getIncomeQuantile();
+                mapIncomeQuantileToText(member.getIncomeQuantile());
+    }
+
+    // 소득분위를 텍스트화 해서 임베딩 정확도를 높임
+    private String mapIncomeQuantileToText(Integer quantile) {
+        if (quantile == null) return "소득 정보 없음";
+
+        if (quantile <= 3) return "기초생활수급 또는 차상위계층 (소득 1~3분위)";
+        if (quantile <= 6) return "중위소득 이하 (소득 4~6분위)";
+        return "중산층 이상 (소득 7~10분위)";
     }
 
     private String generateScholarshipText(Scholarship scholarship) {
