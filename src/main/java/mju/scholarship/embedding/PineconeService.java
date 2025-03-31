@@ -171,7 +171,7 @@ public class PineconeService {
         //  Pinecone 벡터 검색 요청 데이터 생성 (유저 벡터 기반 검색)
         Map<String, Object> requestBody = Map.of(
                 "vector", vector,
-                "topK", 5
+                "topK", 9
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
