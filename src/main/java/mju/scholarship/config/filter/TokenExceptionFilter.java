@@ -20,7 +20,9 @@ public class TokenExceptionFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (TokenException e) {
-            response.sendError(SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{ \"message\": \"" + e.getMessage() + "\" }");
         }
     }
 }
