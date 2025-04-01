@@ -158,7 +158,7 @@ public class PineconeService {
      * 유저 데이터를 DB에서 가져와서 벡터화 후 벡터화된 데이터를
      * @return
      */
-    public List<String> searchScholarshipByDB() {
+    public List<String>searchScholarshipByDB() {
 
         Member loginMember = jwtUtil.getLoginMember();
 
@@ -171,7 +171,7 @@ public class PineconeService {
         //  Pinecone 벡터 검색 요청 데이터 생성 (유저 벡터 기반 검색)
         Map<String, Object> requestBody = Map.of(
                 "vector", vector,
-                "topK", 9
+                "topK", 50
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);

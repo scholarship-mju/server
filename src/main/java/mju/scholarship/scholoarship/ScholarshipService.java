@@ -334,8 +334,26 @@ public class ScholarshipService {
         return response;
     }
 
-    public List<Scholarship> getRecommendedScholarships() {
+    //
+    public List<Scholarship> getRecommendScholarshipByDB() {
         List<String> recommendedIds = pineconeService.searchScholarshipByDB();
+
+        List<Long> scholarshipIds = recommendedIds.stream()
+                .map(Long::parseLong) // String -> Long 변환
+                .toList();
+
+        // DB에서 장학금 가져오고, 진행 중/예정인 것만 필터링
+        return scholarShipRepository.findAllById(scholarshipIds).stream()
+                .filter(s -> s.getProgressStatus() != ScholarshipProgressStatus.ENDED)
+                .limit(9) // 여기서 정확히 9개만 잘라서 사용
+                .toList();
+
+
+    }
+
+    public List<Scholarship> getRecommendScholarshipByPinecone() {
+
+        List<String> recommendedIds = pineconeService.searchScholarshipByPinecone();
 
         List<Long> scholarshipIds = recommendedIds.stream()
                 .map(Long::parseLong) // String -> Long 변환
