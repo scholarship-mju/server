@@ -59,6 +59,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
+            cd ~/app
+            
             docker-compose down
             
             # 최신 이미지 가져오기
