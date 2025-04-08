@@ -17,28 +17,22 @@ import mju.scholarship.redis.TokenRepository;
 import mju.scholarship.redis.TokenService;
 import mju.scholarship.result.exception.JwtSignatureInvalidException;
 import mju.scholarship.result.exception.MemberNotFoundException;
-import mju.scholarship.result.exception.RefreshTokenNotFoundException;
 import mju.scholarship.result.exception.TokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.security.core.GrantedAuthority;
 
 
 import javax.crypto.SecretKey;
-import javax.lang.model.type.ErrorType;
-import java.io.IOException;
-import java.sql.Ref;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Component
