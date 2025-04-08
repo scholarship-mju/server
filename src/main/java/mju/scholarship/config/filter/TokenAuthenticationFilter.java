@@ -36,7 +36,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         // 로그인 및 공용 엔드포인트를 필터링 대상에서 제외
-        return path.equals("/auth/login") || path.startsWith("/scholarship/all/**") || path.startsWith("/oauth2") || path.equals("/rank");
+        return path.equals("/auth/login") || path.startsWith("/anonymous/scholarship/all/**") || path.startsWith("/oauth2") || path.equals("/rank");
     }
 
 

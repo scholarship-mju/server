@@ -364,6 +364,22 @@ public class ScholarshipService {
         return scholarShipRepository.findAllById(scholarshipIds);
     }
 
+    public List<AllScholarshipResponse> getAllScholarshipsByAnonymous(ScholarshipFilterRequest filterRequest, ScholarshipProgressStatus status) {
+
+        // 전체 장학금 조회 및 관심 여부 설정
+        return scholarShipRepository.findAllByFilter(filterRequest, status).stream()
+                .map(scholarship -> AllScholarshipResponse.builder()
+                        .id(scholarship.getId())
+                        .supportDetails(scholarship.getSupportDetails())
+                        .name(scholarship.getName())
+                        .progressStatus(scholarship.getProgressStatus())
+                        .viewCount(getViewCount(scholarship.getId()))
+                        .organizationName(scholarship.getOrganizationName())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
 
 //    public List<Scholarship> getMyScholarship() {
         // 내 정보 가져오기
