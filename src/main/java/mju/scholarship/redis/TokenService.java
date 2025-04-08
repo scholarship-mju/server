@@ -16,7 +16,7 @@ import java.util.Optional;
 public class TokenService {
 
     private final TokenRepository tokenRepository;
-    private final StringRedisTemplate redisTemplate;
+
 
     public void saveAccessToken(String accessToken) {
         Token token = new Token(accessToken); // Token 객체 생성
