@@ -37,7 +37,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
-                .requestMatchers("/error", "/favicon.ico", "/api-docs", "swagger-ui/**", "/scholarship/anonymous/all/**");
+                .requestMatchers("/error", "/favicon.ico", "/api-docs", "swagger-ui/**");
     }
 
     @Bean
@@ -50,7 +50,7 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
 
                     config.addAllowedOriginPattern("http://localhost:3000"); // 로컬 개발 환경
-                    config.addAllowedOriginPattern("https://*.vercel.app"); // Vercel의 서브도메인
+                    config.addAllowedOriginPattern("https://taek-scholarship.vercel.app"); // Vercel의 서브도메인
                     config.addAllowedOriginPattern("http://ec2-43-201-128-122.ap-northeast-2.compute.amazonaws.com");
 
                     config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
