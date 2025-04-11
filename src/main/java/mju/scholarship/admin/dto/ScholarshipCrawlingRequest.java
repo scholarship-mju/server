@@ -21,9 +21,9 @@ public class ScholarshipCrawlingRequest {
     private String specialQualification;
     private String residencyRequirement;
     private String selectionMethod;
-    private Integer selectionCount;
+    private String selectionCount;
     private String eligibilityRestriction;
-    private Boolean recommendationRequired;
+    private String recommendationRequired;
     private String submitDocumentDetail;
     private String scholarshipUrl;
     private String startDate;

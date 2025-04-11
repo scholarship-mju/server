@@ -148,7 +148,7 @@ public class AdminService {
 
         Scholarship scholarship = Scholarship.builder()
                 .organizationName(request.getOrganizationName())
-                .name(request.getOrganizationName())
+                .name(request.getName())
                 .organizationType(request.getOrganizationType())
                 .productType(request.getProductType())
                 .financialAidType(request.getFinancialAidType())
@@ -158,13 +158,20 @@ public class AdminService {
                 .incomeRequirement(request.getIncomeRequirement())
                 .supportDetails(request.getSupportDetails())
                 .specialQualification(request.getSpecialQualification())
-                .recommendationRequired(request.getRecommendationRequired())
+                .recommendationRequired(
+                        "true".equalsIgnoreCase(request.getRecommendationRequired()) ||
+                                "1".equals(request.getRecommendationRequired())
+                )
                 .submitDocumentDetail(request.getSubmitDocumentDetail())
                 .scholarshipUrl(request.getScholarshipUrl())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .selectionMethod(request.getSelectionMethod())
-                .selectionCount(request.getSelectionCount())
+                .selectionCount(
+                        StringUtils.isNumeric(request.getSelectionCount())
+                                ? Integer.parseInt(request.getSelectionCount())
+                                : 0
+                )
                 .residencyRequirement(request.getResidencyRequirement())
                 .eligibilityRestriction(request.getEligibilityRestriction())
                 .departmentType(request.getDepartmentType())
