@@ -36,6 +36,7 @@ public class Scholarship {
     @Column(columnDefinition = "TEXT")
     private String supportDetails; // 지원내역 상세 내용
 
+    @Column(length = 1000)
     private String specialQualification; // 특정자격
     private String residencyRequirement; // 지역거주여부
     private String selectionMethod; // 선발방법
