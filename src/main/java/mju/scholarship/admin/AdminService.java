@@ -3,6 +3,7 @@ package mju.scholarship.admin;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.admin.dto.MemberGotResponse;
+import mju.scholarship.admin.dto.ScholarshipCrawlingRequest;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.entity.MemberGot;
@@ -140,5 +141,35 @@ public class AdminService {
 
 
         return scholarship.getScholarshipUrl();
+    }
+
+    @Transactional
+    public void uploadScholarshipCrawling(ScholarshipCrawlingRequest request) {
+
+        Scholarship scholarship = Scholarship.builder()
+                .organizationName(request.getOrganizationName())
+                .name(request.getOrganizationName())
+                .organizationType(request.getOrganizationType())
+                .productType(request.getProductType())
+                .financialAidType(request.getFinancialAidType())
+                .universityType(request.getUniversityType())
+                .gradeType(request.getGradeType())
+                .gradeRequirement(request.getGradeRequirement())
+                .incomeRequirement(request.getIncomeRequirement())
+                .supportDetails(request.getSupportDetails())
+                .specialQualification(request.getSpecialQualification())
+                .recommendationRequired(request.getRecommendationRequired())
+                .submitDocumentDetail(request.getSubmitDocumentDetail())
+                .scholarshipUrl(request.getScholarshipUrl())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .selectionMethod(request.getSelectionMethod())
+                .selectionCount(request.getSelectionCount())
+                .residencyRequirement(request.getResidencyRequirement())
+                .eligibilityRestriction(request.getEligibilityRestriction())
+                .departmentType(request.getDepartmentType())
+                .build();
+
+        scholarShipRepository.save(scholarship);
     }
 }

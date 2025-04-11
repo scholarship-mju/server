@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 import mju.scholarship.admin.dto.MemberGotResponse;
+import mju.scholarship.admin.dto.ScholarshipCrawlingRequest;
 import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.scholoarship.dto.ValidAddScholarshipRequest;
@@ -42,11 +43,18 @@ public class AdminController {
     }
 
     // 장학금 csv 올리는 API
-    @PostMapping("/upload")
+    @PostMapping("/upload/csv")
     public ResponseEntity<ResultResponse> uploadScholarshipCsv(@RequestParam("file") MultipartFile file) {
         adminService.uploadScholarshipCsv(file);
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
+
+    @PostMapping("/upload/crwaling")
+    public ResponseEntity<ResultResponse> uploadScholarshipCrawling(@RequestBody ScholarshipCrawlingRequest request) {
+        adminService.uploadScholarshipCrawling(request);
+        return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
+    }
+
 
     // TODO : 나중에는 스케줄링으로 돌리기 (자정에)
     @PostMapping("/progressStatus")
@@ -65,4 +73,5 @@ public class AdminController {
     public ResponseEntity<String> getScholarshipImage(@PathVariable Long scholarshipId){
         return ResponseEntity.ok().body(adminService.getScholarshipImage(scholarshipId));
     }
+
 }
