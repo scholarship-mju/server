@@ -28,15 +28,10 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, String dirName, Long scholarshipId) {
-        File uploadFile = null;
-        try {
-            uploadFile = convert(multipartFile)
-                    .orElseThrow(FileConvertException::new);
-        } catch (IOException e) {
+    public String upload(MultipartFile multipartFile, String dirName, Long scholarshipId) throws IOException {
+        File uploadFile = convert(multipartFile)
+                .orElseThrow(FileConvertException::new);
 
-            throw new FileUploadException(e.getMessage());
-        }
 
         return upload(uploadFile, dirName, scholarshipId);
     }

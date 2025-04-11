@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static mju.scholarship.result.code.ResultCode.*;
@@ -52,7 +53,7 @@ public class AdminController {
     @PostMapping("/upload/crawling")
     public ResponseEntity<ResultResponse> uploadScholarshipCrawling(
             @RequestPart("data") ScholarshipCrawlingRequest request,
-            @RequestPart(value = "file", required = false) MultipartFile file) {
+            @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
         adminService.uploadScholarshipCrawling(request, file);
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
