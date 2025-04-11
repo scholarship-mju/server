@@ -49,7 +49,7 @@ public class AdminController {
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
 
-    @PostMapping("/upload/crwaling")
+    @PostMapping("/upload/crawling")
     public ResponseEntity<ResultResponse> uploadScholarshipCrawling(@RequestBody ScholarshipCrawlingRequest request) {
         adminService.uploadScholarshipCrawling(request);
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
