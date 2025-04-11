@@ -104,7 +104,7 @@ public class Scholarship {
     }
 
     @Builder
-    public Scholarship(String name, String organizationType, String productType, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, String selectionCount, String eligibilityRestriction, String recommendationRequired, String submitDocumentDetail, String scholarshipUrl, String scholarshipImage) {
+    public Scholarship(String name, String organizationType, String productType, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, String selectionCount, String eligibilityRestriction, String recommendationRequired, String submitDocumentDetail, String scholarshipUrl) {
         this.name = name;
         this.organizationType = organizationType;
         this.productType = productType;
@@ -126,7 +126,6 @@ public class Scholarship {
         this.recommendationRequired = recommendationRequired;
         this.submitDocumentDetail = submitDocumentDetail;
         this.scholarshipUrl = scholarshipUrl;
-        this.scholarshipImage = scholarshipUrl;
     }
 
     public void updateScholarshipImage(String scholarshipImage) {
