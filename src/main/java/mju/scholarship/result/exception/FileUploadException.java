@@ -7,4 +7,9 @@ public class FileUploadException extends BusinessException{
     public FileUploadException() {
         super(ErrorCode.FileUploadException);
     }
+
+    public FileUploadException(String message) {
+        super(message, ErrorCode.FileUploadException);
+
+    }
 }

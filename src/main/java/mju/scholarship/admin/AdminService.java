@@ -12,6 +12,7 @@ import mju.scholarship.member.repository.MemberGotRepository;
 import mju.scholarship.member.repository.MemberRepository;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.result.exception.*;
+import mju.scholarship.s3.S3UploadService;
 import mju.scholarship.scholoarship.Scholarship;
 import mju.scholarship.scholoarship.ScholarshipService;
 import mju.scholarship.scholoarship.dto.ValidAddScholarshipRequest;
@@ -36,6 +37,7 @@ public class AdminService {
     private final MemberGotRepository memberGotRepository;
     private final MemberRepository memberRepository;
     private final ScholarShipRepository scholarShipRepository;
+    private final S3UploadService s3UploadService;
     private final JwtUtil jwtUtil;
 
     public List<MemberGotResponse> gotScholarshipConfirm(ScholarshipStatus status) {
@@ -144,9 +146,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void uploadScholarshipCrawling(ScholarshipCrawlingRequest request) {
-
-
+    public void uploadScholarshipCrawling(ScholarshipCrawlingRequest request, MultipartFile file) {
 
         Scholarship scholarship = Scholarship.builder()
                 .organizationName(request.getOrganizationName())
@@ -173,5 +173,9 @@ public class AdminService {
                 .build();
 
         scholarShipRepository.save(scholarship);
+
+        String scholarshipImage = s3UploadService.upload(file, "schoalrships", scholarship.getId());
+
+        scholarship.updateScholarshipImage(scholarshipImage);
     }
 }

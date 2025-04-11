@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.result.exception.FileConvertException;
+import mju.scholarship.result.exception.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,30 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
 
+    public String upload(MultipartFile multipartFile, String dirName, Long scholarshipId) {
+        File uploadFile = null;
+        try {
+            uploadFile = convert(multipartFile)
+                    .orElseThrow(FileConvertException::new);
+        } catch (IOException e) {
+            throw new FileUploadException(e.getMessage());
+        }
+
+        return upload(uploadFile, dirName, scholarshipId);
+    }
+
+    public String upload(File uploadFile, String dirName, Long scholarshipId) {
+
+        String sid = String.valueOf(scholarshipId);
+
+        final String fileName = dirName + "/" + uploadFile.getName() + "_" + sid;
+        final String uploadImageUrl = putS3(uploadFile, fileName);
+
+        removeNewFile(uploadFile);
+        log.info("uploadImageUrl={}", uploadImageUrl);
+        return uploadImageUrl;
+    }
+
     public String upload(MultipartFile multipartFile, String dirName, Long memberId, Long scholarshipId) throws IOException {
 
         File uploadFile = convert(multipartFile)
@@ -39,7 +64,6 @@ public class S3UploadService {
 
         String mid = String.valueOf(memberId);
         String sid = String.valueOf(scholarshipId);
-
 
         final String fileName = dirName + "/" + uploadFile.getName() + "_" + mid + "_" + sid;
         final String uploadImageUrl = putS3(uploadFile, fileName);

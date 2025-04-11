@@ -47,6 +47,7 @@ public class Scholarship {
     private String scholarshipUrl; // 신청 주소
     private String startDate; // 신청 시작 날짜
     private String endDate; // 신청 종료 날짜
+    private String scholarshipImage;
 
 
     @Enumerated(EnumType.STRING)
@@ -103,7 +104,7 @@ public class Scholarship {
     }
 
     @Builder
-    public Scholarship(String name, String organizationType, String productType, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, String selectionCount, String eligibilityRestriction, String recommendationRequired, String submitDocumentDetail, String scholarshipUrl) {
+    public Scholarship(String name, String organizationType, String productType, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, String selectionCount, String eligibilityRestriction, String recommendationRequired, String submitDocumentDetail, String scholarshipUrl, String scholarshipImage) {
         this.name = name;
         this.organizationType = organizationType;
         this.productType = productType;
@@ -125,5 +126,10 @@ public class Scholarship {
         this.recommendationRequired = recommendationRequired;
         this.submitDocumentDetail = submitDocumentDetail;
         this.scholarshipUrl = scholarshipUrl;
+        this.scholarshipImage = scholarshipUrl;
+    }
+
+    public void updateScholarshipImage(String scholarshipImage) {
+        this.scholarshipImage = scholarshipImage;
     }
 }

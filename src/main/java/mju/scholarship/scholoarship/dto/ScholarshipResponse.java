@@ -34,9 +34,10 @@ public class ScholarshipResponse {
     private String scholarshipUrl;
     private ScholarshipProgressStatus progressStatus;
     private int viewCount;
+    private String scholarshipImage;
 
     @Builder
-    public ScholarshipResponse(int viewCount, String productType, String organizationType, Long id, String name, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, String selectionCount, String eligibilityRestriction, String recommendationRequired, String submitDocumentDetail, String scholarshipUrl, ScholarshipProgressStatus progressStatus) {
+    public ScholarshipResponse(String scholarshipImage, int viewCount, String productType, String organizationType, Long id, String name, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, String selectionCount, String eligibilityRestriction, String recommendationRequired, String submitDocumentDetail, String scholarshipUrl, ScholarshipProgressStatus progressStatus) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -61,5 +62,6 @@ public class ScholarshipResponse {
         this.scholarshipUrl = scholarshipUrl;
         this.progressStatus = progressStatus;
         this.viewCount = viewCount;
+        this.scholarshipImage = scholarshipImage;
     }
 }

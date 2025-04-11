@@ -50,8 +50,11 @@ public class AdminController {
     }
 
     @PostMapping("/upload/crawling")
-    public ResponseEntity<ResultResponse> uploadScholarshipCrawling(@RequestBody ScholarshipCrawlingRequest request) {
-        adminService.uploadScholarshipCrawling(request);
+    public ResponseEntity<ResultResponse> uploadScholarshipCrawling(
+            @RequestPart("data") ScholarshipCrawlingRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+
+        adminService.uploadScholarshipCrawling(request, file);
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
 
