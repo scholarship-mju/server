@@ -34,6 +34,7 @@ public class S3UploadService {
             uploadFile = convert(multipartFile)
                     .orElseThrow(FileConvertException::new);
         } catch (IOException e) {
+
             throw new FileUploadException(e.getMessage());
         }
 

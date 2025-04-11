@@ -181,8 +181,9 @@ public class AdminService {
 
         scholarShipRepository.save(scholarship);
 
-        String scholarshipImage = s3UploadService.upload(file, "schoalrships", scholarship.getId());
-
-        scholarship.updateScholarshipImage(scholarshipImage);
+        if (file != null && !file.isEmpty()) {
+            String scholarshipImage = s3UploadService.upload(file, "schoalrships", scholarship.getId());
+            scholarship.updateScholarshipImage(scholarshipImage);
+        }
     }
 }
