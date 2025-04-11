@@ -13,4 +13,7 @@ public interface ScholarShipRepository extends JpaRepository<Scholarship, Long> 
 
     @Query("SELECT s FROM Scholarship s WHERE s.name LIKE CONCAT('%', :scholarshipName, '%')")
     List<Scholarship> findByScholarshipName(String scholarshipName);
+
+
+    boolean existsByNameAndOrganizationName(String name, String organizationName);
 }

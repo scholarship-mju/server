@@ -27,6 +27,7 @@ public enum ErrorCode {
     GotScholarshipNotFoundException(404, "S404", "이미 받은 장학금을 찾을 수 없습니다"),
     InterestedScholarshipNotFoundException(404, "S405", "찜한 장학금을 찾을 수 없습니다"),
     CsvParsingException(500, "S501", "장학금 파싱 실패"),
+    AlreadyScholarshipException(400, "S406", "이미 있는 장학금입니다"),
 
     // 파일
     FileConvertException(500, "F501", "파일 변환 실패"),

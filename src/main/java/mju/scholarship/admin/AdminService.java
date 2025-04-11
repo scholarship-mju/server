@@ -148,6 +148,13 @@ public class AdminService {
     @Transactional
     public void uploadScholarshipCrawling(ScholarshipCrawlingRequest request, MultipartFile file) {
 
+        String scholarhsipName = request.getName();
+        String organizationName = request.getOrganizationName();
+
+        boolean alreadyExist = scholarShipRepository.existsByNameAndOrganizationName(scholarhsipName, organizationName);
+
+        if(alreadyExist) throw new AlreadyScholarshipException();
+
         Scholarship scholarship = Scholarship.builder()
                 .organizationName(request.getOrganizationName())
                 .name(request.getName())
