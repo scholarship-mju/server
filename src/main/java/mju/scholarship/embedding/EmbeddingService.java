@@ -96,7 +96,7 @@ public class EmbeddingService {
                 scholarship.getResidencyRequirement() + " " +
                 scholarship.getSelectionMethod() + " " +
                 scholarship.getEligibilityRestriction() + " " +
-                (scholarship.getRecommendationRequired() ? "추천 필요" : "추천 없음") + " " +
+                scholarship.getRecommendationRequired() + " " +
                 scholarship.getSubmitDocumentDetail();
     }
 }

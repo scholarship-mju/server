@@ -104,9 +104,9 @@ public class AdminService {
                         .specialQualification(record.get("특정자격"))
                         .residencyRequirement(record.get("지역거주여부"))
                         .selectionMethod(record.get("선발방법"))
-                        .selectionCount(StringUtils.isNumeric(record.get("선발인원")) ? Integer.parseInt(record.get("선발인원 상세내용")) : 0)
+                        .selectionCount("선발인원")
                         .eligibilityRestriction(record.get("자격제한"))
-                        .recommendationRequired("TRUE".equalsIgnoreCase(record.get("추천필요여부")) || "1".equals(record.get("추천필요여부")))
+                        .recommendationRequired(record.get("추천필요여부"))
                         .submitDocumentDetail(record.get("제출서류"))
                         .scholarshipUrl(record.get("홈페이지주소"))
                         .startDate(record.get("모집시작일"))
@@ -146,6 +146,8 @@ public class AdminService {
     @Transactional
     public void uploadScholarshipCrawling(ScholarshipCrawlingRequest request) {
 
+
+
         Scholarship scholarship = Scholarship.builder()
                 .organizationName(request.getOrganizationName())
                 .name(request.getName())
@@ -158,20 +160,13 @@ public class AdminService {
                 .incomeRequirement(request.getIncomeRequirement())
                 .supportDetails(request.getSupportDetails())
                 .specialQualification(request.getSpecialQualification())
-                .recommendationRequired(
-                        "true".equalsIgnoreCase(request.getRecommendationRequired()) ||
-                                "1".equals(request.getRecommendationRequired())
-                )
+                .recommendationRequired(request.getRecommendationRequired())
                 .submitDocumentDetail(request.getSubmitDocumentDetail())
                 .scholarshipUrl(request.getScholarshipUrl())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .selectionMethod(request.getSelectionMethod())
-                .selectionCount(
-                        StringUtils.isNumeric(request.getSelectionCount())
-                                ? Integer.parseInt(request.getSelectionCount())
-                                : 0
-                )
+                .selectionCount(request.getSelectionCount())
                 .residencyRequirement(request.getResidencyRequirement())
                 .eligibilityRestriction(request.getEligibilityRestriction())
                 .departmentType(request.getDepartmentType())
