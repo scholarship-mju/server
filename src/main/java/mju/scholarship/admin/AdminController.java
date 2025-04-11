@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.admin.dto.MemberGotResponse;
 import mju.scholarship.admin.dto.ScholarshipCrawlingRequest;
 import mju.scholarship.member.entity.ScholarshipStatus;
@@ -24,6 +25,7 @@ import static mju.scholarship.result.code.ResultCode.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
+@Slf4j
 public class AdminController {
 
     private final AdminService adminService;
@@ -55,6 +57,7 @@ public class AdminController {
             @RequestPart("data") ScholarshipCrawlingRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
+        log.info(file.getOriginalFilename());
         adminService.uploadScholarshipCrawling(request, file);
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
