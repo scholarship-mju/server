@@ -12,6 +12,7 @@ import mju.scholarship.admin.dto.MemberGotResponse;
 import mju.scholarship.admin.dto.ScholarshipCrawlingRequest;
 import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.result.ResultResponse;
+import mju.scholarship.result.code.ResultCode;
 import mju.scholarship.scholoarship.dto.ValidAddScholarshipRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +58,6 @@ public class AdminController {
             @RequestPart("data") ScholarshipCrawlingRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
-        log.info(file.getOriginalFilename());
         adminService.uploadScholarshipCrawling(request, file);
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
