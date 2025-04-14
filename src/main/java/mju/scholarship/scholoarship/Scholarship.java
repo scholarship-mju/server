@@ -48,6 +48,7 @@ public class Scholarship {
     private String scholarshipUrl; // 신청 주소
     private String startDate; // 신청 시작 날짜
     private String endDate; // 신청 종료 날짜
+    @Column(name = "scholarship_image", columnDefinition = "TEXT")
     private String scholarshipImage;
 
 
