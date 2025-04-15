@@ -50,6 +50,7 @@ public class Scholarship {
     private String endDate; // 신청 종료 날짜
     @Column(name = "scholarship_image", columnDefinition = "TEXT")
     private String scholarshipImage;
+    private String university;
 
 
     @Enumerated(EnumType.STRING)
@@ -106,7 +107,7 @@ public class Scholarship {
     }
 
     @Builder
-    public Scholarship(String name, String organizationType, String productType, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, String selectionCount, String eligibilityRestriction, String recommendationRequired, String submitDocumentDetail, String scholarshipUrl) {
+    public Scholarship(String name, String university, String organizationType, String productType, String startDate, String endDate, String organizationName, String financialAidType, String universityType, String gradeType, String departmentType, String gradeRequirement, String incomeRequirement, String supportDetails, String specialQualification, String residencyRequirement, String selectionMethod, String selectionCount, String eligibilityRestriction, String recommendationRequired, String submitDocumentDetail, String scholarshipUrl) {
         this.name = name;
         this.organizationType = organizationType;
         this.productType = productType;
@@ -128,6 +129,7 @@ public class Scholarship {
         this.recommendationRequired = recommendationRequired;
         this.submitDocumentDetail = submitDocumentDetail;
         this.scholarshipUrl = scholarshipUrl;
+        this.university = university;
     }
 
     public void updateScholarshipImage(String scholarshipImage) {

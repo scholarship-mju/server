@@ -178,6 +178,7 @@ public class AdminService {
                 .residencyRequirement(request.getResidencyRequirement())
                 .eligibilityRestriction(request.getEligibilityRestriction())
                 .departmentType(request.getDepartmentType())
+                .university(request.getUniversity())
                 .build();
 
         scholarShipRepository.save(scholarship);

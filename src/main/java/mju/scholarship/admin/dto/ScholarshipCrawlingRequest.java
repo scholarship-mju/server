@@ -28,4 +28,5 @@ public class ScholarshipCrawlingRequest {
     private String scholarshipUrl;
     private String startDate;
     private String endDate;
+    private String university;
 }
