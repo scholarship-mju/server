@@ -1,10 +1,12 @@
 package mju.scholarship.scholoarship.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import mju.scholarship.scholoarship.Scholarship;
 import mju.scholarship.scholoarship.ScholarshipProgressStatus;
 
 @Getter
+@NoArgsConstructor
 public class CreateScholarshipRequest {
 
     private String name; // 장학금 이름

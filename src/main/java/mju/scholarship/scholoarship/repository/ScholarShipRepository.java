@@ -16,4 +16,6 @@ public interface ScholarShipRepository extends JpaRepository<Scholarship, Long> 
 
 
     boolean existsByNameAndOrganizationName(String name, String organizationName);
+
+    List<Scholarship> findAllByUniversity(String university);
 }

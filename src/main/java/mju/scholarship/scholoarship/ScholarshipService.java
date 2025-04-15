@@ -18,6 +18,7 @@ import mju.scholarship.scholoarship.dto.*;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -380,6 +381,31 @@ public class ScholarshipService {
                         .build()
                 )
                 .collect(Collectors.toList());
+    }
+
+    public List<UnivScholarshipResponse> getUnivScholarship() {
+
+        Member loginMember = jwtUtil.getLoginMember();
+        String university = loginMember.getUniversity();
+
+        List<Scholarship> allByUniversity = scholarShipRepository.findAllByUniversity(university);
+
+        List<UnivScholarshipResponse> univScholarshipResponses = new ArrayList<>();
+
+        for (Scholarship scholarship : allByUniversity) {
+            UnivScholarshipResponse response = UnivScholarshipResponse.builder()
+                    .id(scholarship.getId())
+                    .supportDetails(scholarship.getSupportDetails())
+                    .name(scholarship.getName())
+                    .progressStatus(scholarship.getProgressStatus())
+                    .viewCount(getViewCount(scholarship.getId()))
+                    .organizationName(scholarship.getOrganizationName())
+                    .build();
+
+            univScholarshipResponses.add(response);
+        }
+
+        return univScholarshipResponses;
     }
 
 

@@ -73,7 +73,7 @@ public class ScholarshipController {
             @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content)
     })
     @DeleteMapping("/got/{scholarshipId}")
-    public ResponseEntity<ResultResponse> deleteGotScholarship(@PathVariable Long scholarshipId){
+    public ResponseEntity<ResultResponse> deleteGotScholarship(@PathVariable Long scholarshipId) {
         scholarshipService.deleteGotScholarship(scholarshipId);
         return ResponseEntity.ok().body(ResultResponse.of(DeleteGotScholarshipSuccess));
     }
@@ -160,7 +160,6 @@ public class ScholarshipController {
     }
 
 
-
     @Operation(summary = "맞춤 장학금 조회", description = "맞춤 장학금 조회.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "장학금 조회 성공",
@@ -191,7 +190,7 @@ public class ScholarshipController {
 
     //추천 장학금 by 유저 DB
     @GetMapping("/recommend/db")
-    public ResponseEntity<List<Scholarship>> getRecommendScholarshipByDB(){
+    public ResponseEntity<List<Scholarship>> getRecommendScholarshipByDB() {
         return ResponseEntity.ok().body(scholarshipService.getRecommendScholarshipByDB());
     }
 
@@ -200,7 +199,6 @@ public class ScholarshipController {
 //    public ResponseEntity<List<Scholarship>> getRecommendScholarshipByPinecone(){
 //        return ResponseEntity.ok().body(scholarshipService.getRecommendScholarshipByPinecone());
 //    }
-
 
 
     @GetMapping("/anonymous/all/{status}")
@@ -230,6 +228,12 @@ public class ScholarshipController {
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
         return ResponseEntity.ok().body(scholarshipService.getAllScholarshipsByAnonymous(filterRequest, scholarshipStatus));
+    }
+
+    @GetMapping("/myUniv")
+    public ResponseEntity<List<UnivScholarshipResponse>> getUnivScholarship() {
+
+        return ResponseEntity.ok().body(scholarshipService.getUnivScholarship());
     }
 
 }
