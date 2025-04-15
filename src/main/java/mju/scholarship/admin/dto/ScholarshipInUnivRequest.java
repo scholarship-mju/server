@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class ScholarshipCrawlingRequest {
+public class ScholarshipInUnivRequest {
 
     private String organizationName;
     private String name;
@@ -28,4 +28,5 @@ public class ScholarshipCrawlingRequest {
     private String scholarshipUrl;
     private String startDate;
     private String endDate;
+    private String university;
 }

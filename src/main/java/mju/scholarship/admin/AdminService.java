@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mju.scholarship.admin.dto.MemberGotResponse;
 import mju.scholarship.admin.dto.ScholarshipCrawlingRequest;
+import mju.scholarship.admin.dto.ScholarshipInUnivRequest;
 import mju.scholarship.config.JwtUtil;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.entity.MemberGot;
@@ -149,10 +150,54 @@ public class AdminService {
     @Transactional
     public void uploadScholarshipCrawling(ScholarshipCrawlingRequest request, MultipartFile file) throws IOException {
 
-        String scholarhsipName = request.getName();
+        String scholarshipName = request.getName();
         String organizationName = request.getOrganizationName();
 
-        boolean alreadyExist = scholarShipRepository.existsByNameAndOrganizationName(scholarhsipName, organizationName);
+        boolean alreadyExist = scholarShipRepository.existsByNameAndOrganizationName(scholarshipName, organizationName);
+
+        if(alreadyExist) throw new AlreadyScholarshipException();
+
+        Scholarship scholarship = Scholarship.builder()
+                .organizationName(request.getOrganizationName())
+                .name(request.getName())
+                .organizationType(request.getOrganizationType())
+                .productType(request.getProductType())
+                .financialAidType(request.getFinancialAidType())
+                .universityType(request.getUniversityType())
+                .gradeType(request.getGradeType())
+                .gradeRequirement(request.getGradeRequirement())
+                .incomeRequirement(request.getIncomeRequirement())
+                .supportDetails(request.getSupportDetails())
+                .specialQualification(request.getSpecialQualification())
+                .recommendationRequired(request.getRecommendationRequired())
+                .submitDocumentDetail(request.getSubmitDocumentDetail())
+                .scholarshipUrl(request.getScholarshipUrl())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .selectionMethod(request.getSelectionMethod())
+                .selectionCount(request.getSelectionCount())
+                .residencyRequirement(request.getResidencyRequirement())
+                .eligibilityRestriction(request.getEligibilityRestriction())
+                .departmentType(request.getDepartmentType())
+                .build();
+
+        scholarShipRepository.save(scholarship);
+
+        if (file != null && !file.isEmpty()) {
+            String scholarshipImage = s3UploadService.upload(file, "scholarships", scholarship.getId());
+            scholarship.updateScholarshipImage(scholarshipImage);
+        }
+
+        scholarShipRepository.save(scholarship);
+    }
+
+    @Transactional
+    public void uploadScholarshipInUniv(ScholarshipInUnivRequest request) {
+
+        String scholarshipName = request.getName();
+        String organizationName = request.getOrganizationName();
+
+        boolean alreadyExist = scholarShipRepository.existsByNameAndOrganizationName(scholarshipName, organizationName);
 
         if(alreadyExist) throw new AlreadyScholarshipException();
 
@@ -180,13 +225,6 @@ public class AdminService {
                 .departmentType(request.getDepartmentType())
                 .university(request.getUniversity())
                 .build();
-
-        scholarShipRepository.save(scholarship);
-
-        if (file != null && !file.isEmpty()) {
-            String scholarshipImage = s3UploadService.upload(file, "scholarships", scholarship.getId());
-            scholarship.updateScholarshipImage(scholarshipImage);
-        }
 
         scholarShipRepository.save(scholarship);
     }

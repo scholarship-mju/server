@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.admin.dto.MemberGotResponse;
 import mju.scholarship.admin.dto.ScholarshipCrawlingRequest;
+import mju.scholarship.admin.dto.ScholarshipInUnivRequest;
 import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.result.code.ResultCode;
@@ -53,6 +54,7 @@ public class AdminController {
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
 
+    // 크롤링한 장학금 등록
     @PostMapping("/upload/crawling")
     public ResponseEntity<ResultResponse> uploadScholarshipCrawling(
             @RequestPart("data") ScholarshipCrawlingRequest request,
@@ -62,10 +64,18 @@ public class AdminController {
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
 
+    @PostMapping("/upload/inUniv")
+    public ResponseEntity<ResultResponse> uploadScholarshipInUniv(@RequestBody ScholarshipInUnivRequest request) {
+        adminService.uploadScholarshipInUniv(request);
+        return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
+    }
+
+
 
     // TODO : 나중에는 스케줄링으로 돌리기 (자정에)
     @PostMapping("/progressStatus")
-    public ResponseEntity<ResultResponse> setProgressStatus(){
+    public ResponseEntity<ResultResponse> setProgressStatus() {
+
         adminService.setProgressStatus();
         return ResponseEntity.ok().body(ResultResponse.of(SetProgressStatusSuccess));
     }
