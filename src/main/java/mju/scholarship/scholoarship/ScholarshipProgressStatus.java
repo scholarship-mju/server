@@ -3,28 +3,18 @@ package mju.scholarship.scholoarship;
 import lombok.Getter;
 import mju.scholarship.member.entity.ScholarshipStatus;
 
-@Getter
 public enum ScholarshipProgressStatus {
 
-    ALL(0),
-    UPCOMING(1),    // 예정
-    ONGOING(2),     // 진행 중
-    ENDED(3); // 종료
+    ALL,        // 예정
+    UPCOMING,   // 진행 중
+    ONGOING,    // 종료
+    ENDED;
 
-    private final int value;
-
-    ScholarshipProgressStatus(int value) {
-        this.value = value;
-    }
-
-
-    public static ScholarshipProgressStatus fromValue(int value) {
-        for (ScholarshipProgressStatus status : ScholarshipProgressStatus.values()) {
-            if (status.getValue() == value) {
-                return status;
-            }
+    public static ScholarshipProgressStatus fromValue(String value) {
+        try {
+            return ScholarshipProgressStatus.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status value: " + value);
         }
-        throw new IllegalArgumentException("Invalid status value: " + value);
     }
-
 }

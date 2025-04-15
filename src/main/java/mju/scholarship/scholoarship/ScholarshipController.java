@@ -132,7 +132,7 @@ public class ScholarshipController {
             @RequestParam(required = false) Integer incomeQuantile,
             @Parameter(description = "장학금 이름", example = "국가장학금")
             @RequestParam(required = false) String scholarshipName,
-            @PathVariable Integer status
+            @PathVariable String status
     ) {
         ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
                 .age(age)
@@ -214,7 +214,7 @@ public class ScholarshipController {
             @RequestParam(required = false) Integer incomeQuantile,
             @Parameter(description = "장학금 이름", example = "국가장학금")
             @RequestParam(required = false) String scholarshipName,
-            @PathVariable Integer status
+            @PathVariable String status
     ) {
         ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
                 .age(age)
