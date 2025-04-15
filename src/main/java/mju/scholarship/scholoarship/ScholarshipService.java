@@ -80,6 +80,7 @@ public class ScholarshipService {
                         .progressStatus(scholarship.getProgressStatus())
                         .viewCount(getViewCount(scholarship.getId()))
                         .organizationName(scholarship.getOrganizationName())
+                        .scholarshipImage(scholarship.getScholarshipImage())
                         .build()
                 )
                 .collect(Collectors.toList());
