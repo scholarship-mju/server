@@ -399,6 +399,7 @@ public class ScholarshipService {
                     .name(scholarship.getName())
                     .progressStatus(scholarship.getProgressStatus())
                     .viewCount(getViewCount(scholarship.getId()))
+                    .scholarshipImage(scholarship.getScholarshipImage())
                     .organizationName(scholarship.getOrganizationName())
                     .build();
 
