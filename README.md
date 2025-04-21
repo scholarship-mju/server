@@ -13,7 +13,7 @@ https://finding-scholarship.vercel.app
 - 로그인 : OAuth2 사용
 - 인증/인가 : JWT & Spring Security 사용
 - 맞춤(추천) 장학금 : QueryDsl -> AI 활용
-- 배포 : Docker & AWS EC2
+- 배포 : Docker compose & AWS EC2
 - CI/CD : Github Actions
 
 ## 💡Why?
@@ -22,8 +22,8 @@ https://finding-scholarship.vercel.app
 - 동적쿼리를 위한 QueryDsl 사용에 대한 글: (Spring Boot에서 Querydsl 사용): <https://onetaek.tistory.com/4>
 - 도커를 활용해서 EC2에 서버를 배포하기 까지: (Docker와 Docker compose): <https://onetaek.tistory.com/5>
 - 조회수 성능 최적화 by Redis: <https://onetaek.tistory.com/18>
-- 레디스 백업 방식에 대한 고민 : <https://onetaek.tistory.com/19>
-- 레디스 백업 환경 설정 : <https://onetaek.tistory.com/21>
+- 레디스 데이터 영속성 방식에 대한 고민 : <https://onetaek.tistory.com/19>
+- 레디스 영속성 환경 설정 : <https://onetaek.tistory.com/21>
 
 ## API 소개
 처음 프로젝트 시작 후 협업할 때는 스웨거를 통해 명세를 했지만 이후 혼자서 프로젝트를 진행하기 때문에 명세는 잠시 중단했습니다.
@@ -39,7 +39,7 @@ https://finding-scholarship.vercel.app
 | **프레임워크** | Spring Boot 3.3.3                |
 | **데이터베이스** | H2 (로컬 환경), AWS S3 (파일)    |
 | **인증/인가**  | Spring Security, JWT, OAuth2     |
-| **캐싱**       | Redis                             |
+| **토큰 저장 / 조회수 **       | Redis                             |
 | **쿼리**       | Spring Data JPA, QueryDSL         |
 | **빌드 툴**    | Gradle                            |
 | **문서화**     | Swagger                           |
