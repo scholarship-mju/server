@@ -121,28 +121,9 @@ public class ScholarshipController {
     })
     @GetMapping("/all/{status}")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
-            @RequestParam(required = false) Integer age,
-            @Parameter(description = "대학교 이름", example = "서울대학교")
-            @RequestParam(required = false) String university,
-            @Parameter(description = "학과 이름", example = "컴퓨터공학과")
-            @RequestParam(required = false) String department,
-            @Parameter(description = "성별", example = "남성")
-            @RequestParam(required = false) String gender,
-            @Parameter(description = "소득분위", example = "3")
-            @RequestParam(required = false) Integer incomeQuantile,
-            @Parameter(description = "장학금 이름", example = "국가장학금")
-            @RequestParam(required = false) String scholarshipName,
-            @PathVariable String status
+            @PathVariable String status,
+            @RequestBody ScholarshipFilterRequest filterRequest
     ) {
-        ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
-                .age(age)
-                .university(university)
-                .department(department)
-                .gender(gender)
-                .incomeQuantile(incomeQuantile)
-                .scholarshipName(scholarshipName)
-                .build();
-
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
         return ResponseEntity.ok().body(scholarshipService.getAllScholarships(filterRequest, scholarshipStatus));
@@ -203,27 +184,9 @@ public class ScholarshipController {
 
     @GetMapping("/anonymous/all/{status}")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarshipsByAnonymous(
-            @RequestParam(required = false) Integer age,
-            @Parameter(description = "대학교 이름", example = "서울대학교")
-            @RequestParam(required = false) String university,
-            @Parameter(description = "학과 이름", example = "컴퓨터공학과")
-            @RequestParam(required = false) String department,
-            @Parameter(description = "성별", example = "남성")
-            @RequestParam(required = false) String gender,
-            @Parameter(description = "소득분위", example = "3")
-            @RequestParam(required = false) Integer incomeQuantile,
-            @Parameter(description = "장학금 이름", example = "국가장학금")
-            @RequestParam(required = false) String scholarshipName,
-            @PathVariable String status
+            @PathVariable String status,
+            @RequestBody ScholarshipFilterRequest filterRequest
     ) {
-        ScholarshipFilterRequest filterRequest = ScholarshipFilterRequest.builder()
-                .age(age)
-                .university(university)
-                .department(department)
-                .gender(gender)
-                .incomeQuantile(incomeQuantile)
-                .scholarshipName(scholarshipName)
-                .build();
 
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 

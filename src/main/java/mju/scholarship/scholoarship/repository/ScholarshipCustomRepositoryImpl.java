@@ -1,5 +1,6 @@
 package mju.scholarship.scholoarship.repository;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -30,15 +31,13 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
         return jpaQueryFactory
                 .selectFrom(scholarship)
                 .where(
-//                        universityFilter(filter.getUniversity()),
-//                        genderFilter(filter.getGender()),
-//                        incomeFilter(filter.getIncomeQuantile()),
-//                        departmentFilter(filter.getDepartment()),
-//                        nameFilter(filter.getScholarshipName()),
+                        qualificationFilter(filter.getQualification()),
                         universityNullFilter(),
                         statusFilter(status)
                 ).fetch();
     }
+
+
 
     @Override
     public List<Scholarship> findMyScholarship(Member member) {
@@ -55,6 +54,10 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
 //                        addressEq(member.getProvince(), member.getCity())
                 )
                 .fetch();
+    }
+
+    private BooleanExpression qualificationFilter(String qualification) {
+        return scholarship.specialQualification.contains(qualification);
     }
 
     private BooleanExpression universityNullFilter() {

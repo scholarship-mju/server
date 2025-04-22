@@ -8,16 +8,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ScholarshipFilterRequest {
 
-    private Integer age;
-
-
-    private String university;
-
-    private String department;
-
-    private String gender;
-
-    private Integer incomeQuantile;
-
-    private String scholarshipName;
+    private String qualification;
 }
