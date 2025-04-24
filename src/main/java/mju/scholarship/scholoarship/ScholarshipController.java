@@ -119,14 +119,14 @@ public class ScholarshipController {
                     content = @Content(schema = @Schema(implementation = List.class))),
             @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
-    @GetMapping("/all/{status}")
+    @GetMapping("/all/{qualification}/{status}")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
             @PathVariable String status,
-            @RequestBody ScholarshipFilterRequest filterRequest
+            @PathVariable String qualification
     ) {
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
-        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(filterRequest, scholarshipStatus));
+        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(qualification, scholarshipStatus));
     }
 
     @Operation(summary = "장학금 단건 조회", description = "특정 장학금을 조회합니다.")

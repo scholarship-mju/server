@@ -27,11 +27,11 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     @Override
-    public List<Scholarship> findAllByFilter(ScholarshipFilterRequest filter, ScholarshipProgressStatus status) {
+    public List<Scholarship> findAllByFilter(String  qualification, ScholarshipProgressStatus status) {
         return jpaQueryFactory
                 .selectFrom(scholarship)
                 .where(
-                        qualificationFilter(filter.getQualification()),
+                        qualificationFilter(qualification),
                         universityNullFilter(),
                         statusFilter(status)
                 ).fetch();
