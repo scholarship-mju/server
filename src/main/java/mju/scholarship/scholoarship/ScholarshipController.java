@@ -121,8 +121,8 @@ public class ScholarshipController {
     })
     @GetMapping("/all/{qualification}/{status}")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
-            @PathVariable String status,
-            @PathVariable String qualification
+            @RequestParam(required = false) String qualification,
+            @RequestParam(required = false) String status
     ) {
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
@@ -184,13 +184,13 @@ public class ScholarshipController {
 
     @GetMapping("/anonymous/all/{status}")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarshipsByAnonymous(
-            @PathVariable String status,
-            @RequestBody ScholarshipFilterRequest filterRequest
+            @RequestParam(required = false) String qualification,
+            @RequestParam(required = false) String status
     ) {
 
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
-        return ResponseEntity.ok().body(scholarshipService.getAllScholarshipsByAnonymous(filterRequest, scholarshipStatus));
+        return ResponseEntity.ok().body(scholarshipService.getAllScholarshipsByAnonymous(qualification, scholarshipStatus));
     }
 
     @GetMapping("/myUniv")
