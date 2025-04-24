@@ -57,6 +57,11 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     private BooleanExpression qualificationFilter(String qualification) {
+
+        if (qualification == null || qualification.isBlank()) {
+            return null; // 필터 조건을 아예 추가하지 않음
+        }
+
         return scholarship.specialQualification.contains(qualification);
     }
 
