@@ -119,7 +119,7 @@ public class ScholarshipController {
                     content = @Content(schema = @Schema(implementation = List.class))),
             @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
-    @GetMapping("/all/{qualification}/{status}")
+    @GetMapping("/all")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
             @RequestParam(required = false) String qualification,
             @RequestParam(required = false) String status
@@ -182,7 +182,7 @@ public class ScholarshipController {
 //    }
 
 
-    @GetMapping("/anonymous/all/{qualification}/{status}")
+    @GetMapping("/anonymous/all")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarshipsByAnonymous(
             @RequestParam(required = false) String qualification,
             @RequestParam(required = false) String status
