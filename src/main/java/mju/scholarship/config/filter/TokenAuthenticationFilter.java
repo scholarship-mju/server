@@ -8,11 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.handler.CustomExceptionHandler;
 import mju.scholarship.config.provider.TokenProvider;
-import mju.scholarship.result.exception.RefreshTokenNotFoundException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -47,6 +44,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = resolveToken(request);
 
         if(StringUtils.hasText(accessToken)) {
+            if(tokenProvider.validBlackListToken(accessToken)) {
+                throw new AuthenticationCredentialsNotFoundException("Access Token is blacklisted.");
+            }
+
             if(tokenProvider.validTokenInRedis(accessToken)) {
                 setAuthentication(accessToken);
             }

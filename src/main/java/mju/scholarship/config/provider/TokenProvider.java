@@ -182,6 +182,10 @@ public class TokenProvider {
         return tokenService.validAccessToken(token);
     }
 
+    public boolean validBlackListToken(String token) {
+        return tokenService.validBlackListToken(token);
+    }
+
 
     public Claims parseClaims(String token) {
         try {
