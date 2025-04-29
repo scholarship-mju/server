@@ -34,8 +34,6 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
         return List.of(new SimpleGrantedAuthority(member.getRole().name()));  // 역할 반환
     }
 
-
-
     public boolean isFirstLogin() {
         return isFirstLogin;
     }
