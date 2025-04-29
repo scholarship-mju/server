@@ -16,11 +16,17 @@ import java.util.Optional;
 public class TokenService {
 
     private final TokenRepository tokenRepository;
+    private final BlackListTokenRepository blackListTokenRepository;
 
 
     public void saveAccessToken(String accessToken) {
         Token token = new Token(accessToken); // Token 객체 생성
         tokenRepository.save(token); // Redis에 저장
+    }
+
+    public void blacklistAccessToken(String accessToken) {
+        BlackListToken token = new BlackListToken(accessToken);
+        blackListTokenRepository.save(token);
     }
 
     public void deleteAccessToken(String id) {
@@ -29,6 +35,10 @@ public class TokenService {
 
     public boolean validAccessToken(String accessToken) {
         return tokenRepository.findByAccessToken(accessToken).isPresent();
+    }
+
+    public boolean validBlackListToken(String accessToken) {
+        return blackListTokenRepository.findByAccessToken(accessToken).isPresent();
     }
 
 
