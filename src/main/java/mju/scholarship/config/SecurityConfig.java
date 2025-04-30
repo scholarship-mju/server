@@ -1,10 +1,7 @@
 package mju.scholarship.config;
 
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
-import mju.scholarship.config.filter.JwtAuthenticationFilter;
 import mju.scholarship.config.filter.TokenAuthenticationFilter;
-import mju.scholarship.config.filter.TokenExceptionFilter;
 import mju.scholarship.config.handler.*;
 import mju.scholarship.config.provider.TokenProvider;
 import mju.scholarship.member.CustomOAuth2UserService;
@@ -90,7 +87,6 @@ public class SecurityConfig {
                )
 
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions
