@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+@RequestMapping("/api")
 public class AuthController {
 
     private final AuthService authService;
@@ -24,10 +25,6 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String tokenHeader) {
         String accessToken = tokenHeader.replace("Bearer ", "");
-
-        // 사용자 ID를 액세스 토큰으로 추출 (구현 필요)
-        String userId = getUserIdFromToken(accessToken);
-        log.info("Logout success with token: {}", accessToken);
 
         // 로그아웃 처리
         authService.logout(accessToken);
