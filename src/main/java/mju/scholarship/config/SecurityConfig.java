@@ -1,9 +1,12 @@
 package mju.scholarship.config;
 
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
+import mju.scholarship.config.filter.JwtAuthenticationFilter;
 import mju.scholarship.config.filter.TokenAuthenticationFilter;
 import mju.scholarship.config.filter.TokenExceptionFilter;
 import mju.scholarship.config.handler.*;
+import mju.scholarship.config.provider.TokenProvider;
 import mju.scholarship.member.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +34,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final TokenProvider tokenProvider;
     private final CustomExceptionHandler customExceptionHandler;
 
 
@@ -72,7 +76,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/rank").permitAll() // /rank 요청 허용
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
@@ -86,7 +90,7 @@ public class SecurityConfig {
                )
 
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new TokenExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions
