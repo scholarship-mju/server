@@ -44,8 +44,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = resolveToken(request);
 
         if(StringUtils.hasText(accessToken)) {
-            if(tokenProvider.validBlackListToken(accessToken)) {
-                throw new AuthenticationCredentialsNotFoundException("Access Token is blacklisted.");
+            if (tokenProvider.validBlackListToken(accessToken)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"message\": \"Access Token is blacklisted.\"}");
+                response.getWriter().flush();
+                return; // 필터 체인 중단
             }
 
             if(tokenProvider.validTokenInRedis(accessToken)) {
