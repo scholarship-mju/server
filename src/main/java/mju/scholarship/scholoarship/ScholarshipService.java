@@ -64,7 +64,7 @@ public class ScholarshipService {
     }
 
 
-    public List<AllScholarshipResponse> getAllScholarships(String  qualification, ScholarshipProgressStatus status) {
+    public List<AllScholarshipResponse> getAllScholarships(List<String>  qualification, ScholarshipProgressStatus status) {
         // 현재 로그인된 사용자 가져오기
         Member loginMember = jwtUtil.getLoginMember();
 
@@ -367,7 +367,7 @@ public class ScholarshipService {
         return scholarShipRepository.findAllById(scholarshipIds);
     }
 
-    public List<AllScholarshipResponse> getAllScholarshipsByAnonymous(String qualification, ScholarshipProgressStatus status) {
+    public List<AllScholarshipResponse> getAllScholarshipsByAnonymous(List<String> qualification, ScholarshipProgressStatus status) {
 
         // 전체 장학금 조회 및 관심 여부 설정
         return scholarShipRepository.findAllByFilter(qualification, status).stream()

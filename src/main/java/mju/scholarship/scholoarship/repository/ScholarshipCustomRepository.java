@@ -12,5 +12,5 @@ public interface ScholarshipCustomRepository {
 
     List<Scholarship> findMyScholarship(Member member);
 
-    List<Scholarship> findAllByFilter(String qualification, ScholarshipProgressStatus status);
+    List<Scholarship> findAllByFilter(List<String> qualification, ScholarshipProgressStatus status);
 }

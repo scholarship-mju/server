@@ -27,7 +27,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     @Override
-    public List<Scholarship> findAllByFilter(String  qualification, ScholarshipProgressStatus status) {
+    public List<Scholarship> findAllByFilter(List<String>  qualification, ScholarshipProgressStatus status) {
         return jpaQueryFactory
                 .selectFrom(scholarship)
                 .where(
@@ -56,13 +56,19 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                 .fetch();
     }
 
-    private BooleanExpression qualificationFilter(String qualification) {
+    private BooleanExpression qualificationFilter(List<String> qualification) {
 
-        if (qualification == null || qualification.isBlank()) {
+        if (qualification == null || qualification.isEmpty()) {
             return null; // 필터 조건을 아예 추가하지 않음
         }
 
-        return scholarship.specialQualification.contains(qualification);
+        BooleanExpression result = null;
+        for (String q : qualification) {
+            BooleanExpression condition = scholarship.specialQualification.containsIgnoreCase(q);
+            result = (result == null) ? condition : result.or(condition);
+        }
+
+        return result;
     }
 
     private BooleanExpression universityNullFilter() {

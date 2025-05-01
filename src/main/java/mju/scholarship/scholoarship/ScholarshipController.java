@@ -121,7 +121,7 @@ public class ScholarshipController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
-            @RequestParam(required = false) String qualification,
+            @RequestParam(required = false) List<String> qualification,
             @RequestParam(required = false) String status
     ) {
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
@@ -184,7 +184,7 @@ public class ScholarshipController {
 
     @GetMapping("/anonymous/all")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarshipsByAnonymous(
-            @RequestParam(required = false) String qualification,
+            @RequestParam(required = false) List<String> qualification,
             @RequestParam(required = false) String status
     ) {
 
