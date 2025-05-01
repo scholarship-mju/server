@@ -12,6 +12,7 @@ import mju.scholarship.scholoarship.ScholarshipProgressStatus;
 import mju.scholarship.scholoarship.dto.ScholarshipFilterRequest;
 
 import java.util.List;
+import java.util.Map;
 
 import static mju.scholarship.scholoarship.QScholarship.scholarship;
 
@@ -25,6 +26,19 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
         this.em = em;
         this.jpaQueryFactory = new JPAQueryFactory(em);
     }
+
+    public static final Map<String, List<String>> QUALIFICATION_KEYWORDS = Map.of(
+            "예체능 특기자", List.of("예·체능", "예술", "체육", "입상", "전국대회", "특기생"),
+            "다자녀 가구", List.of("다자녀", "3자녀", "가족관계증명서"),
+            "성적우수자", List.of("성적우수", "성적 상위", "학점 우수", "우수한 학생", "우수자"),
+            "지역인재", List.of("지역 출신", "지역대학", "○○군", "출신고교", "고등학교 졸업", "관내"),
+            "만학도", List.of("만학도", "만 25세 이상", "25세 이상"),
+            "봉사활동 우수자", List.of("봉사", "자원봉사", "사회공헌"),
+            "리더십/활동 우수자", List.of("학생회", "리더십", "공모전", "대외활동"),
+            "다문화가정", List.of("다문화", "다문화가정"),
+            "장애인", List.of("장애인", "장애 정도"),
+            "국가유공자", List.of("국가유공자", "보훈", "상이군경", "보훈대상")
+    );
 
     @Override
     public List<Scholarship> findAllByFilter(List<String>  qualification, ScholarshipProgressStatus status) {
@@ -56,16 +70,22 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                 .fetch();
     }
 
-    private BooleanExpression qualificationFilter(List<String> qualification) {
+    private BooleanExpression qualificationFilter(List<String> qualifications) {
 
-        if (qualification == null || qualification.isEmpty()) {
-            return null; // 필터 조건을 아예 추가하지 않음
+        if (qualifications == null || qualifications.isEmpty()) {
+            return null;
         }
 
         BooleanExpression result = null;
-        for (String q : qualification) {
-            BooleanExpression condition = scholarship.specialQualification.containsIgnoreCase(q);
-            result = (result == null) ? condition : result.or(condition);
+
+        for (String label : qualifications) {
+            List<String> keywords = QUALIFICATION_KEYWORDS.get(label);
+            if (keywords == null) continue; // 매핑 안 된 라벨은 무시
+
+            for (String keyword : keywords) {
+                BooleanExpression condition = scholarship.specialQualification.containsIgnoreCase(keyword);
+                result = (result == null) ? condition : result.or(condition);
+            }
         }
 
         return result;
@@ -78,6 +98,8 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     private BooleanExpression statusFilter(ScholarshipProgressStatus status) {
         return (status == null || status == ScholarshipProgressStatus.ALL) ? null : scholarship.progressStatus.eq(status);
     }
+
+
 //
 //    private BooleanExpression nameFilter(String name){
 //        if(name == null){
