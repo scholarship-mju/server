@@ -71,8 +71,6 @@ public class AdminController {
     }
 
 
-
-    // TODO : 나중에는 스케줄링으로 돌리기 (자정에)
     @PostMapping("/progressStatus")
     public ResponseEntity<ResultResponse> setProgressStatus() {
 

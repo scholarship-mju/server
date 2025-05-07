@@ -22,6 +22,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -129,6 +130,7 @@ public class AdminService {
     }
 
     @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
     public void setProgressStatus() {
         List<Scholarship> all = scholarShipRepository.findAll();
         for (Scholarship scholarship : all) {
