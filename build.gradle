@@ -47,6 +47,10 @@ dependencies {
 
 //	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 
+	//모니터링
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 	// csv 업로드
 	implementation 'org.apache.commons:commons-csv:1.10.0'
 
