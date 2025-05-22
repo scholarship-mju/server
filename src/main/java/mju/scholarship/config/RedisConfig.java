@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisNode;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,22 +18,36 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 @Configuration
 @EnableCaching
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}")
-    private String host;
+    @Value("${spring.data.redis.sentinel.master}")
+    private String master;
 
-    @Value("${spring.data.redis.port}")
-    private int port;
+    @Value("${spring.data.redis.sentinel.nodes}")
+    private String sentinelNodes; // "host1:port1,host2:port2,..."
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        configuration.setHostName(host);
-        configuration.setPort(port);
+        RedisSentinelConfiguration configuration = new RedisSentinelConfiguration();
+
+        configuration.setMaster(master);
+
+        Set<RedisNode> sentinels = Stream.of(sentinelNodes.split(","))
+                .map(node -> {
+                    String[] parts = node.split(":");
+                    return new RedisNode(parts[0], Integer.parseInt(parts[1]));
+                })
+                .collect(Collectors.toSet());
+
+        configuration.setSentinels(sentinels);
+
         return new LettuceConnectionFactory(configuration);
     }
 
