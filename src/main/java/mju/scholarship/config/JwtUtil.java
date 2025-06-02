@@ -23,9 +23,8 @@ public class JwtUtil {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof PrincipalDetails principal) {
             String email = principal.getEmail();
+            log.info("email = {}", email);
         }
-
-        log.info("email");
 
         return memberRepository.findByUsername(name)
                 .orElseThrow(MemberNotFoundException::new);
