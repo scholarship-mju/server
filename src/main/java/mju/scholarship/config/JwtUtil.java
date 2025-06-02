@@ -21,8 +21,10 @@ public class JwtUtil {
     public Member getLoginMember(){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        String email = principal.getEmail();
+        if (authentication != null && authentication.getPrincipal() instanceof PrincipalDetails principal) {
+            String email = principal.getEmail();
+        }
+
         log.info("email");
 
         return memberRepository.findByUsername(name)
