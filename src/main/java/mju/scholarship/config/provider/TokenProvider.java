@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mju.scholarship.config.JwtUtil;
+import mju.scholarship.member.PrincipalDetails;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.repository.MemberRepository;
 import mju.scholarship.redis.Token;
@@ -29,10 +30,7 @@ import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Component
@@ -108,8 +106,10 @@ public class TokenProvider {
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 
         // Security의 User 객체 생성
-        User principal = new User(username, "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+
+
+        PrincipalDetails principal = new PrincipalDetails(member, Map.of(), "email", member.isFirstLogin());
+        return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
 
     private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
