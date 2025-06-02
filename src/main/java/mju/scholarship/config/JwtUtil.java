@@ -2,6 +2,7 @@ package mju.scholarship.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mju.scholarship.member.PrincipalDetails;
 import mju.scholarship.member.entity.Member;
 import mju.scholarship.member.repository.MemberRepository;
 import mju.scholarship.result.exception.MemberNotFoundException;
@@ -19,8 +20,10 @@ public class JwtUtil {
 
     public Member getLoginMember(){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        String email = principal.getEmail();
+        log.info("email");
 
         return memberRepository.findByUsername(name)
                 .orElseThrow(MemberNotFoundException::new);
