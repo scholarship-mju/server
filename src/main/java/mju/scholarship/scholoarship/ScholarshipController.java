@@ -13,6 +13,7 @@ import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.result.ErrorResponse;
 import mju.scholarship.result.ResultResponse;
 import mju.scholarship.scholoarship.dto.*;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -120,13 +121,14 @@ public class ScholarshipController {
             @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content)
     })
     @GetMapping("/all")
-    public ResponseEntity<List<AllScholarshipResponse>> getAllScholarships(
+    public ResponseEntity<Page<AllScholarshipResponse>> getAllScholarships(
             @RequestParam(required = false) List<String> qualification,
-            @RequestParam(required = false) String status
+            @RequestParam(required = false) String status,
+            @RequestParam int page
     ) {
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
-        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(qualification, scholarshipStatus));
+        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(qualification, scholarshipStatus, page));
     }
 
     @Operation(summary = "장학금 단건 조회", description = "특정 장학금을 조회합니다.")
@@ -185,12 +187,13 @@ public class ScholarshipController {
     @GetMapping("/anonymous/all")
     public ResponseEntity<List<AllScholarshipResponse>> getAllScholarshipsByAnonymous(
             @RequestParam(required = false) List<String> qualification,
-            @RequestParam(required = false) String status
+            @RequestParam(required = false) String status,
+            @RequestParam int page
     ) {
 
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
-        return ResponseEntity.ok().body(scholarshipService.getAllScholarshipsByAnonymous(qualification, scholarshipStatus));
+        return ResponseEntity.ok().body(scholarshipService.getAllScholarshipsByAnonymous(qualification, scholarshipStatus, page));
     }
 
     @GetMapping("/myUniv")

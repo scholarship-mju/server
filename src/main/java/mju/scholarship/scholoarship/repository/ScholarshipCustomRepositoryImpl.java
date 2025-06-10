@@ -10,6 +10,9 @@ import mju.scholarship.member.entity.ScholarshipStatus;
 import mju.scholarship.scholoarship.Scholarship;
 import mju.scholarship.scholoarship.ScholarshipProgressStatus;
 import mju.scholarship.scholoarship.dto.ScholarshipFilterRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -41,14 +44,31 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     );
 
     @Override
-    public List<Scholarship> findAllByFilter(List<String>  qualification, ScholarshipProgressStatus status) {
-        return jpaQueryFactory
+    public Page<Scholarship> findAllByFilter(List<String>  qualification, ScholarshipProgressStatus status, Pageable pageable) {
+        List<Scholarship> content = jpaQueryFactory
                 .selectFrom(scholarship)
                 .where(
                         qualificationFilter(qualification),
                         universityNullFilter(),
                         statusFilter(status)
-                ).fetch();
+                )
+                .offset(pageable.getOffset()) // 페이징 시작 오프셋
+                .limit(pageable.getPageSize()) // 페이지당 가져올 개수
+                .fetch(); // 실제 데이터 조회
+
+        // 2. 전체 데이터 개수 조회 쿼리 (페이징 없이 전체 개수를 가져옴)
+        Long total = jpaQueryFactory
+                .select(scholarship.count())
+                .from(scholarship)
+                .where(
+                        qualificationFilter(qualification),
+                        universityNullFilter(),
+                        statusFilter(status)
+                )
+                .fetchOne(); // 전체 개수 조회
+
+        // 3. Page 객체 생성 및 반환
+        return new PageImpl<>(content, pageable, total);
     }
 
 

@@ -16,6 +16,10 @@ import mju.scholarship.result.exception.*;
 import mju.scholarship.s3.S3UploadService;
 import mju.scholarship.scholoarship.dto.*;
 import mju.scholarship.scholoarship.repository.ScholarShipRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
@@ -64,27 +68,30 @@ public class ScholarshipService {
     }
 
 
-    public List<AllScholarshipResponse> getAllScholarships(List<String>  qualification, ScholarshipProgressStatus status) {
+    public Page<AllScholarshipResponse> getAllScholarships(List<String>  qualification, ScholarshipProgressStatus status, int page) {
         // 현재 로그인된 사용자 가져오기
         Member loginMember = jwtUtil.getLoginMember();
 
         // 관심 장학금 ID 리스트 가져오기
         List<Long> interestedIds = memberInterRepository.findScholarshipIdByMember(loginMember);
 
+        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "viewCount"));
+
         // 전체 장학금 조회 및 관심 여부 설정
-        return scholarShipRepository.findAllByFilter(qualification, status).stream()
-                .map(scholarship -> AllScholarshipResponse.builder()
+        Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(qualification, status, pageable);
+
+        return scholarships.map(scholarship ->
+                AllScholarshipResponse.builder()
                         .id(scholarship.getId())
                         .supportDetails(scholarship.getSupportDetails())
                         .name(scholarship.getName())
-                        .isInterested(interestedIds.contains(scholarship.getId())) // 관심 여부 체크
+                        .isInterested(interestedIds.contains(scholarship.getId()))
                         .progressStatus(scholarship.getProgressStatus())
                         .viewCount(getViewCount(scholarship.getId()))
                         .organizationName(scholarship.getOrganizationName())
                         .scholarshipImage(scholarship.getScholarshipImage())
                         .build()
-                )
-                .collect(Collectors.toList());
+        );
     }
 
 
@@ -367,10 +374,12 @@ public class ScholarshipService {
         return scholarShipRepository.findAllById(scholarshipIds);
     }
 
-    public List<AllScholarshipResponse> getAllScholarshipsByAnonymous(List<String> qualification, ScholarshipProgressStatus status) {
+    public List<AllScholarshipResponse> getAllScholarshipsByAnonymous(List<String> qualification, ScholarshipProgressStatus status, int page) {
+
+        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "viewCount"));
 
         // 전체 장학금 조회 및 관심 여부 설정
-        return scholarShipRepository.findAllByFilter(qualification, status).stream()
+        return scholarShipRepository.findAllByFilter(qualification, status, pageable).stream()
                 .map(scholarship -> AllScholarshipResponse.builder()
                         .id(scholarship.getId())
                         .supportDetails(scholarship.getSupportDetails())
