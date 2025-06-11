@@ -185,7 +185,7 @@ public class ScholarshipController {
 
 
     @GetMapping("/anonymous/all")
-    public ResponseEntity<List<AllScholarshipResponse>> getAllScholarshipsByAnonymous(
+    public ResponseEntity<Page<AllScholarshipResponse>> getAllScholarshipsByAnonymous(
             @RequestParam(required = false) List<String> qualification,
             @RequestParam(required = false) String status,
             @RequestParam int page

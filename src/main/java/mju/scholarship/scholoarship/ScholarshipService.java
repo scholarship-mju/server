@@ -67,34 +67,6 @@ public class ScholarshipService {
         System.out.println("Scholarship progressStatus updated at: " + LocalDate.now());
     }
 
-
-    public Page<AllScholarshipResponse> getAllScholarships(List<String>  qualification, ScholarshipProgressStatus status, int page) {
-        // 현재 로그인된 사용자 가져오기
-        Member loginMember = jwtUtil.getLoginMember();
-
-        // 관심 장학금 ID 리스트 가져오기
-        List<Long> interestedIds = memberInterRepository.findScholarshipIdByMember(loginMember);
-
-        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "viewCount"));
-
-        // 전체 장학금 조회 및 관심 여부 설정
-        Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(qualification, status, pageable);
-
-        return scholarships.map(scholarship ->
-                AllScholarshipResponse.builder()
-                        .id(scholarship.getId())
-                        .supportDetails(scholarship.getSupportDetails())
-                        .name(scholarship.getName())
-                        .isInterested(interestedIds.contains(scholarship.getId()))
-                        .progressStatus(scholarship.getProgressStatus())
-                        .viewCount(getViewCount(scholarship.getId()))
-                        .organizationName(scholarship.getOrganizationName())
-                        .scholarshipImage(scholarship.getScholarshipImage())
-                        .build()
-        );
-    }
-
-
     @Transactional
     public void addGotScholarships(Long scholarshipId) {
         Member loginMember = jwtUtil.getLoginMember();
@@ -374,22 +346,49 @@ public class ScholarshipService {
         return scholarShipRepository.findAllById(scholarshipIds);
     }
 
-    public List<AllScholarshipResponse> getAllScholarshipsByAnonymous(List<String> qualification, ScholarshipProgressStatus status, int page) {
+    public Page<AllScholarshipResponse> getAllScholarships(List<String>  qualification, ScholarshipProgressStatus status, int page) {
+        // 현재 로그인된 사용자 가져오기
+        Member loginMember = jwtUtil.getLoginMember();
+
+        // 관심 장학금 ID 리스트 가져오기
+        List<Long> interestedIds = memberInterRepository.findScholarshipIdByMember(loginMember);
 
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "viewCount"));
 
         // 전체 장학금 조회 및 관심 여부 설정
-        return scholarShipRepository.findAllByFilter(qualification, status, pageable).stream()
-                .map(scholarship -> AllScholarshipResponse.builder()
+        Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(qualification, status, pageable);
+
+        return scholarships.map(scholarship ->
+                AllScholarshipResponse.builder()
+                        .id(scholarship.getId())
+                        .supportDetails(scholarship.getSupportDetails())
+                        .name(scholarship.getName())
+                        .isInterested(interestedIds.contains(scholarship.getId()))
+                        .progressStatus(scholarship.getProgressStatus())
+                        .viewCount(getViewCount(scholarship.getId()))
+                        .organizationName(scholarship.getOrganizationName())
+                        .scholarshipImage(scholarship.getScholarshipImage())
+                        .build()
+        );
+    }
+
+    public Page<AllScholarshipResponse> getAllScholarshipsByAnonymous(List<String> qualification, ScholarshipProgressStatus status, int page) {
+
+        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "viewCount"));
+
+        // 전체 장학금 조회 및 관심 여부 설정
+        Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(qualification, status, pageable);
+
+        return scholarships.map(scholarship ->
+                AllScholarshipResponse.builder()
                         .id(scholarship.getId())
                         .supportDetails(scholarship.getSupportDetails())
                         .name(scholarship.getName())
                         .progressStatus(scholarship.getProgressStatus())
                         .viewCount(getViewCount(scholarship.getId()))
                         .organizationName(scholarship.getOrganizationName())
-                        .build()
-                )
-                .collect(Collectors.toList());
+                        .scholarshipImage(scholarship.getScholarshipImage())
+                        .build());
     }
 
     public List<UnivScholarshipResponse> getUnivScholarship() {
