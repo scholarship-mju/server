@@ -86,6 +86,12 @@ public class Scholarship {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
 
         try {
+            // 기간이 null 이면 계속 진행중 표시
+            if (startDate == null || endDate == null) {
+                this.progressStatus = ScholarshipProgressStatus.ONGOING;
+                return;
+            }
+
             LocalDate start = LocalDate.parse(startDate, formatter);
             LocalDate end = LocalDate.parse(endDate, formatter);
 
