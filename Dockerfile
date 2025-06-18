@@ -17,6 +17,8 @@ FROM openjdk:17-jdk-slim AS runtime
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y iputils-ping netcat-traditional redis-tools && rm -rf /var/lib/apt/lists/*
+
 # 빌드된 JAR 파일 복사
 COPY --from=build /app/build/libs/*.jar /app/scholarship.jar
 
