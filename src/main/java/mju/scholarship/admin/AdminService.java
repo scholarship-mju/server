@@ -22,6 +22,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -136,6 +137,23 @@ public class AdminService {
         for (Scholarship scholarship : all) {
             scholarship.updateProgressStatusConvert();
         }
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void setProgressStatusByAsync() {
+        List<Scholarship> all = scholarShipRepository.findAll();
+        for (Scholarship scholarship : all) {
+            asyncUpdateStatus(scholarship.getId());
+        }
+    }
+
+
+    @Async
+    @Transactional
+    public void asyncUpdateStatus(Long scholarshipId) {
+        Scholarship scholarship = scholarShipRepository.findById(scholarshipId).orElseThrow();
+        scholarship.updateProgressStatusConvert();
     }
 
     public String getScholarshipImage(Long scholarshipId) {

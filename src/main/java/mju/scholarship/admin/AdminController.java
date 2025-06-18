@@ -64,22 +64,29 @@ public class AdminController {
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
 
+    //
     @PostMapping("/upload/inUniv")
     public ResponseEntity<ResultResponse> uploadScholarshipInUniv(@RequestBody ScholarshipInUnivRequest request) {
         adminService.uploadScholarshipInUniv(request);
         return ResponseEntity.ok().body(ResultResponse.of(UploadScholarshipSuccess));
     }
 
-
+    // 모든 장학금의 상태를 최신화 하는 API
     @PostMapping("/progressStatus")
     public ResponseEntity<ResultResponse> setProgressStatus() {
-
         adminService.setProgressStatus();
         return ResponseEntity.ok().body(ResultResponse.of(SetProgressStatusSuccess));
     }
 
+    @PostMapping("/progressStatus/async")
+    public ResponseEntity<ResultResponse> setProgressStatusAsync() {
+        adminService.setProgressStatusByAsync();
+        return ResponseEntity.ok().body(ResultResponse.of(SetProgressStatusSuccess));
+    }
+
+    // 현재 접근하는 사용자가 admin인지 확인하는 API
     @GetMapping("/isAdmin")
-    public ResponseEntity<ResultResponse> isAdmin(){
+    public ResponseEntity<ResultResponse> isAdmin() {
         return ResponseEntity.ok().body(ResultResponse.of(AdminAccessSuccess));
     }
 
