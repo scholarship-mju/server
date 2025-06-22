@@ -13,6 +13,9 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
+@Table(name = "scholarship", indexes = {
+        @Index(name = "idx_status_view", columnList = "progress_status, view_count DESC")
+})
 public class Scholarship {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
