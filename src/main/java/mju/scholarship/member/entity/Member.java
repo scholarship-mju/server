@@ -49,6 +49,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
+    public void updateNickName(String newNickname) {
+        this.nickname = this.nickname;
+    }
+
     public enum Role{
         ROLE_USER, ROLE_ADMIN
     }

@@ -11,6 +11,7 @@ public enum ResultCode {
     CreateInfoSuccess(200, "M202", "회원 정보 등록 성공"),
     ProfileUpdateSuccess(200, "M203", "프로필 변경 성공"),
     DELETE_ACCOUNT_SUCCESS(200, "M204", "회원 탈퇴 성공"),
+    UPDATE_NICKNAME_SUCCESS(200, "UPDATE_NICKNAME_SUCCESS", "닉네임 변경 성공"),
 
     //장학금
     UploadScholarshipSuccess(200, "S201", "장학금 등록 성공"),

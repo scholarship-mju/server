@@ -128,4 +128,10 @@ public class MemberService {
 
         memberRepository.delete(jwtUtil.getLoginMember());
     }
+
+    @Transactional
+    public void updateNickName(UpdateNickNameRequest updateNickNameRequest) {
+        Member loginMember = jwtUtil.getLoginMember();
+        loginMember.updateNickName(updateNickNameRequest.getNickName());
+    }
 }

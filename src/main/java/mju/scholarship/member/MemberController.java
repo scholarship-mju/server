@@ -98,4 +98,10 @@ public class MemberController {
         memberService.deleteAccount();
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.DELETE_ACCOUNT_SUCCESS));
     }
+
+    @PatchMapping("/username")
+    public ResponseEntity<ResultResponse> updateNickName(@RequestBody UpdateNickNameRequest updateNickNameRequest){
+        memberService.updateNickName(updateNickNameRequest);
+        return ResponseEntity.ok().body(ResultResponse.of(ResultCode.UPDATE_NICKNAME_SUCCESS));
+    }
 }
