@@ -93,7 +93,7 @@ public class MemberController {
     }
 
     //회원 탈퇴
-    @DeleteMapping("")
+    @DeleteMapping("me")
     public ResponseEntity<ResultResponse> deleteAccount(){
         memberService.deleteAccount();
         return ResponseEntity.ok().body(ResultResponse.of(ResultCode.DELETE_ACCOUNT_SUCCESS));
