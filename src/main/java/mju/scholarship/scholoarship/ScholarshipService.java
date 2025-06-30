@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -49,6 +51,7 @@ public class ScholarshipService {
     private final StringRedisTemplate redisTemplate;
     private final PineconeService pineconeService;
     private static final int BATCH_SIZE = 1; // 100개씩 모아서 실행
+    private final JdbcTemplate jdbcTemplate;
     private final ConcurrentHashMap<Long, AtomicInteger> localCounter = new ConcurrentHashMap<>();
 
     private static final String VIEW_COUNT_KEY = "scholarship:viewCount:";
@@ -65,6 +68,36 @@ public class ScholarshipService {
 
         scholarShipRepository.saveAll(scholarships); // 일괄 저장
         System.out.println("Scholarship progressStatus updated at: " + LocalDate.now());
+    }
+
+    @Scheduled(cron = "0 */5 * * * *") // 5분마다
+    @Transactional
+    public void syncViewCounts() {
+        Set<String> ids = redisTemplate.opsForSet().members("dirty_scholarship_ids");
+
+        List<Object[]> batchArgs = new ArrayList<>();
+
+        for (String idStr : ids) {
+            Long id = Long.parseLong(idStr);
+            String key = VIEW_COUNT_KEY + id;
+            String countStr = redisTemplate.opsForValue().get(key);
+            if (countStr == null) continue;
+
+            int viewCount = Integer.parseInt(countStr);
+            batchArgs.add(new Object[]{viewCount, id});
+        }
+
+        try {
+            jdbcTemplate.batchUpdate(
+                    "UPDATE scholarship SET view_count = ? WHERE id = ?",
+                    batchArgs
+            );
+            redisTemplate.delete("dirty_scholarship_ids"); // 💡 성공했을 때만 삭제
+        } catch (Exception e) {
+            // 로그 남기고 retry나 alert 가능
+            throw new
+        }
+
     }
 
     @Transactional
@@ -112,7 +145,7 @@ public class ScholarshipService {
         Scholarship scholarship = scholarShipRepository.findById(scholarshipId)
                 .orElseThrow(ScholarshipNotFoundException::new);
 
-        incrementViewCountBatchAndPipe(scholarshipId);
+        incrementViewCountDirect(scholarshipId);
 
         int viewCount = getViewCount(scholarshipId);
 
@@ -155,6 +188,14 @@ public class ScholarshipService {
             connection.stringCommands().incr(key.getBytes()); // 여러 요청을 한 번에 처리
             return null;
         });
+    }
+
+    public void incrementViewCountDirect(Long scholarshipId) {
+        String key = VIEW_COUNT_KEY + scholarshipId;
+        redisTemplate.opsForValue().increment(key);  // 바로 Redis에 증가
+
+        // 변경된 ID 기록
+        redisTemplate.opsForSet().add("dirty_scholarship_ids", scholarshipId.toString());
     }
 
     public void incrementViewCountBatchAndPipe(Long scholarshipId) {
