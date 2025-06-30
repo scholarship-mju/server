@@ -95,7 +95,7 @@ public class ScholarshipService {
             redisTemplate.delete("dirty_scholarship_ids"); // 💡 성공했을 때만 삭제
         } catch (Exception e) {
             // 로그 남기고 retry나 alert 가능
-            throw new
+            throw new ViewCountUpdateException();
         }
 
     }
