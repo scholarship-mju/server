@@ -52,6 +52,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                         universityNullFilter(),
                         statusFilter(status)
                 )
+                .orderBy(scholarship.viewCount.desc())
                 .offset(pageable.getOffset()) // 페이징 시작 오프셋
                 .limit(pageable.getPageSize()) // 페이지당 가져올 개수
                 .fetch(); // 실제 데이터 조회
