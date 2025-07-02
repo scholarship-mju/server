@@ -394,7 +394,7 @@ public class ScholarshipService {
         // 관심 장학금 ID 리스트 가져오기
         List<Long> interestedIds = memberInterRepository.findScholarshipIdByMember(loginMember);
 
-        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "viewCount"));
+        Pageable pageable = PageRequest.of(page, 18, Sort.by(Sort.Direction.DESC, "viewCount"));
 
         // 전체 장학금 조회 및 관심 여부 설정
         Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(qualification, status, pageable);
