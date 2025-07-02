@@ -2,6 +2,8 @@ package mju.scholarship.scholoarship.repository;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +47,11 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
 
     @Override
     public Page<Scholarship> findAllByFilter(List<String>  qualification, ScholarshipProgressStatus status, Pageable pageable) {
+        NumberExpression<Integer> customOrder = new CaseBuilder()
+                .when(scholarship.progressStatus.eq(ScholarshipProgressStatus.ENDED)).then(1)
+                .otherwise(0); // ENDED는 뒤로, 그 외는 먼저
+
+        // 2. 실제 데이터 조회
         List<Scholarship> content = jpaQueryFactory
                 .selectFrom(scholarship)
                 .where(
@@ -52,12 +59,13 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                         universityNullFilter(),
                         statusFilter(status)
                 )
-                .orderBy(scholarship.viewCount.desc())
-                .offset(pageable.getOffset()) // 페이징 시작 오프셋
-                .limit(pageable.getPageSize()) // 페이지당 가져올 개수
-                .fetch(); // 실제 데이터 조회
+                .orderBy(customOrder.asc())                     // ENDED는 뒤로
+                .orderBy(scholarship.viewCount.desc())          // 그 안에서는 조회수 기준 정렬
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
-        // 2. 전체 데이터 개수 조회 쿼리 (페이징 없이 전체 개수를 가져옴)
+        // 3. 전체 개수 조회
         Long total = jpaQueryFactory
                 .select(scholarship.count())
                 .from(scholarship)
@@ -66,9 +74,8 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                         universityNullFilter(),
                         statusFilter(status)
                 )
-                .fetchOne(); // 전체 개수 조회
+                .fetchOne();
 
-        // 3. Page 객체 생성 및 반환
         return new PageImpl<>(content, pageable, total);
     }
 
@@ -117,7 +124,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     }
 
     private BooleanExpression statusFilter(ScholarshipProgressStatus status) {
-        return (status == null || status == ScholarshipProgressStatus.ALL) ? null : scholarship.progressStatus.eq(status);
+        return (status == null) ? null : scholarship.progressStatus.eq(status);
     }
 
 
