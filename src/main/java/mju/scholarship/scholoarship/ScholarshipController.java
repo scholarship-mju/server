@@ -122,13 +122,14 @@ public class ScholarshipController {
     })
     @GetMapping("/all")
     public ResponseEntity<Page<AllScholarshipResponse>> getAllScholarships(
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) List<String> qualification,
             @RequestParam(required = false) String status,
             @RequestParam int page
     ) {
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
-        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(qualification, scholarshipStatus, page));
+        return ResponseEntity.ok().body(scholarshipService.getAllScholarships(keyword, qualification, scholarshipStatus, page));
     }
 
     @Operation(summary = "장학금 단건 조회", description = "특정 장학금을 조회합니다.")
@@ -186,6 +187,7 @@ public class ScholarshipController {
 
     @GetMapping("/anonymous/all")
     public ResponseEntity<Page<AllScholarshipResponse>> getAllScholarshipsByAnonymous(
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) List<String> qualification,
             @RequestParam(required = false) String status,
             @RequestParam int page
@@ -193,7 +195,7 @@ public class ScholarshipController {
 
         ScholarshipProgressStatus scholarshipStatus = (status != null) ? ScholarshipProgressStatus.fromValue(status) : null;
 
-        return ResponseEntity.ok().body(scholarshipService.getAllScholarshipsByAnonymous(qualification, scholarshipStatus, page));
+        return ResponseEntity.ok().body(scholarshipService.getAllScholarshipsByAnonymous(keyword, qualification, scholarshipStatus, page));
     }
 
     @GetMapping("/myUniv")

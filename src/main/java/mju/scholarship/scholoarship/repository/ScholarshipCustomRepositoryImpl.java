@@ -46,7 +46,7 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
     );
 
     @Override
-    public Page<Scholarship> findAllByFilter(List<String>  qualification, ScholarshipProgressStatus status, Pageable pageable) {
+    public Page<Scholarship> findAllByFilter(String keyword, List<String>  qualification, ScholarshipProgressStatus status, Pageable pageable) {
         NumberExpression<Integer> customOrder = new CaseBuilder()
                 .when(scholarship.progressStatus.eq(ScholarshipProgressStatus.ENDED)).then(1)
                 .otherwise(0); // ENDED는 뒤로, 그 외는 먼저
@@ -57,7 +57,8 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
                 .where(
                         qualificationFilter(qualification),
                         universityNullFilter(),
-                        statusFilter(status)
+                        statusFilter(status),
+                        keywordFilter(keyword)
                 )
                 .orderBy(customOrder.asc())                     // ENDED는 뒤로
                 .orderBy(scholarship.viewCount.desc())          // 그 안에서는 조회수 기준 정렬
@@ -78,7 +79,6 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
 
         return new PageImpl<>(content, pageable, total);
     }
-
 
 
     @Override
@@ -118,6 +118,21 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
 
         return result;
     }
+
+    private BooleanExpression keywordFilter(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return null;
+        }
+
+        return scholarship.organizationName.containsIgnoreCase(keyword)
+                .or(scholarship.name.containsIgnoreCase(keyword))
+                .or(scholarship.departmentType.containsIgnoreCase(keyword))
+                .or(scholarship.supportDetails.containsIgnoreCase(keyword))
+                .or(scholarship.specialQualification.containsIgnoreCase(keyword))
+                .or(scholarship.selectionMethod.containsIgnoreCase(keyword))
+                .or(scholarship.eligibilityRestriction.containsIgnoreCase(keyword));
+    }
+
 
     private BooleanExpression universityNullFilter() {
         return (scholarship.university.isNull());

@@ -387,7 +387,7 @@ public class ScholarshipService {
         return scholarShipRepository.findAllById(scholarshipIds);
     }
 
-    public Page<AllScholarshipResponse> getAllScholarships(List<String>  qualification, ScholarshipProgressStatus status, int page) {
+    public Page<AllScholarshipResponse> getAllScholarships(String keyword, List<String>  qualification, ScholarshipProgressStatus status, int page) {
         // 현재 로그인된 사용자 가져오기
         Member loginMember = jwtUtil.getLoginMember();
 
@@ -397,7 +397,7 @@ public class ScholarshipService {
         Pageable pageable = PageRequest.of(page, 18, Sort.by(Sort.Direction.DESC, "viewCount"));
 
         // 전체 장학금 조회 및 관심 여부 설정
-        Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(qualification, status, pageable);
+        Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(keyword, qualification, status, pageable);
 
         return scholarships.map(scholarship ->
                 AllScholarshipResponse.builder()
@@ -413,12 +413,12 @@ public class ScholarshipService {
         );
     }
 
-    public Page<AllScholarshipResponse> getAllScholarshipsByAnonymous(List<String> qualification, ScholarshipProgressStatus status, int page) {
+    public Page<AllScholarshipResponse> getAllScholarshipsByAnonymous(String keyword, List<String> qualification, ScholarshipProgressStatus status, int page) {
 
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "viewCount"));
 
         // 전체 장학금 조회 및 관심 여부 설정
-        Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(qualification, status, pageable);
+        Page<Scholarship> scholarships = scholarShipRepository.findAllByFilter(keyword, qualification, status, pageable);
 
         return scholarships.map(scholarship ->
                 AllScholarshipResponse.builder()
