@@ -95,6 +95,12 @@ public class AdminService {
             }
 
             for (CSVRecord record : csvParser) {
+
+                if(scholarShipRepository
+                        .existsByNameAndOrganizationName(record.get("상품명"), record.get("운영기관명"))){
+                    continue;
+                }
+
                 Scholarship scholarship = Scholarship.builder()
                         .organizationName(record.get("운영기관명"))
                         .name(record.get("상품명"))
