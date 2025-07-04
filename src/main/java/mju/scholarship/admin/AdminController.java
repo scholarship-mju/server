@@ -26,7 +26,7 @@ import static mju.scholarship.result.code.ResultCode.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 @Slf4j
 public class AdminController {
 

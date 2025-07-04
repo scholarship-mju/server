@@ -25,7 +25,7 @@ import static mju.scholarship.result.code.ResultCode.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/scholarship")
+@RequestMapping("/api/scholarship")
 @Tag(name = "Scholarship", description = "장학금 관리 API")
 @Slf4j
 public class ScholarshipController {

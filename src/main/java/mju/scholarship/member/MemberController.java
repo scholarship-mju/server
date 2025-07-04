@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import static mju.scholarship.result.code.ResultCode.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/member")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Member", description = "회원 관리 API")
