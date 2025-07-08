@@ -432,12 +432,12 @@ public class ScholarshipService {
                         .build());
     }
 
-    public List<UnivScholarshipResponse> getUnivScholarship() {
+    public List<UnivScholarshipResponse> getUnivScholarship(String keyword) {
 
         Member loginMember = jwtUtil.getLoginMember();
         String university = loginMember.getUniversity();
 
-        List<Scholarship> allByUniversity = scholarShipRepository.findAllByUniversity(university);
+        List<Scholarship> allByUniversity = scholarShipRepository.findAllByUniversity(university, keyword);
 
         List<UnivScholarshipResponse> univScholarshipResponses = new ArrayList<>();
 

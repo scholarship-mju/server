@@ -80,6 +80,16 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
         return new PageImpl<>(content, pageable, total);
     }
 
+    public List<Scholarship> findAllByUniversity(String university, String keyword){
+        return jpaQueryFactory
+                .selectFrom(scholarship)
+                .where(
+                        universityFilter(university),
+                        keywordFilter(keyword)
+                )
+                .fetch();
+    }
+
 
     @Override
     public List<Scholarship> findMyScholarship(Member member) {
@@ -117,6 +127,10 @@ public class ScholarshipCustomRepositoryImpl implements ScholarshipCustomReposit
         }
 
         return result;
+    }
+
+    private BooleanExpression universityFilter(String university){
+        return scholarship.university.eq(university);
     }
 
     private BooleanExpression keywordFilter(String keyword) {

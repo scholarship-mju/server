@@ -198,10 +198,12 @@ public class ScholarshipController {
         return ResponseEntity.ok().body(scholarshipService.getAllScholarshipsByAnonymous(keyword, qualification, scholarshipStatus, page));
     }
 
+    // 교내 장학금 조회
     @GetMapping("/myUniv")
-    public ResponseEntity<List<UnivScholarshipResponse>> getUnivScholarship() {
+    public ResponseEntity<List<UnivScholarshipResponse>> getUnivScholarship(
+            @RequestParam(required = false) String keyword) {
 
-        return ResponseEntity.ok().body(scholarshipService.getUnivScholarship());
+        return ResponseEntity.ok().body(scholarshipService.getUnivScholarship(keyword));
     }
 
 }
