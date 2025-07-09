@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,11 +75,16 @@ public class ScholarshipService {
     @Scheduled(cron = "0 */5 * * * *") // 5분마다
     @Transactional
     public void syncViewCounts() {
-        Set<String> ids = redisTemplate.opsForSet().members("dirty_scholarship_ids");
+        Set<String> idSet = redisTemplate.opsForSet().members("dirty_scholarship_ids");
         List<Object[]> batchArgs = new ArrayList<>();
         List<String> keysToDelete = new ArrayList<>();
 
-        if (ids == null || ids.isEmpty()) return;
+        if (idSet == null || idSet.isEmpty()) return;
+
+        List<String> ids = new ArrayList<>(idSet); // 순서 고정
+        Collections.sort(ids);
+
+
 
         // Redis 파이프라인으로 view count 한번에 가져오기
         List<Object> viewCounts = redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
@@ -97,7 +103,8 @@ public class ScholarshipService {
                 continue;
             }
 
-            int viewCount = Integer.parseInt(new String((byte[]) countObj, StandardCharsets.UTF_8));
+            String countStr = (String) countObj; // 타입에 맞게 String으로 캐스팅
+            int viewCount = Integer.parseInt(countStr); // 정상 파싱
             Long id = Long.parseLong(idStr);
 
             batchArgs.add(new Object[]{viewCount, id});
@@ -108,7 +115,7 @@ public class ScholarshipService {
 
         try {
             jdbcTemplate.batchUpdate(
-                    "UPDATE scholarship SET view_count = ? WHERE id = ?",
+                    "UPDATE scholarship SET view_count = ? WHERE scholarship_id = ?",
                     batchArgs
             );
             redisTemplate.delete("dirty_scholarship_ids"); //  성공했을 때만 삭제
@@ -117,6 +124,51 @@ public class ScholarshipService {
         }
 
     }
+
+    @Scheduled(cron = "0 */5 * * * *") // 5분마다
+    @Transactional
+    public void syncViewCountsWithoutPipeline() {
+        Set<String> idSet = redisTemplate.opsForSet().members("dirty_scholarship_ids");
+        List<Object[]> batchArgs = new ArrayList<>();
+        List<String> keysToDelete = new ArrayList<>();
+
+        if (idSet == null || idSet.isEmpty()) return;
+
+        List<String> ids = new ArrayList<>(idSet); // 순서 고정
+        Collections.sort(ids);
+
+        for (String idStr : ids) {
+            String key = VIEW_COUNT_KEY + idStr;
+            String countStr = redisTemplate.opsForValue().get(key); // ❶ 한 개씩 get
+
+            if (countStr == null) {
+                log.warn("View count 없음: {}", key);
+                continue;
+            }
+
+            try {
+                int viewCount = Integer.parseInt(countStr);
+                Long id = Long.parseLong(idStr);
+                batchArgs.add(new Object[]{viewCount, id});
+                keysToDelete.add(key);
+            } catch (NumberFormatException e) {
+                log.warn("파싱 실패: {} → {}", key, countStr);
+            }
+        }
+
+        if (batchArgs.isEmpty()) return;
+
+        try {
+            jdbcTemplate.batchUpdate(
+                    "UPDATE scholarship SET view_count = ? WHERE scholarship_id = ?",
+                    batchArgs
+            );
+            redisTemplate.delete("dirty_scholarship_ids"); // 성공 시 삭제
+        } catch (Exception e) {
+            throw new ViewCountUpdateException();
+        }
+    }
+
 
     @Transactional
     public void addGotScholarships(Long scholarshipId) {
