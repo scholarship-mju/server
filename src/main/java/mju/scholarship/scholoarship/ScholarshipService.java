@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,27 +75,44 @@ public class ScholarshipService {
     @Transactional
     public void syncViewCounts() {
         Set<String> ids = redisTemplate.opsForSet().members("dirty_scholarship_ids");
-
         List<Object[]> batchArgs = new ArrayList<>();
+        List<String> keysToDelete = new ArrayList<>();
 
+        if (ids == null || ids.isEmpty()) return;
+
+        // Redis 파이프라인으로 view count 한번에 가져오기
+        List<Object> viewCounts = redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            for (String idStr : ids) {
+                String key = (VIEW_COUNT_KEY + idStr);
+                connection.get(key.getBytes(StandardCharsets.UTF_8));
+            }
+            return null;
+        });
+
+        int index = 0;
         for (String idStr : ids) {
-            Long id = Long.parseLong(idStr);
-            String key = VIEW_COUNT_KEY + id;
-            String countStr = redisTemplate.opsForValue().get(key);
-            if (countStr == null) continue;
+            Object countObj = viewCounts.get(index++);
+            if (countObj == null) {
+                log.warn("View count 없음: {}", VIEW_COUNT_KEY + idStr);
+                continue;
+            }
 
-            int viewCount = Integer.parseInt(countStr);
+            int viewCount = Integer.parseInt(new String((byte[]) countObj, StandardCharsets.UTF_8));
+            Long id = Long.parseLong(idStr);
+
             batchArgs.add(new Object[]{viewCount, id});
+            keysToDelete.add(VIEW_COUNT_KEY + idStr);
         }
+
+        if (batchArgs.isEmpty()) return;
 
         try {
             jdbcTemplate.batchUpdate(
                     "UPDATE scholarship SET view_count = ? WHERE id = ?",
                     batchArgs
             );
-            redisTemplate.delete("dirty_scholarship_ids"); // 💡 성공했을 때만 삭제
+            redisTemplate.delete("dirty_scholarship_ids"); //  성공했을 때만 삭제
         } catch (Exception e) {
-            // 로그 남기고 retry나 alert 가능
             throw new ViewCountUpdateException();
         }
 
@@ -208,7 +226,7 @@ public class ScholarshipService {
                 if (localCounter.get(scholarshipId).get() >= BATCH_SIZE) {
                     String key = VIEW_COUNT_KEY + scholarshipId;
 
-                    // 🚀 Pipeline 적용: 네트워크 오버헤드 최소화!
+                    // Pipeline 적용: 네트워크 오버헤드 최소화
                     redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
                         connection.stringCommands().incrBy(key.getBytes(), currentCount);
                         return null;
