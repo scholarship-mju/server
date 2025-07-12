@@ -1,11 +1,16 @@
 # 맞춤 장학금 서비스
 ## 사이트 주소
-https://finding-scholarship.vercel.app
+https://finding-scholarship.com
 
 ## 소개
 이 프로젝트는 청년들에게 지원되는 장학금의 수가 많고 다양한 것에 비해 장학금 정보를 찾기가 어렵고 자신이 조건이 되는 것에도 불구하고 정보의 부족으로
 장학금을 받지 못하는 청년들이 많다고 생각되어 시작하게 된 프로젝트입니다. 단 한사람이라도 이 사이트를 통해서 장학금을 정보를 얻고 장학금을 받을 수 있도록
 돕는 것이 이 프로젝트의 목적입니다.
+
+## 서비스 아키텍처
+<img width="1123" height="697" alt="image" src="https://github.com/user-attachments/assets/d3ed554e-c808-4465-8b84-8bb295815e8b" />
+
+---
 
 <img width="1455" alt="image" src="https://github.com/user-attachments/assets/070f010a-0ba2-45ee-bf48-9f4710a558d6" />
 
